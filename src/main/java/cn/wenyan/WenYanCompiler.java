@@ -5,6 +5,7 @@ import cn.wenyan.exceptions.SyntaxException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,19 +80,9 @@ public class WenYanCompiler {
         StringBuilder head = new StringBuilder("def ");
         switch (type){
             case '數':
-                if(name.size() == 0)throw new SyntaxException("此地无造物者");
-                if(name.size()!=values.size())throw new SyntaxException("君有"+name.size()+"之变量,而吾得"+values.size()+"也，嗟乎");
-                for(int i = 0;i<name.size();i++){
-                    String def = name.get(i) + "=" + getNumber(values.get(i));
-                    if(name.size() == 1||i == name.size()-1) {
-                        head.append(def);
-                    }else {
-                        head.append(def+",");
-                    }
-                }
-                return head.toString();
+                return getVarString(head,name,values,this::getNumber);
             case '言':
-                return "";
+                return getVarString(head,name,values,val-> "'"+val.substring(val.indexOf("「")+1,val.lastIndexOf("」"))+"'");
             case '爻':
                 return "";
             case '列':
@@ -104,6 +95,19 @@ public class WenYanCompiler {
     }
 
 
+    private String getVarString(StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
+        if(name.size() == 0)throw new SyntaxException("此地无造物者");
+        if(name.size()!=values.size())throw new SyntaxException("君有"+name.size()+"之变量,而吾得"+values.size()+"也，嗟乎");
+        for(int i = 0;i<name.size();i++){
+            String def = name.get(i) + "=" + setValue.apply(values.get(i));
+            if(name.size() == 1||i == name.size()-1) {
+                head.append(def);
+            }else {
+                head.append(def+",");
+            }
+        }
+        return head.toString();
+    }
 
     private long getNumber(String wenyanNumber){
         int maxNumber = 0;

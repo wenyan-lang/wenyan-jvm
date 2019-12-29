@@ -56,6 +56,7 @@ public class WenYanCompiler implements Compile{
     }
 
     public Object runDirectly(boolean out,String... wenyanString){
+        serverLogger.info("---------------运行之--------------------");
         return shell.evaluate(getGroovyCode(out,wenyanString));
     }
 

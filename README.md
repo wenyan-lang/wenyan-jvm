@@ -7,6 +7,8 @@ You can run WenYan Programming Language in JVM.
 文言lang可以调用java库或groovy库，以实现在虚拟机运行。
 目前还在开发过程
 
+目前实现的语法
+
 
 | wenyan | groovy |
 |---|---|

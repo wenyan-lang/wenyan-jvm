@@ -58,7 +58,7 @@ object WenYanLib {
   val patterns = Map[String,Pattern](
     NUMBER -> Pattern.compile("[一二三四五六七八九十]+"),
     ALL -> Pattern.compile("[\\s\\S]+"),
-    TYPE -> Pattern.compile("[數言爻列]"),
+    TYPE -> Pattern.compile("[數言爻列物]"),
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
   )
 

@@ -1,6 +1,8 @@
 # wenyan-lang_jvm
 You can run WenYan Programming Language in JVM.
 
+作者为一高中生，所以不能很快实现全部
+
 语法源: https://github.com/LingDong-/wenyan-lang 
 
 本项目的目标语言是groovy,以实现动态语言，主要是为了实现

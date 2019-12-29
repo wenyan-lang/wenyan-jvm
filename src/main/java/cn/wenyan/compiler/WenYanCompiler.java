@@ -2,6 +2,7 @@ package cn.wenyan.compiler;
 
 
 import cn.wenyan.compiler.log.ServerLogger;
+import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -24,6 +25,8 @@ public class WenYanCompiler implements Compile{
     private GroovyCompiler groovyCompiler;
 
     private ServerLogger serverLogger;
+
+    private GroovyShell shell;
     // 据之以得上下文，而书之。
     private String now;
 
@@ -32,6 +35,7 @@ public class WenYanCompiler implements Compile{
         variableCompilerStream = new VariableCompileStream(this);
         groovyCompiler = new GroovyCompiler();
         serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
+        shell = new GroovyShell();
     }
 
     //单句编译
@@ -49,6 +53,10 @@ public class WenYanCompiler implements Compile{
 
         this.serverLogger.info("得类为:"+clz.getName());
         return clz;
+    }
+
+    public Object runDirectly(boolean out,String... wenyanString){
+        return shell.evaluate(getGroovyCode(out,wenyanString));
     }
 
     public int compileToGroovy(File file,boolean outInConsole,String... wenyanString){

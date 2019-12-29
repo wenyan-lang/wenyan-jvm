@@ -1,10 +1,15 @@
 # wenyan-lang_jvm
 You can run WenYan Programming Language in JVM.
 
+作者为一高中生，所以不能很快实现全部
+
 语法源: https://github.com/LingDong-/wenyan-lang 
 
 本项目的目标语言是groovy,以实现动态语言，主要是为了实现
 文言lang可以调用java库或groovy库，以实现在虚拟机运行。
+
+java版的编译器是按行编译，所以不支持没有标点分割和不分行，若有有意者，可以实现它
+
 目前还在开发过程
 
 目前实现的语法
@@ -17,5 +22,5 @@ You can run WenYan Programming Language in JVM.
 |`吾有一爻。曰陰。名之曰「丙」。` | `def bing = false` |
 |`吾有三數。曰一。曰三。曰五。名之曰「甲」曰「乙」曰「丙」。` | `def jia = 1,yi=3,bing=5` |
 |`吾有一數。曰五。書之`| `def ans=5 println(ans)`|
-|`吾有一言。曰「乙」。`|`println(yi)`|
+|`吾有一言。曰「乙」。書之`|`println(yi)`|
 ![image](images/program.png)

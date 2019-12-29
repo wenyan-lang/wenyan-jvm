@@ -73,7 +73,7 @@ public class VariableCompileStream extends CompileStream{
                             return "'"+val.substring(val.indexOf("「「")+2,val.lastIndexOf("」」"))+"'";
                         } );
             case '爻':
-                return getVarString(head,name,values,val->WenYanLib.bool().get(val));
+                return getVarString(head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':
                 return "";
             case '物':

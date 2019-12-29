@@ -42,7 +42,13 @@ public class VariableCompileStream extends CompileStream{
             case '數':
                 return getVarString(head,name,values,this::getNumber);
             case '言':
-                return getVarString(head,name,values,val-> "'"+val.substring(val.indexOf("「")+1,val.lastIndexOf("」"))+"'");
+                return getVarString(head,name,values,
+                        val->{
+                            if(!val.contains("「「")||!val.contains("」」")){
+                                throw new SyntaxException("此非言也: "+val);
+                            }
+                            return "'"+val.substring(val.indexOf("「「")+2,val.lastIndexOf("」」"))+"'";
+                        } );
             case '爻':
                 return getVarString(head,name,values,val->WenYanLib.bool().get(val));
             case '列':

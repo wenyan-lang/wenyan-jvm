@@ -31,6 +31,6 @@ public class WenYanCompiler {
 
     public static void main(String[] args) {
         WenYanCompiler compiler = new WenYanCompiler();
-        System.out.println(compiler.compile("吾有三數。曰三。曰四。曰五。名之曰「甲」曰「乙」曰「以」"));
+        System.out.println(compiler.compile("吾有一言。曰「「噫吁戲」」。名之曰「甲」"));
     }
 }

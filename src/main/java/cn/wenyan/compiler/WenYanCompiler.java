@@ -45,15 +45,15 @@ public class WenYanCompiler implements Compile{
 
     //多句编译
     public Class<?> compileToClass(String className,String... wenyanString){
-        Class<?> clz = groovyCompiler.compile(getGroovyCode(wenyanString),className);
+        Class<?> clz = groovyCompiler.compile(getGroovyCode(false,wenyanString),className);
 
         this.serverLogger.info("得类为:"+clz.getName());
         return clz;
     }
 
-    public int compileToGroovy(File file,String... wenyanString){
+    public int compileToGroovy(File file,boolean outInConsole,String... wenyanString){
         try {
-            String code = getGroovyCode(wenyanString);
+            String code = getGroovyCode(outInConsole,wenyanString);
             FileUtils.write(file,code,System.getProperty("file.coding"));
             serverLogger.info("得文件为: "+file);
             return 0;
@@ -63,10 +63,14 @@ public class WenYanCompiler implements Compile{
         }
     }
 
-    public String getGroovyCode(String... wenyanString){
+    public String getGroovyCode(boolean outInConsole,String... wenyanString){
         StringBuilder groovyCode = new StringBuilder();
         for(String code:wenyanString){
-            groovyCode.append(compile(code)).append("\n");
+            String compile = compile(code);
+            if(outInConsole){
+                serverLogger.info(code+" => "+ compile);
+            }
+            groovyCode.append(compile).append("\n");
         }
         this.serverLogger.info("此事成也，得之");
         return groovyCode.toString();

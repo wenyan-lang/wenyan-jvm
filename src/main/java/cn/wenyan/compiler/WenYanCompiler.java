@@ -3,6 +3,7 @@ package cn.wenyan.compiler;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.List;
 
 /**
  * 若施文言之术，必先用其器。古人云: 君子生非异，善假于物。
@@ -19,22 +20,34 @@ public class WenYanCompiler implements Compile{
 
     private VariableCompileStream variableCompilerStream;
 
+    private GroovyCompiler groovyCompiler;
     // 据之以得上下文，而书之。
     private String now;
 
     //此为天地之造物者，乃于此乎。
     public WenYanCompiler(){
         variableCompilerStream = new VariableCompileStream(this);
+        groovyCompiler = new GroovyCompiler();
     }
 
+    //单句编译
     public String compile(String wenyan){
         return StreamBuilder.compile(wenyan,
                 variableCompilerStream
         );
     }
 
+    //多句编译
+    public Class<?> compileToClass(String... wenyanString){
+        StringBuilder groovyCode = new StringBuilder();
+        for(String code:wenyanString){
+            groovyCode.append(compile(code)).append("\n");
+        }
+        return groovyCompiler.compile(groovyCode.toString());
+    }
+
     public void setNow(String now) {
         this.now = now;
     }
-    
+
 }

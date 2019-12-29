@@ -3,10 +3,7 @@ package cn.wenyan.compiler;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 
@@ -25,6 +22,9 @@ public class VariableCompileStream extends CompileStream{
     public CompileResult compile(String wenyan) {
         compiler.setNow(wenyan);
         String[] wenyans = wenyan.split("。");
+        List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
+        appendSplit(newWenyans,wenyans);
+        wenyans = newWenyans.toArray(new String[0]);
         if(Utils.matches(wenyans[0],WenYanLib.DEFINE_VAR())){
             long number = getNumber(Utils.getString(WenYanLib.NUMBER(),wenyans[0]));
             return new CompileResult(true,appendVar(
@@ -36,6 +36,33 @@ public class VariableCompileStream extends CompileStream{
             );
         }
         return new CompileResult(false,wenyan);
+    }
+
+    private void appendSplit(List<String> newWenyans,String[] wenyans){
+        //此处要解决歧义问题，如果'。'在字符串出现如何解决
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0;i<newWenyans.size();i++){
+            int index = newWenyans.get(i).indexOf("「「");
+            if(index != -1) {
+                int endIndex = newWenyans.get(i).indexOf("」」", index);
+                if (endIndex == -1) {
+                    builder.append(newWenyans.get(i));
+                    int removed = 0;
+                    for (int j = i+1; j < wenyans.length; j++) {
+                        builder.append("。").append(newWenyans.get(j));
+                        removed++;
+                        if (builder.indexOf("」」", index) != -1) {
+                            for(int z = 0;z<removed;z++){
+                                newWenyans.remove(i+1);
+                            }
+                            newWenyans.set(i,builder.toString());
+                            break;
+                        }
+                    }
+                }
+                builder = new StringBuilder();
+            }
+        }
     }
     //变量者乎
     //TODO

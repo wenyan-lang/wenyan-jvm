@@ -16,6 +16,8 @@ public class VariableCompileStream extends CompileStream{
 
     private int varIndex = 0;
 
+    private List<String> nextVars;
+
     VariableCompileStream(WenYanCompiler compiler){
         super(compiler);
     }
@@ -26,6 +28,7 @@ public class VariableCompileStream extends CompileStream{
         if(Utils.matches(wenyans[0],WenYanLib.DEFINE_VAR())){
             long number = getNumber(Utils.getString(WenYanLib.NUMBER(),wenyans[0]));
             return new CompileResult(true,appendVar(
+                    wenyans[(int)number+1],
                     getNames(number,wenyans),
                     getValues(number,wenyans),
                     Utils.getString(WenYanLib.TYPE(),wenyans[0]).charAt(0)
@@ -36,7 +39,27 @@ public class VariableCompileStream extends CompileStream{
     }
     //变量者乎
     //TODO
-    private String appendVar(List<String> name, List<String> values, char type){
+    private String appendVar(String end,List<String> name, List<String> values, char type){
+        if(name.size()==0&&Utils.matches(end,WenYanLib.WRITE())){
+            //TODO  这里就是输出的编译地方
+            String value = values.get(0);
+            if(
+                    value.startsWith("「")&&value.endsWith("」")
+                    &&!value.startsWith("「「")&&!value.endsWith("」」")
+            ){
+                String varName = getName(value);
+                return "println("+varName+")";
+            }else{
+                String systemName = getName("「ans」");
+                List<String> systemNames = new ArrayList<>();
+                systemNames.add(systemName);
+                return parseType(type, systemNames, values)+"\n" +
+                        "println("+systemName+")";
+            }
+        }else return parseType(type, name, values);
+    }
+
+    private String parseType(char type,List<String> name,List<String> values){
         StringBuilder head = new StringBuilder("def ");
         switch (type){
             case '數':
@@ -65,22 +88,26 @@ public class VariableCompileStream extends CompileStream{
         if(Utils.matches(wenyans[(int)number+1],WenYanLib.VAR_VALUE())){
             String[] ns = Utils.getString(WenYanLib.VAR_GET_NAME(),wenyans[(int)number+1]).split("曰");
             for(int i = 1;i<ns.length;i++) {
-                String chinese = ns[i].substring(ns[i].indexOf("「") + 1, ns[i].lastIndexOf("」"));
-                if(varMap.containsValue(chinese)){
-                    throw new SyntaxException("物之名且唯一也: "+chinese);
-                }
-                String name = PinYinUtils.getPingYin(chinese);
-                if(varMap.containsKey(name)){
-                    varIndex++;
-                    name = name+varIndex;
-                    varMap.put(name,chinese);
-                }else{
-                    varMap.put(name,chinese);
-                }
-                names.add(name);
+                names.add(getName(ns[i]));
             }
         }
         return names;
+    }
+
+    private String getName(String name){
+        String chinese = name.substring(name.indexOf("「") + 1, name.lastIndexOf("」"));
+        if(varMap.containsValue(chinese)){
+            throw new SyntaxException("物之名且唯一也: "+chinese);
+        }
+        name = PinYinUtils.getPingYin(chinese);
+        if(varMap.containsKey(name)){
+            varIndex++;
+            name = name+varIndex;
+            varMap.put(name,chinese);
+        }else{
+            varMap.put(name,chinese);
+        }
+        return name;
     }
 
     private List<String> getValues(long number,String[] wenyans){

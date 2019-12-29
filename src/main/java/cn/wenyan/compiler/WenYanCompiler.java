@@ -28,4 +28,10 @@ public class WenYanCompiler {
     public void setNow(String now) {
         this.now = now;
     }
+
+    public static void main(String[] args) {
+
+        WenYanCompiler compiler = new WenYanCompiler();
+        System.out.println(compiler.compile("吾有一數。曰五。書之"));
+    }
 }

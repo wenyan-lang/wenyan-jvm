@@ -18,6 +18,8 @@ object WenYanLib {
 
   final val VAR_GET_NAME : String = "get_name"
 
+  final val WRITE : String = "write"
+
   final val TRUE = "陽"
 
   final val FALSE = "陰"
@@ -48,7 +50,8 @@ object WenYanLib {
     DEFINE_VAR -> "吾有[一二三四五六七八九十]+[數言爻列物]",
     VAR_NAME -> "曰[\\s\\S]+",
     VAR_VALUE -> "名之(曰「[\\s\\S]+」)+",
-    VAR_GET_NAME -> "曰「[\\s\\S]+」"
+    VAR_GET_NAME -> "曰「[\\s\\S]+」",
+    WRITE -> "書之"
   )
 
 
@@ -56,7 +59,7 @@ object WenYanLib {
     NUMBER -> Pattern.compile("[一二三四五六七八九十]+"),
     ALL -> Pattern.compile("[\\s\\S]+"),
     TYPE -> Pattern.compile("[數言爻列]"),
-    VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME))
+    VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
   )
 
 

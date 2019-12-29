@@ -14,4 +14,6 @@ You can run WenYan Programming Language in JVM.
 |`吾有一言。曰「「噫吁戲」」。名之曰「乙」。`|`def yi = '噫吁戲'`|
 |`吾有一爻。曰陰。名之曰「丙」。` | `def bing = false` |
 |`吾有三數。曰一。曰三。曰五。名之曰「甲」曰「乙」曰「丙」。` | `def jia = 1,yi=3,bing=5` |
+|`吾有一數。曰五。書之`| `def ans=5 println(ans)`|
+|`吾有一言。曰「乙」。`|`println(yi)`|
 ![image](images/program.png)

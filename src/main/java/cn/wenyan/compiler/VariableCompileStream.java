@@ -11,7 +11,7 @@ public class VariableCompileStream extends CompileStream{
 
     private Map<String,String> varMap = new HashMap<>();
 
-    private int varIndex = 0;
+    private long varIndex = 0;
 
     private List<String> nextVars;
 
@@ -77,7 +77,8 @@ public class VariableCompileStream extends CompileStream{
                 String varName = getName(value);
                 return "println("+varName+")";
             }else{
-                String systemName = getName("「ans」");
+                varIndex++;
+                String systemName = getName("「ans_"+varIndex+"」");
                 List<String> systemNames = new ArrayList<>();
                 systemNames.add(systemName);
                 return parseType(type, systemNames, values)+"\n" +

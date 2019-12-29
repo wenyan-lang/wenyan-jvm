@@ -1,4 +1,4 @@
-package cn.wenyan.exceptions;
+package cn.wenyan.compiler.exceptions;
 
 public class SyntaxException extends RuntimeException {
 

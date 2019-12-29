@@ -1,8 +1,8 @@
-package cn.wenyan;
+package cn.wenyan.compiler;
 
 public class CompileResult {
 
-    private boolean success = false;
+    private boolean success;
 
     private String result;
 

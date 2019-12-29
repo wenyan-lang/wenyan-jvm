@@ -1,4 +1,4 @@
-package cn.wenyan
+package cn.wenyan.compiler
 
 import java.util.regex.Pattern
 
@@ -48,7 +48,7 @@ object WenYanLib {
     DEFINE_VAR -> "吾有[一二三四五六七八九十]+[數言爻列物]",
     VAR_NAME -> "曰[\\s\\S]+",
     VAR_VALUE -> "名之(曰「[\\s\\S]+」)+",
-    VAR_GET_NAME -> "「[\\s\\S]+」"
+    VAR_GET_NAME -> "曰「[\\s\\S]+」"
   )
 
 

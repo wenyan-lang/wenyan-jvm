@@ -6,6 +6,7 @@ import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -84,6 +85,23 @@ public class WenYanCompiler implements Compile{
     public Object runDirectly(boolean out,String... wenyanString){
         serverLogger.info("---------------运行之--------------------");
         return shell.evaluate(getGroovyCode(out,wenyanString));
+    }
+
+    public void runFile(String file){
+        try {
+            runFile(new File(file));
+        }catch (IOException e){
+            serverLogger.info("",e);
+        }
+    }
+
+    public void runFile(File file) throws IOException {
+        List<String> list = FileUtils.readLines(file,System.getProperty("file.coding"));
+        StringBuilder builder = new StringBuilder();
+        for(String str:list){
+            builder.append(str);
+        }
+        runDirectly(false,builder.toString());
     }
 
     public int compileToGroovy(File file,boolean outInConsole,String... wenyanString){

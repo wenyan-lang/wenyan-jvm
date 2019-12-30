@@ -1,5 +1,6 @@
 package cn.wenyan.compiler.utils;
 
+import cn.wenyan.compiler.WenYanCompiler;
 import cn.wenyan.compiler.WenYanLib;
 
 import java.util.ArrayList;
@@ -25,6 +26,10 @@ public class Utils {
 
     public static String getString(String patternId,String thing){
         return getStrings(patternId, thing).get(0);
+    }
+
+    public static void inputWenyan(WenYanCompiler compiler, int wenyanIndex){
+        compiler.getNowCompiling().add(wenyanIndex);
     }
 
     public static String getStringFrom(String patternId,String thing,String start){

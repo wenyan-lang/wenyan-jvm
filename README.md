@@ -1,7 +1,12 @@
 # wenyan-lang_jvm
 You can run WenYan Programming Language in JVM.
 
-作者为一高中生，所以不能很快实现全部
+> 关于作者
+
+作者由于为一高中生，所以不能很快实现全部，并且不能非常严谨的实现，不能确保全部
+来自javascript版的wenyan脚本通过编译
+
+> 关于项目
 
 语法源: https://github.com/LingDong-/wenyan-lang 
 
@@ -10,9 +15,15 @@ You can run WenYan Programming Language in JVM.
 
 java版的编译器是按行编译，所以不支持没有标点分割和不分行，若有有意者，可以实现它
 
+> 与javascript版本的区别
+
+1. 语法相对严格一些，由于实现的原理不同所导致。
+2. 区别主要体现在标点必须是'。'分割。
+> 目前状态
+
 目前还在开发过程
 
-目前实现的语法
+> 目前实现的语法
 
 
 | wenyan | groovy |

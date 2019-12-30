@@ -8,7 +8,10 @@ public class StreamBuilder {
 
         for(CompileStream stream : streams){
             CompileResult result = stream.compile(wenyan);
-            if(result.isSuccess())return result.getResult();
+            if(result.isSuccess()){
+
+                return result.getResult();
+            }
             wenyan = result.getResult();
         }
         throw new SyntaxException("无是术也:"+ wenyan);

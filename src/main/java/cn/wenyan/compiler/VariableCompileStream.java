@@ -13,62 +13,36 @@ public class VariableCompileStream extends CompileStream{
 
     private long varIndex = 0;
 
-    private List<String> nextVars;
-
     VariableCompileStream(WenYanCompiler compiler){
         super(compiler);
     }
     // 具之一句，而翻万里者也。
     public CompileResult compile(String wenyan) {
-        compiler.setNow(wenyan);
         String[] wenyans = wenyan.split("。");
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
-        appendSplit(newWenyans,wenyans);
+        compiler.appendSplit(newWenyans,wenyans);
         wenyans = newWenyans.toArray(new String[0]);
         if(Utils.matches(wenyans[0],WenYanLib.DEFINE_VAR())){
-            long number = getNumber(Utils.getString(WenYanLib.NUMBER(),wenyans[0]));
+            String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[0]);
+            Utils.inputWenyan(compiler,0);
+            long number = getNumber(wuYiYan);
             return new CompileResult(true,appendVar(
-                    wenyans[(int)number+1],
+                    (int)number+1,wenyans[(int)number+1],
                     getNames(number,wenyans),
                     getValues(number,wenyans),
                     Utils.getString(WenYanLib.TYPE(),wenyans[0]).charAt(0)
-            )
+                )
             );
         }
         return new CompileResult(false,wenyan);
     }
 
-    private void appendSplit(List<String> newWenyans,String[] wenyans){
-        //此处要解决歧义问题，如果'。'在字符串出现如何解决
-        StringBuilder builder = new StringBuilder();
-        for(int i = 0;i<newWenyans.size();i++){
-            int index = newWenyans.get(i).indexOf("「「");
-            if(index != -1) {
-                int endIndex = newWenyans.get(i).indexOf("」」", index);
-                if (endIndex == -1) {
-                    builder.append(newWenyans.get(i));
-                    int removed = 0;
-                    for (int j = i+1; j < wenyans.length; j++) {
-                        builder.append("。").append(newWenyans.get(j));
-                        removed++;
-                        if (builder.indexOf("」」", index) != -1) {
-                            for(int z = 0;z<removed;z++){
-                                newWenyans.remove(i+1);
-                            }
-                            newWenyans.set(i,builder.toString());
-                            break;
-                        }
-                    }
-                }
-                builder = new StringBuilder();
-            }
-        }
-    }
+
     //变量者乎
     //TODO
-    private String appendVar(String end,List<String> name, List<String> values, char type){
+    private String appendVar(int endIndex,String end,List<String> name, List<String> values, char type){
         if(name.size()==0&&Utils.matches(end,WenYanLib.WRITE())){
-            //TODO  这里就是输出的编译地方
+            Utils.inputWenyan(compiler,endIndex);
             String value = values.get(0);
             if(
                     value.startsWith("「")&&value.endsWith("」")
@@ -115,6 +89,7 @@ public class VariableCompileStream extends CompileStream{
         List<String> names = new ArrayList<>();
         if(Utils.matches(wenyans[(int)number+1],WenYanLib.VAR_VALUE())){
             String[] ns = Utils.getString(WenYanLib.VAR_GET_NAME(),wenyans[(int)number+1]).split("曰");
+            Utils.inputWenyan(compiler,(int)number+1);
             for(int i = 1;i<ns.length;i++) {
                 names.add(getName(ns[i]));
             }
@@ -143,6 +118,7 @@ public class VariableCompileStream extends CompileStream{
         for(int i = 1;i<=number;i++){
             if(wenyans.length == 1)break;
             if(Utils.matches(wenyans[i],WenYanLib.VAR_NAME())){
+                Utils.inputWenyan(compiler,i);
                 values.add(Utils.getStringFrom(WenYanLib.ALL(),wenyans[i],"曰"));
             }
         }

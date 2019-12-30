@@ -8,6 +8,10 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -19,6 +23,7 @@ public class WenYanCompiler implements Compile{
 
     private int index = 0;
 
+    private List<Integer> nowCompiling = new ArrayList<>();
 
     private VariableCompileStream variableCompilerStream;
 
@@ -29,6 +34,8 @@ public class WenYanCompiler implements Compile{
     private GroovyShell shell;
     // 据之以得上下文，而书之。
     private String now;
+
+    private String[] wenyans;
 
     //此为天地之造物者，乃于此乎。
     public WenYanCompiler(){
@@ -41,10 +48,29 @@ public class WenYanCompiler implements Compile{
     //单句编译
     public String compile(String wenyan){
         index ++;
+        StringBuilder builder = new StringBuilder();
         serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
-        return StreamBuilder.compile(wenyan,
-                variableCompilerStream
-        );
+        setNow(wenyan);
+        wenyans = wenyan.split("。");
+        List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
+        appendSplit(newWenyans,wenyans);
+        wenyans = newWenyans.toArray(new String[0]);
+        while (wenyans.length != 0) {
+            builder.append("\n").append(StreamBuilder.compile(wenyan,
+                    variableCompilerStream
+            ));
+            this.clearCompiled();
+            wenyan = getWenyanFromArray(wenyans);
+        }
+        return builder.toString();
+    }
+
+    private String getWenyanFromArray(String[] wenyans){
+        StringBuilder builder = new StringBuilder();
+        for(String wenyan: wenyans){
+            builder.append(wenyan).append("。");
+        }
+        return builder.toString();
     }
 
     //多句编译
@@ -95,4 +121,47 @@ public class WenYanCompiler implements Compile{
     }
 
 
+    public List<Integer> getNowCompiling() {
+        return nowCompiling;
+    }
+
+    public void clearCompiled(){
+        List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
+        for(int index:nowCompiling){
+            newWenyans.set(index,null);
+        }
+        Iterator<String> str = newWenyans.iterator();
+        while (str.hasNext()){
+            if(str.next() == null)str.remove();
+        }
+        wenyans = newWenyans.toArray(new String[0]);
+        nowCompiling.clear();
+    }
+
+    void appendSplit(List<String> newWenyans,String[] wenyans){
+        //此处要解决歧义问题，如果'。'在字符串出现如何解决
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0;i<newWenyans.size();i++){
+            int index = newWenyans.get(i).indexOf("「「");
+            if(index != -1) {
+                int endIndex = newWenyans.get(i).indexOf("」」", index);
+                if (endIndex == -1) {
+                    builder.append(newWenyans.get(i));
+                    int removed = 0;
+                    for (int j = i+1; j < wenyans.length; j++) {
+                        builder.append("。").append(newWenyans.get(j));
+                        removed++;
+                        if (builder.indexOf("」」", index) != -1) {
+                            for(int z = 0;z<removed;z++){
+                                newWenyans.remove(i+1);
+                            }
+                            newWenyans.set(i,builder.toString());
+                            break;
+                        }
+                    }
+                }
+                builder = new StringBuilder();
+            }
+        }
+    }
 }

@@ -3,15 +3,15 @@ package cn.wenyan.compiler;
 
 import cn.wenyan.compiler.command.CommandHandler;
 import cn.wenyan.compiler.command.CompilerConfig;
+import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.utils.Utils;
 import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
+import org.fusesource.jansi.Ansi;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -54,6 +54,7 @@ public class WenYanCompiler implements Compile{
         this.shell = new GroovyShell();
         this.handler = new CommandHandler(this);
         this.supportPinyin = supportPinyin;
+        this.serverLogger.info(LogFormat.Control.BOLD+"WenYan Lang JVM Compiler"+LogFormat.fg(Ansi.Color.DEFAULT));
     }
 
     //单句编译

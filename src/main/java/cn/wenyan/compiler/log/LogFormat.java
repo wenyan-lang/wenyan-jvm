@@ -60,8 +60,9 @@ public class LogFormat {
 
     public enum Control{
 
-        GLISTEN("\033[5m");
+        GLISTEN("\033[5m"),
 
+        BOLD("\033[1m");
 
         private String ansi;
         Control(String ansi){

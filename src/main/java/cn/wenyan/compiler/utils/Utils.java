@@ -45,4 +45,31 @@ public class Utils {
     public static boolean matches(String thing,String patternId){
         return thing.matches(WenYanLib.syntaxs().get(patternId).get());
     }
+
+    public static void appendSplit(List<String> newWenyans,String[] wenyans){
+        //此处要解决歧义问题，如果'。'在字符串出现如何解决
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0;i<newWenyans.size();i++){
+            int index = newWenyans.get(i).indexOf("「「");
+            if(index != -1) {
+                int endIndex = newWenyans.get(i).indexOf("」」", index);
+                if (endIndex == -1) {
+                    builder.append(newWenyans.get(i));
+                    int removed = 0;
+                    for (int j = i+1; j < wenyans.length; j++) {
+                        builder.append("。").append(newWenyans.get(j));
+                        removed++;
+                        if (builder.indexOf("」」", index) != -1) {
+                            for(int z = 0;z<removed;z++){
+                                newWenyans.remove(i+1);
+                            }
+                            newWenyans.set(i,builder.toString());
+                            break;
+                        }
+                    }
+                }
+                builder = new StringBuilder();
+            }
+        }
+    }
 }

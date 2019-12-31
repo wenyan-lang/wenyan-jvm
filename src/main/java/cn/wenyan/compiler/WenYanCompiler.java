@@ -1,7 +1,10 @@
 package cn.wenyan.compiler;
 
 
+import cn.wenyan.compiler.command.CommandHandler;
+import cn.wenyan.compiler.command.CompilerConfig;
 import cn.wenyan.compiler.log.ServerLogger;
+import cn.wenyan.compiler.utils.Utils;
 import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
 
@@ -41,12 +44,15 @@ public class WenYanCompiler implements Compile{
 
     private String[] wenyans;
 
+    private CommandHandler handler;
+
     //此为天地之造物者，乃于此乎。
     public WenYanCompiler(boolean supportPinyin){
         this.variableCompilerStream = new VariableCompileStream(this);
         this.groovyCompiler = new GroovyCompiler();
         this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
         this.shell = new GroovyShell();
+        this.handler = new CommandHandler(this);
         this.supportPinyin = supportPinyin;
     }
 
@@ -58,7 +64,7 @@ public class WenYanCompiler implements Compile{
         setNow(wenyan);
         wenyans = wenyan.split("。");
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
-        appendSplit(newWenyans,wenyans);
+        Utils.appendSplit(newWenyans,wenyans);
         wenyans = newWenyans.toArray(new String[0]);
         while (wenyans.length != 0) {
             builder.append("\n").append(StreamBuilder.compile(wenyan,
@@ -99,13 +105,24 @@ public class WenYanCompiler implements Compile{
         }
     }
 
+    public String compileOut(File file,File outDir) throws IOException{
+        String code = getGroovyCodeByFile(file);
+        FileUtils.write(new File(outDir,file.getName()),code,System.getProperty("file.coding"));
+        return code;
+    }
+
     public void runFile(File file) throws IOException {
-        List<String> list = FileUtils.readLines(file,System.getProperty("file.coding"));
+
+        runDirectly(false,getGroovyCodeByFile(file));
+    }
+
+    public String getGroovyCodeByFile(File wenyan) throws IOException{
+        List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
         StringBuilder builder = new StringBuilder();
         for(String str:list){
             builder.append(str);
         }
-        runDirectly(false,builder.toString());
+        return builder.toString();
     }
 
     public int compileToGroovy(File file,boolean outInConsole,String... wenyanString){
@@ -138,8 +155,8 @@ public class WenYanCompiler implements Compile{
     }
 
     @Override
-    public int compile(PrintStream out, InputStream in, String... args) {
-        return 0;
+    public int compile(String... args) {
+        return handler.executeCommand(args);
     }
 
 
@@ -147,7 +164,7 @@ public class WenYanCompiler implements Compile{
         return nowCompiling;
     }
 
-    public void clearCompiled(){
+    private void clearCompiled(){
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
         for(int index:nowCompiling){
             newWenyans.set(index,null);
@@ -160,31 +177,26 @@ public class WenYanCompiler implements Compile{
         nowCompiling.clear();
     }
 
-    void appendSplit(List<String> newWenyans,String[] wenyans){
-        //此处要解决歧义问题，如果'。'在字符串出现如何解决
-        StringBuilder builder = new StringBuilder();
-        for(int i = 0;i<newWenyans.size();i++){
-            int index = newWenyans.get(i).indexOf("「「");
-            if(index != -1) {
-                int endIndex = newWenyans.get(i).indexOf("」」", index);
-                if (endIndex == -1) {
-                    builder.append(newWenyans.get(i));
-                    int removed = 0;
-                    for (int j = i+1; j < wenyans.length; j++) {
-                        builder.append("。").append(newWenyans.get(j));
-                        removed++;
-                        if (builder.indexOf("」」", index) != -1) {
-                            for(int z = 0;z<removed;z++){
-                                newWenyans.remove(i+1);
-                            }
-                            newWenyans.set(i,builder.toString());
-                            break;
-                        }
-                    }
-                }
-                builder = new StringBuilder();
+
+    public int init(CompilerConfig compilerConfig){
+        try {
+            supportPinyin = compilerConfig.isSupportPinYin();
+            String[] files = compilerConfig.getCompileFiles();
+            String[] libs = compilerConfig.getCompileLib();
+            boolean isRun = compilerConfig.isRun();
+            String[] runArgs = compilerConfig.getRunArgs();
+            String out = compilerConfig.getOutFile();
+            if (out == null || files == null) {
+                serverLogger.info("必要: 输出文件路径和编译文件信息");
+                return 1;
             }
+            for (String file : files) {
+                compileOut(new File(file), new File(out));
+            }
+        }catch (IOException e){
+            serverLogger.error("",e);
         }
+        return 0;
     }
 
     public boolean isSupportPinyin() {

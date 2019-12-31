@@ -20,10 +20,18 @@ object WenYanLib {
 
   final val WRITE : String = "write"
 
+  final val SIMPLE_VAR : String = "simple_var"
+
   final val TRUE = "陽"
 
   final val FALSE = "陰"
 
+  val prefixs = Map[Char,Int](
+    '十' -> 10,
+    '百' -> 100,
+    '千' -> 1000,
+    '萬' -> 10000
+  )
   val numbers = Map[Char,Int](
     '零' -> 0,
     '一' -> 1,
@@ -36,22 +44,17 @@ object WenYanLib {
     '七' -> 7,
     '八' -> 8,
     '九' -> 9,
-
   )
 
-  val prefixs = Map[Char,Int](
-    '十' -> 10,
-    '百' -> 100,
-    '千' -> 1000,
-    '萬' -> 10000
-  )
+
 
   val syntaxs = Map[String,String](
     DEFINE_VAR -> "吾有[一二三四五六七八九十]+[數言爻列物]",
     VAR_NAME -> "曰[\\s\\S]+",
     VAR_VALUE -> "名之(曰「[\\s\\S]+」)+",
     VAR_GET_NAME -> "曰「[\\s\\S]+」",
-    WRITE -> "書之"
+    WRITE -> "書之",
+    SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
   )
 
 

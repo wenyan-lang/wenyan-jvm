@@ -14,8 +14,7 @@ public class GroovyCompiler {
      */
     public Class<?> compile(String script) {
         GroovyClassLoader loader = getDefaultParentGroovyClassLoader();
-        Class<?> groovyClass = loader.parseClass(script);
-        return groovyClass;
+        return loader.parseClass(script);
     }
 
     /**
@@ -25,8 +24,7 @@ public class GroovyCompiler {
      */
     public Class<?> compile(String script, String className) {
         GroovyClassLoader loader = getDefaultParentGroovyClassLoader();
-        Class<?> groovyClass = loader.parseClass(script, className);
-        return groovyClass;
+        return loader.parseClass(script, className);
     }
 
     /**
@@ -34,7 +32,7 @@ public class GroovyCompiler {
      * @return  返回groovy的类加载器
      */
     public GroovyClassLoader getDefaultParentGroovyClassLoader() {
-        ClassLoader cl = new GroovyCompiler().getClass().getClassLoader();
+        ClassLoader cl = GroovyCompiler.class.getClassLoader();
         return new GroovyClassLoader(cl);
     }
 }

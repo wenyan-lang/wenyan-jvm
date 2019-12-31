@@ -20,7 +20,7 @@ public class VariableCompileStream extends CompileStream{
     public CompileResult compile(String wenyan) {
         String[] wenyans = wenyan.split("。");
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
-        compiler.appendSplit(newWenyans,wenyans);
+        Utils.appendSplit(newWenyans,wenyans);
         wenyans = newWenyans.toArray(new String[0]);
         if(Utils.matches(wenyans[0],WenYanLib.DEFINE_VAR())){
             String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[0]);
@@ -33,6 +33,18 @@ public class VariableCompileStream extends CompileStream{
                     Utils.getString(WenYanLib.TYPE(),wenyans[0]).charAt(0)
                 )
             );
+        }
+        if(Utils.matches(wenyans[0],WenYanLib.SIMPLE_VAR())){
+            Utils.inputWenyan(compiler,0);
+            List<String> values = new ArrayList<>();
+            values.add(wenyans[0].substring(2));
+            int number = 0;
+            return new CompileResult(true,appendVar(
+                    number+1,wenyans[number+1],
+                    getNames(number,wenyans),
+                    values,
+                    Utils.getString(WenYanLib.TYPE(),wenyans[0]).charAt(0)
+            ));
         }
         return new CompileResult(false,wenyan);
     }
@@ -147,6 +159,9 @@ public class VariableCompileStream extends CompileStream{
     private long getNumber(String wenyanNumber){
         int maxNumber = 0;
         long result = 0;
+        if(wenyanNumber.startsWith("十")){
+            wenyanNumber = "一"+wenyanNumber;
+        }
         char[] chars = wenyanNumber.toCharArray();
         for(int i = 0;i<chars.length;i++){
             if(i+1<=chars.length-1){

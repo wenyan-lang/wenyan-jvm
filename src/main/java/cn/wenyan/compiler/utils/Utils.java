@@ -39,7 +39,7 @@ public class Utils {
 
     public static String getStringFrom(String patternId,String thing,String start,String end){
         String value = getString(patternId,thing);
-        return value.substring(value.indexOf(start)+1,value.lastIndexOf(end));
+        return value.substring(value.indexOf(start)+start.length(),value.lastIndexOf(end));
     }
 
     public static boolean matches(String thing,String patternId){

@@ -35,6 +35,8 @@ public class WenYanCompiler implements Compile{
 
     private VariableCompileStream variableCompilerStream;
 
+    private CommentCompileStream commentCompileStream;
+
     private GroovyCompiler groovyCompiler;
 
     private ServerLogger serverLogger;
@@ -50,6 +52,7 @@ public class WenYanCompiler implements Compile{
     //此为天地之造物者，乃于此乎。
     public WenYanCompiler(boolean supportPinyin){
         this.variableCompilerStream = new VariableCompileStream(this);
+        this.commentCompileStream = new CommentCompileStream(this);
         this.groovyCompiler = new GroovyCompiler();
         this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
         this.shell = new GroovyShell();
@@ -71,7 +74,8 @@ public class WenYanCompiler implements Compile{
         wenyans = newWenyans.toArray(new String[0]);
         while (wenyans.length != 0) {
             builder.append("\n").append(StreamBuilder.compile(wenyans,
-                    variableCompilerStream
+                    variableCompilerStream,
+                    commentCompileStream
             )[0]);
             this.clearCompiled();
         }

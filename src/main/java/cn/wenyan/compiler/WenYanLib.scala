@@ -28,9 +28,12 @@ object WenYanLib {
 
   final val AFTER_NAME : String = "after_name"
 
+  final val COMMENT : String = "comment"
+
   final val TRUE = "陽"
 
   final val FALSE = "陰"
+
 
   val prefixs = Map[Char,Int](
     '十' -> 10,
@@ -62,7 +65,8 @@ object WenYanLib {
     WRITE -> "書之",
     SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
     CHANGE -> "昔之「[\\s\\S]+」者",
-    AFTER_NAME -> "今「[\\s\\S]+」是也"
+    AFTER_NAME -> "今「[\\s\\S]+」是也",
+    COMMENT -> "[疏注批]曰"
   )
 
 
@@ -72,7 +76,8 @@ object WenYanLib {
     TYPE -> Pattern.compile("[數言爻列物]"),
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
     BEFORE_NAME -> Pattern.compile(syntaxs(CHANGE)),
-    AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME))
+    AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
+    COMMENT -> Pattern.compile( "「「[\\s\\S]+」」")
   )
 
 

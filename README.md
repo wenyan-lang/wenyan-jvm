@@ -3,7 +3,6 @@
 # wenyan-lang_jvm
 You can run WenYan Programming Language in JVM.
 
-![](images/logo.png)
 > 关于作者
 
 作者由于为一高中生，所以不能很快实现全部，并且不能非常严谨的实现，不能确保全部

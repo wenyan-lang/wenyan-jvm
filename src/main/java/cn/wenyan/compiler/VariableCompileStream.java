@@ -77,9 +77,9 @@ public class VariableCompileStream extends CompileStream{
         StringBuilder head = new StringBuilder("def ");
         switch (type){
             case '數':
-                return getVarString(head,name,values,this::getNumber);
+                return getVarString(true,head,name,values,this::getNumber);
             case '言':
-                return getVarString(head,name,values,
+                return getVarString(true,head,name,values,
                         val->{
                             if(!val.contains("「「")||!val.contains("」」")){
                                 throw new SyntaxException("此非言也: "+val);
@@ -87,9 +87,9 @@ public class VariableCompileStream extends CompileStream{
                             return "'"+val.substring(val.indexOf("「「")+2,val.lastIndexOf("」」"))+"'";
                         } );
             case '爻':
-                return getVarString(head,name,values,val->WenYanLib.bool().get(val).get());
+                return getVarString(true,head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':
-                return "";
+                return getVarString(false,head,name,values,val->"[]");
             case '物':
                 return "";
             default:
@@ -142,11 +142,12 @@ public class VariableCompileStream extends CompileStream{
 
 
 
-    private String getVarString(StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
-        if(name.size() == 0)throw new SyntaxException("此地无造物者");
-        if(name.size()!=values.size())throw new SyntaxException("君有"+name.size()+"之变量,而吾得"+values.size()+"也，嗟乎");
+    private String getVarString(boolean mustNameValue,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
+        if(mustNameValue&&name.size() == 0)throw new SyntaxException("此地无造物者");
+        if(mustNameValue&&name.size()!=values.size())throw new SyntaxException("君有"+name.size()+"之变量,而吾得"+values.size()+"也，嗟乎");
         for(int i = 0;i<name.size();i++){
-            String def = name.get(i) + "=" + setValue.apply(values.get(i));
+
+            String def = name.get(i) + "=" + (i >= values.size()?"":setValue.apply(values.get(i)));
             if(name.size() == 1||i == name.size()-1) {
                 head.append(def);
             }else {

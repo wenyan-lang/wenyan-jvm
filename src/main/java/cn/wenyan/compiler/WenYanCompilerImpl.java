@@ -73,7 +73,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             nowMap.put(hash,comment);
             wenyan = wenyan.replaceAll(comment,hash);
         }
-        wenyans = wenyan.split("[。!,]");
+        wenyans = wenyan.split("[。!,！，]");
         Set<Map.Entry<String,String>> set = nowMap.entrySet();
         for(Map.Entry<String,String> e:set){
             for(int i = 0;i<wenyans.length;i++){
@@ -173,6 +173,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             groovyCode.append(compile).append("\n");
         }
         this.serverLogger.info("此事成也，得之");
+        System.out.println("----------------------------WenYanConsole--------------------------------");
         return groovyCode.toString();
     }
 

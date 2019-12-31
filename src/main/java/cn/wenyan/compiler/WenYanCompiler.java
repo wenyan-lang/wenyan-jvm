@@ -9,6 +9,7 @@ import cn.wenyan.compiler.utils.Utils;
 import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,7 @@ public class WenYanCompiler implements Compile{
         this.shell = new GroovyShell();
         this.handler = new CommandHandler(this);
         this.supportPinyin = supportPinyin;
+        if(File.separator.equals("\\")) AnsiConsole.systemInstall();
         this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+LogFormat.fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
     }
 

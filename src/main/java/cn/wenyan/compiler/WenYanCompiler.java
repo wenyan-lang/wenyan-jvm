@@ -22,6 +22,9 @@ import java.util.List;
  */
 public class WenYanCompiler implements Compile{
 
+
+    private boolean supportPinyin;
+
     private int index = 0;
 
     private List<Integer> nowCompiling = new ArrayList<>();
@@ -39,11 +42,12 @@ public class WenYanCompiler implements Compile{
     private String[] wenyans;
 
     //此为天地之造物者，乃于此乎。
-    public WenYanCompiler(){
-        variableCompilerStream = new VariableCompileStream(this);
-        groovyCompiler = new GroovyCompiler();
-        serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
-        shell = new GroovyShell();
+    public WenYanCompiler(boolean supportPinyin){
+        this.variableCompilerStream = new VariableCompileStream(this);
+        this.groovyCompiler = new GroovyCompiler();
+        this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
+        this.shell = new GroovyShell();
+        this.supportPinyin = supportPinyin;
     }
 
     //单句编译
@@ -181,5 +185,9 @@ public class WenYanCompiler implements Compile{
                 builder = new StringBuilder();
             }
         }
+    }
+
+    public boolean isSupportPinyin() {
+        return supportPinyin;
     }
 }

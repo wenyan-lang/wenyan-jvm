@@ -15,7 +15,8 @@ public class PinYinUtils {
      * @param inputString
      * @return
      */
-    public static String getPingYin(String inputString) {
+    public static String getPingYin(String inputString,boolean support) {
+        if(!support)return inputString;
         int index = 0;
         HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
         format.setCaseType(HanyuPinyinCaseType.LOWERCASE);

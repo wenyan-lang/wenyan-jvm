@@ -48,11 +48,11 @@ public class VariableCompileStream extends CompileStream{
                     value.startsWith("「")&&value.endsWith("」")
                     &&!value.startsWith("「「")&&!value.endsWith("」」")
             ){
-                String varName = getName(value);
+                String varName = getName(value,false);
                 return "println("+varName+")";
             }else{
                 varIndex++;
-                String systemName = getName("「ans_"+varIndex+"」");
+                String systemName = getName("「ans_"+varIndex+"」",true);
                 List<String> systemNames = new ArrayList<>();
                 systemNames.add(systemName);
                 return parseType(type, systemNames, values)+"\n" +
@@ -91,18 +91,20 @@ public class VariableCompileStream extends CompileStream{
             String[] ns = Utils.getString(WenYanLib.VAR_GET_NAME(),wenyans[(int)number+1]).split("曰");
             Utils.inputWenyan(compiler,(int)number+1);
             for(int i = 1;i<ns.length;i++) {
-                names.add(getName(ns[i]));
+                names.add(getName(ns[i],true));
             }
         }
         return names;
     }
 
-    private String getName(String name){
+    private String getName(String name,boolean define){
         String chinese = name.substring(name.indexOf("「") + 1, name.lastIndexOf("」"));
         if(varMap.containsValue(chinese)){
-            throw new SyntaxException("物之名且唯一也: "+chinese);
+            if(define)
+                throw new SyntaxException("物之名且唯一也: "+chinese);
+            return varMap.get(chinese);
         }
-        name = PinYinUtils.getPingYin(chinese);
+        name = PinYinUtils.getPingYin(chinese,compiler.isSupportPinyin());
         if(varMap.containsKey(name)){
             varIndex++;
             name = name+varIndex;

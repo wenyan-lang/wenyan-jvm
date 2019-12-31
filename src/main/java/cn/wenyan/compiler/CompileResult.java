@@ -1,17 +1,24 @@
 package cn.wenyan.compiler;
 
+import cn.wenyan.compiler.utils.Utils;
+
 public class CompileResult {
 
     private boolean success;
 
-    private String result;
+    private String[] result;
 
-    public CompileResult(boolean success, String result) {
+    public CompileResult(boolean success, String[] result) {
         this.success = success;
         this.result = result;
     }
 
-    public String getResult() {
+    public CompileResult(String result){
+        this.success = true;
+        this.result = new String[]{result};
+    }
+
+    public String[] getResult() {
         return result;
     }
 
@@ -19,7 +26,7 @@ public class CompileResult {
         return success;
     }
 
-    public void setResult(String result) {
+    public void setResult(String[] result) {
         this.result = result;
     }
 
@@ -29,6 +36,6 @@ public class CompileResult {
 
     @Override
     public String toString() {
-        return result;
+        return Utils.getWenyanFromArray(result);
     }
 }

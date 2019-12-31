@@ -46,6 +46,13 @@ public class Utils {
         return thing.matches(WenYanLib.syntaxs().get(patternId).get());
     }
 
+    public static String getWenyanFromArray(String[] wenyans){
+        StringBuilder builder = new StringBuilder();
+        for(String wenyan: wenyans){
+            builder.append(wenyan).append("。");
+        }
+        return builder.toString();
+    }
     public static void appendSplit(List<String> newWenyans,String[] wenyans){
         //此处要解决歧义问题，如果'。'在字符串出现如何解决
         StringBuilder builder = new StringBuilder();

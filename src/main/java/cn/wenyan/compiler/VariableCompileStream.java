@@ -17,16 +17,12 @@ public class VariableCompileStream extends CompileStream{
         super(compiler);
     }
     // 具之一句，而翻万里者也。
-    public CompileResult compile(String wenyan) {
-        String[] wenyans = wenyan.split("。");
-        List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
-        Utils.appendSplit(newWenyans,wenyans);
-        wenyans = newWenyans.toArray(new String[0]);
+    public CompileResult compile(String[] wenyans) {
         if(Utils.matches(wenyans[0],WenYanLib.DEFINE_VAR())){
             String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[0]);
             Utils.inputWenyan(compiler,0);
             long number = getNumber(wuYiYan);
-            return new CompileResult(true,appendVar(
+            return new CompileResult(appendVar(
                     (int)number+1,wenyans[(int)number+1],
                     getNames(number,wenyans),
                     getValues(number,wenyans),
@@ -39,14 +35,24 @@ public class VariableCompileStream extends CompileStream{
             List<String> values = new ArrayList<>();
             values.add(wenyans[0].substring(2));
             int number = 0;
-            return new CompileResult(true,appendVar(
+            return new CompileResult(appendVar(
                     number+1,wenyans[number+1],
                     getNames(number,wenyans),
                     values,
                     Utils.getString(WenYanLib.TYPE(),wenyans[0]).charAt(0)
             ));
         }
-        return new CompileResult(false,wenyan);
+
+        if(Utils.matches(wenyans[0],WenYanLib.CHANGE())){
+            Utils.inputWenyan(compiler,0);
+            String beforeName = Utils.getStringFrom(WenYanLib.BEFORE_NAME(),wenyans[0],"「","」");
+            if(Utils.matches(wenyans[1],WenYanLib.AFTER_NAME())){
+                Utils.inputWenyan(compiler,1);
+                String afterName = Utils.getStringFrom(WenYanLib.AFTER_NAME(),wenyans[1],"「","」");
+                return new CompileResult(beforeName+" = "+afterName);
+            }
+        }
+        return new CompileResult(false,wenyans);
     }
 
 

@@ -54,7 +54,7 @@ public class WenYanCompiler implements Compile{
         this.shell = new GroovyShell();
         this.handler = new CommandHandler(this);
         this.supportPinyin = supportPinyin;
-        this.serverLogger.info(LogFormat.Control.BOLD+"WenYan Lang JVM Compiler"+LogFormat.fg(Ansi.Color.DEFAULT));
+        this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+LogFormat.fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
     }
 
     //单句编译
@@ -68,22 +68,15 @@ public class WenYanCompiler implements Compile{
         Utils.appendSplit(newWenyans,wenyans);
         wenyans = newWenyans.toArray(new String[0]);
         while (wenyans.length != 0) {
-            builder.append("\n").append(StreamBuilder.compile(wenyan,
+            builder.append("\n").append(StreamBuilder.compile(wenyans,
                     variableCompilerStream
-            ));
+            )[0]);
             this.clearCompiled();
-            wenyan = getWenyanFromArray(wenyans);
         }
         return builder.toString();
     }
 
-    private String getWenyanFromArray(String[] wenyans){
-        StringBuilder builder = new StringBuilder();
-        for(String wenyan: wenyans){
-            builder.append(wenyan).append("。");
-        }
-        return builder.toString();
-    }
+
 
     //多句编译
     public Class<?> compileToClass(String className,String... wenyanString){

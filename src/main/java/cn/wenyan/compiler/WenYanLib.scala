@@ -22,6 +22,12 @@ object WenYanLib {
 
   final val SIMPLE_VAR : String = "simple_var"
 
+  final val CHANGE : String = "change"
+
+  final val BEFORE_NAME : String = "before_name"
+
+  final val AFTER_NAME : String = "after_name"
+
   final val TRUE = "陽"
 
   final val FALSE = "陰"
@@ -55,6 +61,8 @@ object WenYanLib {
     VAR_GET_NAME -> "曰「[\\s\\S]+」",
     WRITE -> "書之",
     SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
+    CHANGE -> "昔之「[\\s\\S]+」者",
+    AFTER_NAME -> "今「[\\s\\S]+」是也"
   )
 
 
@@ -63,6 +71,8 @@ object WenYanLib {
     ALL -> Pattern.compile("[\\s\\S]+"),
     TYPE -> Pattern.compile("[數言爻列物]"),
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
+    BEFORE_NAME -> Pattern.compile(syntaxs(CHANGE)),
+    AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME))
   )
 
 

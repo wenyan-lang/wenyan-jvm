@@ -39,6 +39,7 @@ java版的编译器是按行编译，所以不支持没有标点分割和不分�
 |`吾有一數。曰五。書之`| `def ans_1=5 println(ans_1)`|
 |`吾有一言。曰「乙」。書之`|`println(yi)`|
 |`有數五十。名之曰「大衍」。`|`def dayan = 50`|
+|`昔之「甲」者。今「大衍」是也。`|`jia = dayan`|
 
 ![image](images/program.png)
 

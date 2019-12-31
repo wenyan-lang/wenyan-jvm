@@ -7,5 +7,5 @@ public abstract class CompileStream {
     CompileStream(WenYanCompiler compiler){
         this.compiler = compiler;
     }
-    public abstract CompileResult compile(String wenyan);
+    public abstract CompileResult compile(String[] wenyan);
 }

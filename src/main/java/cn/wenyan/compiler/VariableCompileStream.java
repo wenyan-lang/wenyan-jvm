@@ -13,7 +13,7 @@ public class VariableCompileStream extends CompileStream{
 
     private long varIndex = 0;
 
-    VariableCompileStream(WenYanCompiler compiler){
+    VariableCompileStream(WenYanCompilerImpl compiler){
         super(compiler);
     }
     // 具之一句，而翻万里者也。

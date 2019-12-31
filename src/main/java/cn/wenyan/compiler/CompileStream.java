@@ -2,9 +2,9 @@ package cn.wenyan.compiler;
 
 public abstract class CompileStream {
 
-    protected WenYanCompiler compiler;
+    protected WenYanCompilerImpl compiler;
 
-    CompileStream(WenYanCompiler compiler){
+    CompileStream(WenYanCompilerImpl compiler){
         this.compiler = compiler;
     }
     public abstract CompileResult compile(String[] wenyan);

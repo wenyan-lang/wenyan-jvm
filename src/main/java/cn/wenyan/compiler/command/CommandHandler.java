@@ -1,6 +1,6 @@
 package cn.wenyan.compiler.command;
 
-import cn.wenyan.compiler.WenYanCompiler;
+import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.exceptions.CommandException;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class CommandHandler {
 
     public static Map<String,Command> compileCommand = new ConcurrentHashMap<>();
 
-    private WenYanCompiler compiler;
+    private WenYanCompilerImpl compiler;
 
     static {
         registerCommands();
@@ -23,7 +23,7 @@ public class CommandHandler {
         compileCommand.put("-c",new CompileFileCommand());
     }
 
-    public CommandHandler(WenYanCompiler compiler){
+    public CommandHandler(WenYanCompilerImpl compiler){
         this.compiler =compiler;
     }
 

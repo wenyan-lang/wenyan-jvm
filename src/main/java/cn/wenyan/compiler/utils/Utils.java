@@ -1,6 +1,6 @@
 package cn.wenyan.compiler.utils;
 
-import cn.wenyan.compiler.WenYanCompiler;
+import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
 
 import java.util.ArrayList;
@@ -15,10 +15,8 @@ public class Utils {
         Pattern typePattern = WenYanLib.patterns().get(patternId).get();
         for(String thing : things) {
             Matcher typeMatcher = typePattern.matcher(thing);
-            int i = 0;
             while (typeMatcher.find()) {
-                matchers.add(typeMatcher.group(i));
-                i++;
+                matchers.add(typeMatcher.group(0));
             }
         }
         return matchers;
@@ -28,7 +26,7 @@ public class Utils {
         return getStrings(patternId, thing).get(0);
     }
 
-    public static void inputWenyan(WenYanCompiler compiler, int wenyanIndex){
+    public static void inputWenyan(WenYanCompilerImpl compiler, int wenyanIndex){
         compiler.getNowCompiling().add(wenyanIndex);
     }
 
@@ -53,6 +51,8 @@ public class Utils {
         }
         return builder.toString();
     }
+
+    @Deprecated
     public static void appendSplit(List<String> newWenyans,String[] wenyans){
         //此处要解决歧义问题，如果'。'在字符串出现如何解决
         StringBuilder builder = new StringBuilder();

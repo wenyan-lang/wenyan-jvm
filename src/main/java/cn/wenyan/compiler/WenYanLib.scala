@@ -30,6 +30,8 @@ object WenYanLib {
 
   final val COMMENT : String = "comment"
 
+  final val STRING : String = "string"
+
   final val TRUE = "陽"
 
   final val FALSE = "陰"
@@ -77,7 +79,8 @@ object WenYanLib {
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
     BEFORE_NAME -> Pattern.compile(syntaxs(CHANGE)),
     AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
-    COMMENT -> Pattern.compile( "「「[\\s\\S]+」」")
+    COMMENT -> Pattern.compile( "「「[\\s\\S]+」」"),
+    STRING -> Pattern.compile("「「[^(「「|」」)]+」」")
   )
 
 

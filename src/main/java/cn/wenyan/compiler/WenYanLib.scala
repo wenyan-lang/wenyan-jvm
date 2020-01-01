@@ -32,6 +32,16 @@ object WenYanLib {
 
   final val STRING : String = "string"
 
+  final val SPLIT : String = "[。!,！，、]"
+
+  final val STRING_START : String = "「「"
+
+  final val STRING_END : String = "」」"
+
+  final val NAME_START : String = "「"
+
+  final val NAME_END : String = "」"
+
   final val BIG_THAN : String = "大於"
 
   final val SMALL_THAN : String = "小於"

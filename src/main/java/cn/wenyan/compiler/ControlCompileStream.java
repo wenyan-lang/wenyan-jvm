@@ -13,11 +13,6 @@ public class ControlCompileStream extends CompileStream {
         return new CompileResult(false,wenyan);
     }
 
-    public static void main(String[] args) throws Exception{
-
-        System.out.println(new ControlCompileStream(new WenYanCompilerImpl(true)).getBooleanSyntax("一不小於二"));
-    }
-
     private String getBooleanSyntax(String wenYan){
         if(wenYan.contains(WenYanLib.NOT_BIG_THAN())){
             return getBool(WenYanLib.NOT_BIG_THAN(),wenYan);

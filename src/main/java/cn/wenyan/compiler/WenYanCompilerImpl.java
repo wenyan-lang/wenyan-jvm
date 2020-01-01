@@ -82,7 +82,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             nowMap.put(hash,comment);
             wenyan = wenyan.replaceAll(comment,hash);
         }
-        wenyans = wenyan.split("[。!,！，]");
+        wenyans = wenyan.split(WenYanLib.SPLIT());
         Set<Map.Entry<String,String>> set = nowMap.entrySet();
         for(Map.Entry<String,String> e:set){
             for(int i = 0;i<wenyans.length;i++){

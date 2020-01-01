@@ -45,10 +45,10 @@ public class VariableCompileStream extends CompileStream{
 
         if(Utils.matches(wenyans[0],WenYanLib.CHANGE())){
             Utils.inputWenyan(compiler,0);
-            String beforeName = Utils.getStringFrom(WenYanLib.BEFORE_NAME(),wenyans[0],"「","」");
+            String beforeName = Utils.getStringFrom(WenYanLib.BEFORE_NAME(),wenyans[0],WenYanLib.NAME_START(),WenYanLib.NAME_END());
             if(Utils.matches(wenyans[1],WenYanLib.AFTER_NAME())){
                 Utils.inputWenyan(compiler,1);
-                String afterName = Utils.getStringFrom(WenYanLib.AFTER_NAME(),wenyans[1],"「","」");
+                String afterName = Utils.getStringFrom(WenYanLib.AFTER_NAME(),wenyans[1],WenYanLib.NAME_START(),WenYanLib.NAME_END());
                 return new CompileResult(beforeName+" = "+afterName);
             }
         }
@@ -63,14 +63,14 @@ public class VariableCompileStream extends CompileStream{
             Utils.inputWenyan(compiler,endIndex);
             String value = values.get(0);
             if(
-                    value.startsWith("「")&&value.endsWith("」")
-                    &&!value.startsWith("「「")&&!value.endsWith("」」")
+                    value.startsWith(WenYanLib.NAME_START())&&value.endsWith(WenYanLib.NAME_END())
+                    &&!value.startsWith(WenYanLib.STRING_START())&&!value.endsWith(WenYanLib.STRING_END())
             ){
                 String varName = getName(value,false);
                 return "println("+varName+")";
             }else{
                 varIndex++;
-                String systemName = getName("「ans_"+varIndex+"」",true);
+                String systemName = getName(WenYanLib.NAME_START()+"ans_"+varIndex+WenYanLib.NAME_END(),true);
                 List<String> systemNames = new ArrayList<>();
                 systemNames.add(systemName);
                 return parseType(type, systemNames, values)+"\n" +
@@ -87,10 +87,10 @@ public class VariableCompileStream extends CompileStream{
             case '言':
                 return getVarString(true,head,name,values,
                         val->{
-                            if(!val.contains("「「")||!val.contains("」」")){
+                            if(!val.contains(WenYanLib.STRING_START())||!val.contains(WenYanLib.STRING_END())){
                                 throw new SyntaxException("此非言也: "+val);
                             }
-                            return "'"+val.substring(val.indexOf("「「")+2,val.lastIndexOf("」」"))+"'";
+                            return "'"+val.substring(val.indexOf(WenYanLib.STRING_START())+2,val.lastIndexOf(WenYanLib.STRING_END()))+"'";
                         } );
             case '爻':
                 return getVarString(true,head,name,values,val->WenYanLib.bool().get(val).get());
@@ -116,7 +116,7 @@ public class VariableCompileStream extends CompileStream{
     }
 
     private String getName(String name,boolean define){
-        String chinese = name.substring(name.indexOf("「") + 1, name.lastIndexOf("」"));
+        String chinese = name.substring(name.indexOf(WenYanLib.NAME_START()) + 1, name.lastIndexOf(WenYanLib.NAME_END()));
         if(varMap.containsValue(chinese)){
             if(define)
                 throw new SyntaxException("物之名且唯一也: "+chinese);

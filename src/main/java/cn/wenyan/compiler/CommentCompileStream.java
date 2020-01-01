@@ -29,7 +29,7 @@ public class CommentCompileStream extends CompileStream {
         if(Utils.matches(wenyan[0],WenYanLib.COMMENT())){
             Utils.inputWenyan(compiler,0);
             Utils.inputWenyan(compiler,1);
-            return new CompileResult("/*"+Utils.getStringFrom(WenYanLib.COMMENT(),wenyan[1],"「「","」」")+"*/");
+            return new CompileResult("/*"+Utils.getStringFrom(WenYanLib.COMMENT(),wenyan[1],WenYanLib.STRING_START(),WenYanLib.STRING_END())+"*/");
         }
         return new CompileResult(false,wenyan);
     }

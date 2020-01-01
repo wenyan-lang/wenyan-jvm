@@ -42,8 +42,6 @@ object WenYanLib {
 
   final val NAME_END : String = "」"
 
-
-
   final val BIG_THAN : String = "大於"
 
   final val SMALL_THAN : String = "小於"

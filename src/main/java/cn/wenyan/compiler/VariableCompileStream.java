@@ -163,7 +163,7 @@ public class VariableCompileStream extends CompileStream{
         return head.toString();
     }
 
-    private long getNumber(String wenyanNumber){
+    public long getNumber(String wenyanNumber){
         int maxNumber = 0;
         long result = 0;
         if(wenyanNumber.startsWith("十")){

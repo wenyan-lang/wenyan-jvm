@@ -33,6 +33,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private CommentCompileStream commentCompileStream;
 
+    private ControlCompileStream controlCompileStream;
+
     private GroovyCompiler groovyCompiler;
 
     private ServerLogger serverLogger;
@@ -43,10 +45,11 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private CommandHandler handler;
 
+    private Map<Class<? extends CompileStream>,CompileStream> streamMap;
+
     //此为天地之造物者，乃于此乎。
     public WenYanCompilerImpl(boolean supportPinyin){
-        this.variableCompilerStream = new VariableCompileStream(this);
-        this.commentCompileStream = new CommentCompileStream(this);
+        this.streamMap = new HashMap<>();
         this.groovyCompiler = new GroovyCompiler();
         this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
         this.shell = new GroovyShell();
@@ -54,6 +57,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         this.supportPinyin = supportPinyin;
         if(File.separator.equals("\\")) AnsiConsole.systemInstall();
         this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+LogFormat.fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
+        this.variableCompilerStream = new VariableCompileStream(this);
+        this.commentCompileStream = new CommentCompileStream(this);
+        this.controlCompileStream = new ControlCompileStream(this);
     }
 
     @Override
@@ -61,6 +67,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return handler.executeCommand(args);
     }
 
+    public String dispatch(String wenyan){
+        return compile(wenyan);
+    }
     public String compile(String wenyan){
         index ++;
         StringBuilder builder = new StringBuilder();
@@ -88,7 +97,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         while (wenyans.length != 0) {
             builder.append("\n").append(StreamBuilder.compile(wenyans,
                     variableCompilerStream,
-                    commentCompileStream
+                    commentCompileStream,
+                    controlCompileStream
             )[0]);
             this.clearCompiled();
         }
@@ -178,8 +188,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
 
-
-
+    public Map<Class<? extends CompileStream>, CompileStream> getStreamMap() {
+        return streamMap;
+    }
 
     public List<Integer> getNowCompiling() {
         return nowCompiling;
@@ -213,4 +224,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     boolean isSupportPinyin() {
         return supportPinyin;
     }
+
+    public <T extends CompileStream> T getStream(Class<T> stream){
+        return stream.cast(streamMap.get(stream));
+    }
+
 }

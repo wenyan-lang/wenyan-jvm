@@ -32,6 +32,16 @@ object WenYanLib {
 
   final val STRING : String = "string"
 
+  final val BIG_THAN : String = "大於"
+
+  final val SMALL_THAN : String = "小於"
+
+  final val NOT : String = "不"
+
+  final val NOT_BIG_THAN : String = NOT+BIG_THAN
+
+  final val NOT_SMALL_THAN : String = NOT+SMALL_THAN
+
   final val TRUE = "陽"
 
   final val FALSE = "陰"
@@ -86,7 +96,12 @@ object WenYanLib {
 
   val bool = Map[String,String](
     FALSE -> "false",
-    TRUE -> "true"
+    TRUE -> "true",
+    BIG_THAN -> ">",
+    SMALL_THAN -> "<",
+    NOT -> "=",
+    NOT_BIG_THAN -> "<=",
+    NOT_SMALL_THAN -> ">="
   )
 
 }

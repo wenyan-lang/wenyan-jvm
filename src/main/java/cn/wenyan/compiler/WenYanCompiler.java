@@ -11,5 +11,5 @@ public interface WenYanCompiler extends Compile,RunCode{
 
     void runFile(File file) throws IOException;
 
-    String compile(String wenyan);
+    String dispatch(String wenyan);
 }

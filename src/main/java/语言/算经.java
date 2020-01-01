@@ -1,4 +1,4 @@
-package cn.wenyan.lang;
+package 语言;
 
 /**
  * 此为文言文算数之书，亦可明正弦余弦之义

@@ -42,6 +42,8 @@ object WenYanLib {
 
   final val NAME_END : String = "」"
 
+
+
   final val BIG_THAN : String = "大於"
 
   final val SMALL_THAN : String = "小於"
@@ -51,6 +53,8 @@ object WenYanLib {
   final val NOT_BIG_THAN : String = NOT+BIG_THAN
 
   final val NOT_SMALL_THAN : String = NOT+SMALL_THAN
+
+  final val VAL_DEF = NAME_START+"[\\s\\S]+"+NAME_END
 
   final val TRUE = "陽"
 
@@ -82,12 +86,12 @@ object WenYanLib {
   val syntaxs = Map[String,String](
     DEFINE_VAR -> "吾有[一二三四五六七八九十]+[數言爻列物]",
     VAR_NAME -> "曰[\\s\\S]+",
-    VAR_VALUE -> "名之(曰「[\\s\\S]+」)+",
-    VAR_GET_NAME -> "曰「[\\s\\S]+」",
+    VAR_VALUE -> ("名之(曰"+VAL_DEF+")+"),
+    VAR_GET_NAME -> ("曰"+VAL_DEF),
     WRITE -> "書之",
     SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
-    CHANGE -> "昔之「[\\s\\S]+」者",
-    AFTER_NAME -> "今「[\\s\\S]+」是也",
+    CHANGE -> ("昔之"+VAL_DEF+"者"),
+    AFTER_NAME -> ("今"+VAL_DEF+"是也"),
     COMMENT -> "[疏注批]曰"
   )
 
@@ -99,7 +103,7 @@ object WenYanLib {
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
     BEFORE_NAME -> Pattern.compile(syntaxs(CHANGE)),
     AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
-    COMMENT -> Pattern.compile( "「「[\\s\\S]+」」"),
+    COMMENT -> Pattern.compile("「「[^(「「|」」)]+」」"),
     STRING -> Pattern.compile("「「[^(「「|」」)]+」」")
   )
 

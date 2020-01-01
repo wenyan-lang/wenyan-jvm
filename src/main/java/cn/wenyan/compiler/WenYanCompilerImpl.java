@@ -74,6 +74,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         index ++;
         StringBuilder builder = new StringBuilder();
         serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
+        //暂时草率的实现这个符号
+        wenyan = wenyan.replaceAll("『","「「")
+                        .replaceAll("』","」」");
         List<String> comments = Utils.getStrings(WenYanLib.STRING(),wenyan);
         Map<String,String> nowMap = new HashMap<>();
         for(String comment:comments){

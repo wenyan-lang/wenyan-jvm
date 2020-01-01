@@ -1,6 +1,7 @@
 package cn.wenyan.compiler;
 
 import cn.wenyan.compiler.exceptions.SyntaxException;
+import cn.wenyan.compiler.utils.ScalaUtils;
 import cn.wenyan.compiler.utils.Utils;
 
 import java.util.*;
@@ -163,9 +164,20 @@ public class VariableCompileStream extends CompileStream{
         return head.toString();
     }
 
+
     public long getNumber(String wenyanNumber){
         int maxNumber = 0;
         long result = 0;
+        if(ScalaUtils.containsCommonNumber(wenyanNumber)){
+            int len = wenyanNumber.length();
+            char[] numberChar = wenyanNumber.toCharArray();
+            for(char str : numberChar){
+                result += (Integer)WenYanLib.numbers().get(str).get() * Math.pow(10,len);
+                len -- ;
+            }
+            return result;
+        }
+
         if(wenyanNumber.startsWith("十")){
             wenyanNumber = "一"+wenyanNumber;
         }

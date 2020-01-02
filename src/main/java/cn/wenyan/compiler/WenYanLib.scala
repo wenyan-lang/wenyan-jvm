@@ -40,6 +40,10 @@ object WenYanLib {
 
   final val STRING_END : String = "」」"
 
+  final val NEW_START : String = "『"
+
+  final val NEW_END : String = "』"
+
   final val NAME_START : String = "「"
 
   final val NAME_END : String = "」"
@@ -105,9 +109,9 @@ object WenYanLib {
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
     BEFORE_NAME -> Pattern.compile(syntaxs(CHANGE)),
     AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
-    COMMENT -> Pattern.compile("「「[^(「「|」」)]+」」"),
-    STRING -> Pattern.compile("「「[^(「「|」」)]+」」"),
-    HASH -> Pattern.compile("[0-9]+HASH~")
+    COMMENT -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
+    STRING -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
+    HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}")
   )
 
 

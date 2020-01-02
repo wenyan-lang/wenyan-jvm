@@ -3,6 +3,7 @@ package cn.wenyan.compiler;
 
 import cn.wenyan.compiler.command.CommandHandler;
 import cn.wenyan.compiler.command.CompilerConfig;
+import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.utils.Utils;
@@ -72,9 +73,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         index ++;
         StringBuilder builder = new StringBuilder();
         serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
-//        //暂时草率的实现这个符号
-//        wenyan = wenyan.replaceAll("『","「「")
-//                        .replaceAll("』","」」");
+        //暂时草率的实现这个符号
+        if(Utils.getStrings(WenYanLib.HASH(),wenyan).size()!=0){
+            throw new SyntaxException("此占位符不可存在: {{$numberHASH~}}");
+        }
         Map<String,String> nowMap = new HashMap<>();
         wenyan = wenYansToHASH(wenyan,nowMap);
         wenyans = wenyan.split(WenYanLib.SPLIT());
@@ -82,7 +84,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             wenyans[j] = replaceWenYan(wenyans[j],nowMap);
         }
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
-        //Utils.appendSplit(newWenyans,wenyans);
         wenyans = newWenyans.toArray(new String[0]);
         while (wenyans.length != 0) {
             builder.append("\n").append(factory.compile(wenyans)[0]);
@@ -92,10 +93,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
 
-    public String replaceWenYan(String wenyan,Map<String,String> map){
+    private String replaceWenYan(String wenyan,Map<String,String> map){
         List<String> list = Utils.getStrings(WenYanLib.HASH(),wenyan);
         for(String s:list){
-            wenyan = wenyan.replaceAll(s,map.get(s));
+            wenyan = wenyan.replace(s,map.get(s));
             wenyan = replaceWenYan(wenyan,map);
         }
         return wenyan;
@@ -104,12 +105,20 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         List<String> comments = Utils.getStrings(WenYanLib.STRING(),wenyan);
         for(String comment:comments){
             int count = index++;
-            String hash = count+"HASH~";
+            String hash = "{{"+count+"HASH~"+"}}";
             map.put(hash,comment);
-            wenyan = wenyan.replaceAll(comment,hash);
+            wenyan = wenyan.replace(comment,hash);
+            if(hasOne(wenyan,WenYanLib.NEW_START())&&hasOne(wenyan,WenYanLib.NAME_END())){
+                wenyan = wenyan.replace(WenYanLib.NEW_START(),WenYanLib.STRING_START())
+                        .replace(WenYanLib.NEW_END(),WenYanLib.STRING_END());
+            }
             wenyan = wenYansToHASH(wenyan,map);
         }
         return wenyan;
+    }
+
+    private boolean hasOne(String s,String thing){
+        return s.indexOf(thing) == s.lastIndexOf(thing);
     }
     //多句编译
     public Class<?> compileToClass(String className,String... wenyanString){

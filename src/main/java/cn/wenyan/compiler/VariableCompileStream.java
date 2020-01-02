@@ -64,8 +64,8 @@ public class VariableCompileStream extends CompileStream{
             Utils.inputWenyan(compiler,endIndex);
             String value = values.get(0);
             if(
-                    value.startsWith(WenYanLib.NAME_START())&&value.endsWith(WenYanLib.NAME_END())
-                    &&!value.startsWith(WenYanLib.STRING_START())&&!value.endsWith(WenYanLib.STRING_END())
+                    (value.startsWith(WenYanLib.NAME_START())&&value.endsWith(WenYanLib.NAME_END())
+                    &&!value.startsWith(WenYanLib.STRING_START())&&!value.endsWith(WenYanLib.STRING_END()))
             ){
                 String varName = getName(value,false);
                 return "println("+varName+")";
@@ -87,12 +87,7 @@ public class VariableCompileStream extends CompileStream{
                 return getVarString(true,head,name,values,this::getNumber);
             case '言':
                 return getVarString(true,head,name,values,
-                        val->{
-                            if(!val.contains(WenYanLib.STRING_START())||!val.contains(WenYanLib.STRING_END())){
-                                throw new SyntaxException("此非言也: "+val);
-                            }
-                            return "'"+val.substring(val.indexOf(WenYanLib.STRING_START())+2,val.lastIndexOf(WenYanLib.STRING_END()))+"'";
-                        } );
+                        val->"'"+val.substring(val.indexOf(WenYanLib.STRING_START())+2,val.lastIndexOf(WenYanLib.STRING_END()))+"'");
             case '爻':
                 return getVarString(true,head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':

@@ -23,7 +23,9 @@ public class Utils {
     }
 
     public static String getString(String patternId,String thing){
-        return getStrings(patternId, thing).get(0);
+        List<String> strs = getStrings(patternId, thing);
+        if(strs.size() == 0)return null;
+        return strs.get(0);
     }
 
     public static void inputWenyan(WenYanCompilerImpl compiler, int wenyanIndex){

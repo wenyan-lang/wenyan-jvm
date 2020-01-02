@@ -111,7 +111,7 @@ public class VariableCompileStream extends CompileStream{
         return names;
     }
 
-    private String getName(String name,boolean define){
+    public String getName(String name,boolean define){
         String chinese = name.substring(name.indexOf(WenYanLib.NAME_START()) + 1, name.lastIndexOf(WenYanLib.NAME_END()));
         if(varMap.containsValue(chinese)){
             if(define)

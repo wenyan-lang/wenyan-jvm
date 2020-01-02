@@ -58,8 +58,13 @@ object WenYanLib {
 
   final val NOT_SMALL_THAN : String = NOT+SMALL_THAN
 
-  final val VAL_DEF = NAME_START+"[\\s\\S]+"+NAME_END
+  final val VAL_DEF : String= NAME_START+"[\\s\\S]+"+NAME_END
 
+  final val VAR_NAME_FOR : String = "var_name_for"
+
+  final val FOR : String = "for"
+
+  final val FOR_END : String = "for_end"
   final val TRUE = "陽"
 
   final val FALSE = "陰"
@@ -90,7 +95,7 @@ object WenYanLib {
 
 
   val syntaxs = Map[String,String](
-    DEFINE_VAR -> "吾有[一二三四五六七八九十]+[數言爻列物]",
+    DEFINE_VAR -> "吾有[一二三四五六七八九十百十千萬億]+[數言爻列物]",
     VAR_NAME -> "曰[\\s\\S]+",
     VAR_VALUE -> ("名之(曰"+VAL_DEF+")+"),
     VAR_GET_NAME -> ("曰"+VAL_DEF),
@@ -98,7 +103,9 @@ object WenYanLib {
     SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
     CHANGE -> ("昔之"+VAL_DEF+"者"),
     AFTER_NAME -> ("今"+VAL_DEF+"是也"),
-    COMMENT -> "[疏注批]曰"
+    COMMENT -> "[疏注批]曰",
+    FOR -> "為是([一二三四五六七八九十百十千萬億]+|「[\\s\\S]+」)遍",
+    FOR_END -> "云云"
   )
 
 
@@ -111,7 +118,9 @@ object WenYanLib {
     AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
     COMMENT -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
     STRING -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
-    HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}")
+    HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}"),
+    FOR -> Pattern.compile("[一二三四五六七八九十百十千萬億]+"),
+    VAR_NAME_FOR -> Pattern.compile(VAL_DEF)
   )
 
 

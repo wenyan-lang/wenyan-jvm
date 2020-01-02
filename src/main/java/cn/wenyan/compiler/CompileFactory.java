@@ -22,6 +22,13 @@ public class CompileFactory {
             }
             wenyan = result.getResult();
         }
-        throw new SyntaxException("无是术也:"+ Utils.getWenyanFromArray(wenyan));
+        String prefix = "\n无是术也:";
+        StringBuilder w = new StringBuilder(Utils.getWenyanFromArray(wenyan)).append("\n");
+        int len = w.length()+prefix.length();
+        for(int i = 0;i<len;i++){
+            w.append(" ");
+        }
+        w.append("^");
+        throw new SyntaxException(prefix+ w);
     }
 }

@@ -164,12 +164,11 @@ public class VariableCompileStream extends CompileStream{
         return head.toString();
     }
 
-
     public long getNumber(String wenyanNumber){
         int maxNumber = 0;
         long result = 0;
         if(ScalaUtils.containsCommonNumber(wenyanNumber)){
-            int len = wenyanNumber.length();
+            int len = wenyanNumber.length()-1;
             char[] numberChar = wenyanNumber.toCharArray();
             for(char str : numberChar){
                 result += (Integer)WenYanLib.numbers().get(str).get() * Math.pow(10,len);

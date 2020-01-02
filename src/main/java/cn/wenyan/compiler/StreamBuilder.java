@@ -1,19 +1,22 @@
 package cn.wenyan.compiler;
 
-import cn.wenyan.compiler.exceptions.SyntaxException;
-import cn.wenyan.compiler.utils.Utils;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StreamBuilder {
 
-    public static String[] compile(String[] wenyan,CompileStream... streams){
+    private List<CompileStream> streams = new ArrayList<>();
 
-        for(CompileStream stream : streams){
-            CompileResult result = stream.compile(wenyan);
-            if(result.isSuccess()){
-                return result.getResult();
-            }
-            wenyan = result.getResult();
-        }
-        throw new SyntaxException("无是术也:"+ Utils.getWenyanFromArray(wenyan));
+    public StreamBuilder put(CompileStream stream){
+        streams.add(stream);
+        return this;
     }
+
+    public CompileFactory build(){
+        return new CompileFactory(streams);
+    }
+
+
 }

@@ -29,13 +29,13 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private List<Integer> nowCompiling = new ArrayList<>();
 
-    private CompileStream[] compileStreams;
-
     private GroovyCompiler groovyCompiler;
 
     private ServerLogger serverLogger;
 
     private GroovyShell shell;
+
+    private CompileFactory factory;
 
     private String[] wenyans;
 
@@ -53,11 +53,11 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         this.supportPinyin = supportPinyin;
         if(File.separator.equals("\\")) AnsiConsole.systemInstall();
         this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+LogFormat.fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
-        List<CompileStream> compileStreams = new ArrayList<>();
-        compileStreams.add(new VariableCompileStream(this));
-        compileStreams.add(new CommentCompileStream(this));
-        compileStreams.add(new ControlCompileStream(this));
-        this.compileStreams = compileStreams.toArray(new CompileStream[0]);
+        this.factory = new StreamBuilder()
+                .put(new VariableCompileStream(this))
+                .put(new CommentCompileStream(this))
+                .put(new ControlCompileStream(this))
+                .build();
     }
 
     @Override
@@ -96,9 +96,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         //Utils.appendSplit(newWenyans,wenyans);
         wenyans = newWenyans.toArray(new String[0]);
         while (wenyans.length != 0) {
-            builder.append("\n").append(StreamBuilder.compile(wenyans,
-                    compileStreams
-            )[0]);
+            builder.append("\n").append(factory.compile(wenyans)[0]);
             this.clearCompiled();
         }
         return builder.toString();

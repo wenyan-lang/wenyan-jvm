@@ -167,7 +167,7 @@ public class VariableCompileStream extends CompileStream{
     public long getNumber(String wenyanNumber){
         int maxNumber = 0;
         long result = 0;
-        if(ScalaUtils.containsCommonNumber(wenyanNumber)){
+        if(!ScalaUtils.containsCommonNumber(wenyanNumber)){
             int len = wenyanNumber.length()-1;
             char[] numberChar = wenyanNumber.toCharArray();
             for(char str : numberChar){

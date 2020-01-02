@@ -81,7 +81,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         wenyan = wenYansToHASH(wenyan,nowMap);
         wenyans = wenyan.split(WenYanLib.SPLIT());
         for(int j = 0;j<wenyans.length;j++){
-            wenyans[j] = replaceWenYan(wenyans[j],nowMap);
+            wenyans[j] = replaceWenYan(wenyans[j],nowMap).trim();
         }
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
         wenyans = newWenyans.toArray(new String[0]);

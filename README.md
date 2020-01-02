@@ -60,7 +60,7 @@ java版的编译器不支持没有标点分割，若有有意者，可以实现�
 
 > 如何使用
 
-目前编译器还不支持运行，但是可以通过函数库的形式调用
+目前编译器还不支持main函数运行，但是可以通过函数库的形式调用编译器类
 
 ```
     WenYanCompiler compiler = new WenYanCompiler(false);

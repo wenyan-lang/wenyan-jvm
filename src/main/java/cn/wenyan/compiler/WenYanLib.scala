@@ -32,6 +32,8 @@ object WenYanLib {
 
   final val STRING : String = "string"
 
+  final val HASH : String = "hash"
+
   final val SPLIT : String = "[。!,！，、]"
 
   final val STRING_START : String = "「「"
@@ -104,7 +106,8 @@ object WenYanLib {
     BEFORE_NAME -> Pattern.compile(syntaxs(CHANGE)),
     AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
     COMMENT -> Pattern.compile("「「[^(「「|」」)]+」」"),
-    STRING -> Pattern.compile("「「[^(「「|」」)]+」」")
+    STRING -> Pattern.compile("「「[^(「「|」」)]+」」"),
+    HASH -> Pattern.compile("[0-9]+HASH~")
   )
 
 

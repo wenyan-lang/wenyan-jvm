@@ -7,6 +7,6 @@ public class Main {
         WenYanCompiler compiler = new WenYanCompilerImpl(false);
         compiler.compile(args);
         compiler.runDirectly(false,
-                "吾有一數，曰一百一，書之。");
+                "吾有一言，曰「「一百一。「「1」」」」，書之。");
     }
 }

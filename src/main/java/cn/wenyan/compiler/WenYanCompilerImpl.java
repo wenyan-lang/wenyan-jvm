@@ -72,25 +72,14 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         index ++;
         StringBuilder builder = new StringBuilder();
         serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
-        //暂时草率的实现这个符号
-        wenyan = wenyan.replaceAll("『","「「")
-                        .replaceAll("』","」」");
-        List<String> comments = Utils.getStrings(WenYanLib.STRING(),wenyan);
+//        //暂时草率的实现这个符号
+//        wenyan = wenyan.replaceAll("『","「「")
+//                        .replaceAll("』","」」");
         Map<String,String> nowMap = new HashMap<>();
-        for(String comment:comments){
-            int count = index++;
-            String hash = count+"HASH~";
-            nowMap.put(hash,comment);
-            wenyan = wenyan.replaceAll(comment,hash);
-        }
+        wenyan = wenYansToHASH(wenyan,nowMap);
         wenyans = wenyan.split(WenYanLib.SPLIT());
-        Set<Map.Entry<String,String>> set = nowMap.entrySet();
-        for(Map.Entry<String,String> e:set){
-            for(int i = 0;i<wenyans.length;i++){
-                if(wenyans[i].contains(e.getKey())){
-                    wenyans[i] = wenyans[i].replaceAll(e.getKey(),e.getValue());
-                }
-            }
+        for(int j = 0;j<wenyans.length;j++){
+            wenyans[j] = replaceWenYan(wenyans[j],nowMap);
         }
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
         //Utils.appendSplit(newWenyans,wenyans);
@@ -102,6 +91,26 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return builder.toString();
     }
 
+
+    public String replaceWenYan(String wenyan,Map<String,String> map){
+        List<String> list = Utils.getStrings(WenYanLib.HASH(),wenyan);
+        for(String s:list){
+            wenyan = wenyan.replaceAll(s,map.get(s));
+            wenyan = replaceWenYan(wenyan,map);
+        }
+        return wenyan;
+    }
+    private String wenYansToHASH(String wenyan,Map<String,String> map){
+        List<String> comments = Utils.getStrings(WenYanLib.STRING(),wenyan);
+        for(String comment:comments){
+            int count = index++;
+            String hash = count+"HASH~";
+            map.put(hash,comment);
+            wenyan = wenyan.replaceAll(comment,hash);
+            wenyan = wenYansToHASH(wenyan,map);
+        }
+        return wenyan;
+    }
     //多句编译
     public Class<?> compileToClass(String className,String... wenyanString){
         Class<?> clz = groovyCompiler.compile(getGroovyCode(false,wenyanString),className);

@@ -3,6 +3,8 @@ package cn.wenyan.compiler;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.utils.Utils;
 
+import static cn.wenyan.compiler.utils.Utils.getValue;
+
 public class ControlCompileStream extends CompileStream {
 
 
@@ -32,6 +34,28 @@ public class ControlCompileStream extends CompileStream {
             Utils.inputWenyan(compiler,0);
             return new CompileResult("}");
         }
+        if(Utils.matches(wenyan[0],WenYanLib.IF_END())){
+            Utils.inputWenyan(compiler,0);
+            return new CompileResult("}");
+        }
+        if(Utils.matches(wenyan[0],WenYanLib.IF_START())){
+            Utils.inputWenyan(compiler,0);
+            String bool = getBooleanSyntax(wenyan[0].substring(wenyan[0].indexOf("若")+1,wenyan[0].indexOf("者")));
+            return new CompileResult("if("+bool+"){");
+        }
+        if(Utils.matches(wenyan[0],WenYanLib.IF_BREAK())){
+            Utils.inputWenyan(compiler,0);
+            String bool = getBooleanSyntax(wenyan[0].substring(wenyan[0].indexOf("若")+1,wenyan[0].indexOf("者")));
+            return new CompileResult("if("+bool+")break");
+        }
+        if(Utils.matches(wenyan[0],WenYanLib.WHILE())){
+            Utils.inputWenyan(compiler,0);
+            return new CompileResult("while(true){");
+        }
+        if(Utils.matches(wenyan[0],WenYanLib.ELSE())){
+            Utils.inputWenyan(compiler,0);
+            return new CompileResult("}else{");
+        }
         return new CompileResult(false,wenyan);
     }
 
@@ -44,13 +68,24 @@ public class ControlCompileStream extends CompileStream {
             return getBool(WenYanLib.NOT_SMALL_THAN(),wenYan);
         }else if(wenYan.contains(WenYanLib.SMALL_THAN())){
             return getBool(WenYanLib.SMALL_THAN(),wenYan);
+        }else if(wenYan.contains(WenYanLib.EQUALS())){
+            return getBool(WenYanLib.EQUALS(),wenYan);
         }
         throw new SyntaxException("无此对比也: "+wenYan);
     }
 
+    //TODO 未完成
     public String getBool(String type,String wenYan){
         String[] numbers = wenYan.split(type);
+        if(numbers.length != 2)throw new SyntaxException("此表达式之过也: "+wenYan);
         VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
-        return stream.getNumber(numbers[0])+WenYanLib.bool().get(type).get()+stream.getNumber(numbers[1]);
+        StringBuilder builder = new StringBuilder();
+        builder.append(getValue(numbers[0],stream));
+        builder.append(WenYanLib.bool().get(type).get());
+        builder.append(getValue(numbers[1],stream));
+        return builder.toString();
     }
+
+
+
 }

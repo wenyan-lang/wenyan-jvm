@@ -5,13 +5,18 @@ public class Main {
 
     public static void main(String[] args) {
         WenYanCompiler compiler = new WenYanCompilerImpl(false);
-        compiler.runDirectly(false,
+        compiler.runDirectly(true,
                 "" +
-                        "吾有一數。曰七。名之曰「甲」。" +
-                        "為是「甲」遍。" +
-                        "   為是「甲」遍。"+
-                        "       吾有一言。曰「「問天地好在。」」。書之。" +
-                        "   云云。" +
+                        "有數七，名之曰「甲」。" +
+                        "有數九，名之曰「乙」。" +
+                        "有數零，名之曰「艾」。" +
+                        "恆為是，若「艾」大於「甲」者乃止也。" +
+                        "   若「艾」等於「乙」者。" +
+                        "       有言『ssr』，書之。" +
+                        "   若非。" +
+                        "       加一以「甲」，乘其以三，書之。" +
+                        "   也。" +
+                        "   加一以「艾」，昔之「艾」者，今其是矣。" +
                         "云云。");
     }
 }

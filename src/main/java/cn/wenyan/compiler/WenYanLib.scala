@@ -34,6 +34,10 @@ object WenYanLib {
 
   final val HASH : String = "hash"
 
+  final val IF_START : String = "if_start"
+
+  final val IF_END : String = "if_end"
+
   final val SPLIT : String = "[。!,！，、]"
 
   final val STRING_START : String = "「「"
@@ -52,7 +56,13 @@ object WenYanLib {
 
   final val SMALL_THAN : String = "小於"
 
+  final val EQUALS : String = "等於"
+
+  final val ELSE : String = "若非"
+
   final val NOT : String = "不"
+
+  final val SPLIT_MATH : String = "split_math"
 
   final val NOT_BIG_THAN : String = NOT+BIG_THAN
 
@@ -62,9 +72,22 @@ object WenYanLib {
 
   final val VAR_NAME_FOR : String = "var_name_for"
 
+  final val MOD : String = "mod"
+
   final val FOR : String = "for"
 
   final val FOR_END : String = "for_end"
+
+  final val BREAK : String = "break"
+
+  final val IF_BREAK : String = "if_break" //顺应语法糖
+
+  final val MATH_START : String = "math_start"
+
+  final val MATH_APPEND : String = "math_append"
+
+  final val WHILE : String = "while"
+
   final val TRUE = "陽"
 
   final val FALSE = "陰"
@@ -95,7 +118,7 @@ object WenYanLib {
 
 
   val syntaxs = Map[String,String](
-    DEFINE_VAR -> "吾有[一二三四五六七八九十百十千萬億]+[數言爻列物]",
+    DEFINE_VAR -> "吾有[一二三四五六七八九十百十千萬億零〇]+[數言爻列物]",
     VAR_NAME -> "曰[\\s\\S]+",
     VAR_VALUE -> ("名之(曰"+VAL_DEF+")+"),
     VAR_GET_NAME -> ("曰"+VAL_DEF),
@@ -104,8 +127,16 @@ object WenYanLib {
     CHANGE -> ("昔之"+VAL_DEF+"者"),
     AFTER_NAME -> ("今"+VAL_DEF+"是也"),
     COMMENT -> "[疏注批]曰",
-    FOR -> "為是([一二三四五六七八九十百十千萬億]+|「[\\s\\S]+」)遍",
-    FOR_END -> "云云"
+    FOR -> "為是([一二三四五六七八九十百十千萬億零〇]+|「[\\s\\S]+」)遍",
+    FOR_END -> "云云",
+    IF_START -> "若[\\s\\S]+者",
+    IF_END -> "也",
+    BREAK -> "乃止",
+    IF_BREAK -> "若[\\s\\S]+者乃止也",
+    WHILE -> "恆為是",
+    ELSE -> "若非",
+    MATH_START -> "[加减乘除]([一二三四五六七八九十百十千萬億零〇]+|「[\\s\\S]+」|其)[以於]([一二三四五六七八九十百十千萬億零〇]+|「[\\s\\S]+」|其)",
+    MOD -> "所餘幾何"
   )
 
 
@@ -120,7 +151,8 @@ object WenYanLib {
     STRING -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
     HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}"),
     FOR -> Pattern.compile("[一二三四五六七八九十百十千萬億]+"),
-    VAR_NAME_FOR -> Pattern.compile(VAL_DEF)
+    VAR_NAME_FOR -> Pattern.compile(VAL_DEF),
+    SPLIT_MATH ->Pattern.compile("[以於]")
   )
 
 
@@ -131,7 +163,15 @@ object WenYanLib {
     SMALL_THAN -> "<",
     NOT -> "=",
     NOT_BIG_THAN -> "<=",
-    NOT_SMALL_THAN -> ">="
+    NOT_SMALL_THAN -> ">=",
+    EQUALS -> "=="
+  )
+
+  val math = Map[Char,String](
+    '加' -> "+",
+    '减' -> "-",
+    '乘' -> "*",
+    '除' -> "/"
   )
 
 }

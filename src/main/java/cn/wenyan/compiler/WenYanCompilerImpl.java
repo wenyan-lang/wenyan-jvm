@@ -28,6 +28,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private int index = 0;
 
+    private String now;
+
     private List<Integer> nowCompiling = new ArrayList<>();
 
     private GroovyCompiler groovyCompiler;
@@ -58,6 +60,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 .put(new VariableCompileStream(this))
                 .put(new CommentCompileStream(this))
                 .put(new ControlCompileStream(this))
+                .put(new MathCompileStream(this))
                 .build();
     }
 
@@ -86,6 +89,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
         wenyans = newWenyans.toArray(new String[0]);
         while (wenyans.length != 0) {
+            now = Utils.getWenyanFromArray(wenyans);
             builder.append("\n").append(factory.compile(wenyans)[0]);
             this.clearCompiled();
         }
@@ -97,6 +101,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         List<String> list = Utils.getStrings(WenYanLib.HASH(),wenyan);
         for(String s:list){
             wenyan = wenyan.replace(s,map.get(s));
+            if(hasOne(wenyan,WenYanLib.NEW_START())&&hasOne(wenyan,WenYanLib.NEW_END())){
+                wenyan = wenyan.replace(WenYanLib.NEW_START(),WenYanLib.STRING_START())
+                        .replace(WenYanLib.NEW_END(),WenYanLib.STRING_END());
+            }
             wenyan = replaceWenYan(wenyan,map);
         }
         return wenyan;
@@ -108,10 +116,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             String hash = "{{"+count+"HASH~"+"}}";
             map.put(hash,comment);
             wenyan = wenyan.replace(comment,hash);
-            if(hasOne(wenyan,WenYanLib.NEW_START())&&hasOne(wenyan,WenYanLib.NAME_END())){
-                wenyan = wenyan.replace(WenYanLib.NEW_START(),WenYanLib.STRING_START())
-                        .replace(WenYanLib.NEW_END(),WenYanLib.STRING_END());
-            }
+
             wenyan = wenYansToHASH(wenyan,map);
         }
         return wenyan;
@@ -244,4 +249,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return stream.cast(streamMap.get(stream));
     }
 
+    public String getNow() {
+        return now;
+    }
 }

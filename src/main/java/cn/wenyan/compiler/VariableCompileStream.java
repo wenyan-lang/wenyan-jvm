@@ -10,6 +10,8 @@ import java.util.function.Function;
 
 public class VariableCompileStream extends CompileStream{
 
+    private String nowName;
+
     private Map<String,String> varMap = new HashMap<>();
 
     private long varIndex = 0;
@@ -19,6 +21,11 @@ public class VariableCompileStream extends CompileStream{
     }
     // 具之一句，而翻万里者也。
     public CompileResult compile(String[] wenyans) {
+
+        if(wenyans[0].equals("書之")){
+            Utils.inputWenyan(compiler,0);
+            return new CompileResult("println("+nowName+")");
+        }
         if(Utils.matches(wenyans[0],WenYanLib.DEFINE_VAR())){
             String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[0]);
             Utils.inputWenyan(compiler,0);
@@ -43,14 +50,16 @@ public class VariableCompileStream extends CompileStream{
                     Utils.getString(WenYanLib.TYPE(),wenyans[0]).charAt(0)
             ));
         }
-
         if(Utils.matches(wenyans[0],WenYanLib.CHANGE())){
             Utils.inputWenyan(compiler,0);
             String beforeName = Utils.getStringFrom(WenYanLib.BEFORE_NAME(),wenyans[0],WenYanLib.NAME_START(),WenYanLib.NAME_END());
             if(Utils.matches(wenyans[1],WenYanLib.AFTER_NAME())){
                 Utils.inputWenyan(compiler,1);
-                String afterName = Utils.getStringFrom(WenYanLib.AFTER_NAME(),wenyans[1],WenYanLib.NAME_START(),WenYanLib.NAME_END());
+                String afterName = this.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[1]),false);
                 return new CompileResult(beforeName+" = "+afterName);
+            }else if(wenyans[1].equals("今其是矣")){
+                Utils.inputWenyan(compiler,1);
+                return new CompileResult(beforeName+" = "+nowName);
             }
         }
         return new CompileResult(false,wenyans);
@@ -59,7 +68,8 @@ public class VariableCompileStream extends CompileStream{
 
     //变量者乎
     //TODO
-    private String appendVar(int endIndex,String end,List<String> name, List<String> values, char type){
+    //endIndex就是结尾，为value定义后
+    public String appendVar(int endIndex,String end,List<String> name, List<String> values, char type){
         if(name.size()==0&&Utils.matches(end,WenYanLib.WRITE())){
             Utils.inputWenyan(compiler,endIndex);
             String value = values.get(0);
@@ -70,14 +80,18 @@ public class VariableCompileStream extends CompileStream{
                 String varName = getName(value,false);
                 return "println("+varName+")";
             }else{
-                varIndex++;
-                String systemName = getName(WenYanLib.NAME_START()+"ans_"+varIndex+WenYanLib.NAME_END(),true);
+                String systemName = getAnsName();
                 List<String> systemNames = new ArrayList<>();
                 systemNames.add(systemName);
                 return parseType(type, systemNames, values)+"\n" +
                         "println("+systemName+")";
             }
         }else return parseType(type, name, values);
+    }
+
+    public String getAnsName(){
+        varIndex++;
+        return getName(WenYanLib.NAME_START()+"ans_"+varIndex+WenYanLib.NAME_END(),true);
     }
 
     private String parseType(char type,List<String> name,List<String> values){
@@ -126,6 +140,7 @@ public class VariableCompileStream extends CompileStream{
         }else{
             varMap.put(name,chinese);
         }
+        nowName = name;
         return name;
     }
 
@@ -145,7 +160,7 @@ public class VariableCompileStream extends CompileStream{
 
 
     private String getVarString(boolean mustNameValue,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
-        if(mustNameValue&&name.size() == 0)throw new SyntaxException("此地无造物者");
+        if(mustNameValue&&name.size() == 0)throw new SyntaxException("此地无造物者: "+compiler.getNow());
         if(mustNameValue&&name.size()!=values.size())throw new SyntaxException("君有"+name.size()+"之变量,而吾得"+values.size()+"也，嗟乎");
         for(int i = 0;i<name.size();i++){
 
@@ -200,4 +215,7 @@ public class VariableCompileStream extends CompileStream{
         return result;
     }
 
+    public String getNowName() {
+        return nowName;
+    }
 }

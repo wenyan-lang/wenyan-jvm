@@ -83,7 +83,8 @@ public class FunctionCompileStream extends CompileStream {
                 if(Utils.matches(wenyan[i],WenYanLib.ARGS_RUN())){
                     end++;
                     Utils.inputWenyan(compiler,i);
-                    builder.append(Utils.getValue( Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[i]),stream)).append(",");
+
+                    builder.append(Utils.getValue(wenyan[i].substring(wenyan[i].indexOf("於")+1),stream)).append(",");
                 }
             }
             String result;
@@ -92,7 +93,7 @@ public class FunctionCompileStream extends CompileStream {
             }else{
                 result = builder.toString();
             }
-            String returnName = "";
+            String returnName;
             if(Utils.matches(wenyan[end+1],WenYanLib.VAR_VALUE())){
                 Utils.inputWenyan(compiler,end+1);
                 returnName = Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[end+1]),stream) +"= ";

@@ -177,7 +177,7 @@ object WenYanLib {
     DEFINE_ARG -> "[一二三四五六七八九十百千萬億零〇]+[數言爻列物]",
     DEFINE_END -> "乃行是術曰",
     RUN_FUNCTION -> "施「[\\s\\S]+」",
-    ARGS_RUN -> "於「[\\s\\S]+」",
+    ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",
     IMPORT -> "吾嘗觀「「[\\s\\S]+」」之書",
     IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義"
   )

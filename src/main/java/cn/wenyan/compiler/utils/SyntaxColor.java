@@ -28,10 +28,8 @@ public class SyntaxColor {
             wenyan = wenyan.replaceAll(WenYanLib.patterns().get(WenYanLib.FOR()).get().toString(),LogFormat.textFormat(str,Ansi.Color.BLUE)+LogFormat.fg(Ansi.Color.DEFAULT));
         }
         stringList = Utils.getStrings(WenYanLib.STRING(),wenyan);
-        List<String> getted = new ArrayList<>();
         for(String str : stringList){
             wenyan = wenyan.replaceAll(str,LogFormat.textFormat(str,Ansi.Color.GREEN)+LogFormat.fg(Ansi.Color.DEFAULT));
-            getted.add(str);
         }
         return wenyan;
     }

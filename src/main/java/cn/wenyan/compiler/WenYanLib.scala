@@ -68,7 +68,7 @@ object WenYanLib {
 
   final val NOT_SMALL_THAN : String = NOT+SMALL_THAN
 
-  final val VAL_DEF : String= NAME_START+"[\\s\\S]+"+NAME_END
+  final val VAL_DEF : String= NAME_START+"[^(「「|」」)]+"+NAME_END
 
   final val VAR_NAME_FOR : String = "var_name_for"
 
@@ -87,6 +87,8 @@ object WenYanLib {
   final val MATH_APPEND : String = "math_append"
 
   final val WHILE : String = "while"
+
+  final val AND_OR : String = "and_or"
 
   final val IT_CHANGE : String = "今其是矣"
 
@@ -139,7 +141,8 @@ object WenYanLib {
     ELSE -> "若非",
     MATH_START -> "[加減乘除]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)[以於]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)",
     MOD -> "所餘幾何",
-    IT_CHANGE -> IT_CHANGE
+    IT_CHANGE -> IT_CHANGE,
+    AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎"
   )
 
 
@@ -155,7 +158,8 @@ object WenYanLib {
     HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}"),
     FOR -> Pattern.compile("[一二三四五六七八九十百十千萬億]+"),
     VAR_NAME_FOR -> Pattern.compile(VAL_DEF),
-    SPLIT_MATH ->Pattern.compile("[以於]")
+    SPLIT_MATH ->Pattern.compile("[以於]"),
+    AND_OR -> Pattern.compile("(有陽|無陰)")
   )
 
 

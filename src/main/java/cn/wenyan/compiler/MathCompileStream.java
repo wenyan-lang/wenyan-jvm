@@ -2,6 +2,8 @@ package cn.wenyan.compiler;
 
 import cn.wenyan.compiler.utils.Utils;
 
+import java.util.List;
+
 public class MathCompileStream extends CompileStream {
 
 
@@ -41,6 +43,16 @@ public class MathCompileStream extends CompileStream {
             }
 
             return new CompileResult(result);
+        }
+        if(Utils.matches(wenyan[0],WenYanLib.AND_OR())){
+            Utils.inputWenyan(compiler,0);
+            String method = Utils.getString(WenYanLib.AND_OR(),wenyan[0]);
+            List<String> strings = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),wenyan[0]);
+            if("有陽".equals(method)){
+                return new CompileResult(stream.getAnsName()+"="+stream.getName(strings.get(0),false)+"||"+stream.getName(strings.get(1),false));
+            }else if("無陰".equals(method)){
+                return new CompileResult(stream.getAnsName()+"="+stream.getName(strings.get(0),false)+"&&"+stream.getName(strings.get(1),false));
+            }
         }
         return new CompileResult(false,wenyan);
     }

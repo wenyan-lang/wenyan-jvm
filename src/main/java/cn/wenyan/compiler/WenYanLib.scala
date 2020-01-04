@@ -158,7 +158,7 @@ object WenYanLib {
     FOR -> "為是([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」)遍",
     FOR_END -> "云云",
     IF_START -> "若[\\s\\S]+者",
-    IF_END -> "也",
+    IF_END -> "[也|噫]",
     BREAK -> "乃止",
     IF_BREAK -> "若[\\s\\S]+者乃止也",
     WHILE -> "恆為是",

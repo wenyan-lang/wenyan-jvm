@@ -83,6 +83,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         Map<String,String> nowMap = new HashMap<>();
         wenyan = wenYansToHASH(wenyan,nowMap);
         wenyan = JuDouUtils.getWenYan(wenyan);
+        serverLogger.info("断句者为: ");
+        serverLogger.info(wenyan);
         wenyans = wenyan.split(WenYanLib.SPLIT());
         for(int j = 0;j<wenyans.length;j++){
             wenyans[j] = replaceWenYan(wenyans[j],nowMap).trim();

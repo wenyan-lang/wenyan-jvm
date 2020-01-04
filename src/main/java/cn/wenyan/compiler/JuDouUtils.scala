@@ -21,13 +21,13 @@ object JuDouUtils {
     }
 
     def splitWenYan(strings: String) : java.util.List[String] ={
-        var string = strings.replace(" ","")
+        val string = strings.replace(" ","")
         val list = new util.ArrayList[String]()
         var builder = new StringBuilder
         var index = 0
         while(index < string.length){
             var isAppend = false
-            var s = string(index)
+            val s = string(index)
             loop.breakable{
                 if(s.toString.equals("{")){
                     builder.append("{")

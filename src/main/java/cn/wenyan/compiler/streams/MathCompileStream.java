@@ -1,5 +1,8 @@
-package cn.wenyan.compiler;
+package cn.wenyan.compiler.streams;
 
+import cn.wenyan.compiler.CompileResult;
+import cn.wenyan.compiler.WenYanCompilerImpl;
+import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.utils.Utils;
 
 import java.util.List;
@@ -14,7 +17,7 @@ public class MathCompileStream extends CompileStream {
     @Override
     public CompileResult compile(String[] wenyan) {
         VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
-        if(Utils.matches(wenyan[0],WenYanLib.MATH_START())){
+        if(Utils.matches(wenyan[0], WenYanLib.MATH_START())){
             int index = 0;
             Utils.inputWenyan(compiler,index);
             String symbol = WenYanLib.math().get(wenyan[index].charAt(0)).get();

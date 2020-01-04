@@ -1,5 +1,8 @@
-package cn.wenyan.compiler;
+package cn.wenyan.compiler.streams;
 
+import cn.wenyan.compiler.CompileResult;
+import cn.wenyan.compiler.WenYanCompilerImpl;
+import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.utils.Utils;
 
 /**
@@ -10,7 +13,7 @@ import cn.wenyan.compiler.utils.Utils;
  * 此术数亦在运行时忽略之。
  *
  * @author MagicLu
- * @see cn.wenyan.compiler.CompileStream
+ * @see CompileStream
  */
 public class CommentCompileStream extends CompileStream {
 
@@ -26,7 +29,7 @@ public class CommentCompileStream extends CompileStream {
      */
     @Override
     public CompileResult compile(String[] wenyan) {
-        if(Utils.matches(wenyan[0],WenYanLib.COMMENT())){
+        if(Utils.matches(wenyan[0], WenYanLib.COMMENT())){
             Utils.inputWenyan(compiler,0);
             Utils.inputWenyan(compiler,1);
             return new CompileResult("/*"+Utils.getStringFrom(WenYanLib.COMMENT(),wenyan[1],WenYanLib.STRING_START(),WenYanLib.STRING_END())+"*/");

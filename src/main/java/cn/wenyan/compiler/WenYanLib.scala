@@ -68,9 +68,11 @@ object WenYanLib {
 
   final val NOT_SMALL_THAN : String = NOT+SMALL_THAN
 
-  final val VAL_DEF : String= NAME_START+"[^(「「|」」)]+"+NAME_END
+  final val VAL_DEF : String= NAME_START+"[^(「「|」」|「|」)]+"+NAME_END
 
   final val VAR_NAME_FOR : String = "var_name_for"
+
+  final val FOR_EACH : String = "for_each"
 
   final val MOD : String = "mod"
 
@@ -92,11 +94,33 @@ object WenYanLib {
 
   final val IT_CHANGE : String = "今其是矣"
 
-  final val TRUE = "陽"
+  final val TRUE : String = "陽"
 
-  final val FALSE = "陰"
+  final val FALSE : String = "陰"
 
+  final val FUNCTION : String="function"
 
+  final val NO_ARGS : String = "no_args"
+
+  final val RETURN : String = "return"
+
+  final val FUNCTION_END : String = "function_end"
+
+  final val ARGS : String = "args"
+
+  final val MUST : String = "must"
+
+  final val DEFINE_ARG : String = "define_arg"
+
+  final val DEFINE_END : String = "define_end"
+
+  final val RUN_FUNCTION : String = "run_function"
+
+  final val ARGS_RUN : String = "run_function_args"
+
+  final val IMPORT : String = "import"
+
+  final val IMPORT_STATIC : String = "import_static"
   val prefixs = Map[Char,Int](
     '十' -> 10,
     '百' -> 100,
@@ -122,7 +146,7 @@ object WenYanLib {
 
 
   val syntaxs = Map[String,String](
-    DEFINE_VAR -> "吾有[一二三四五六七八九十百十千萬億零〇]+[數言爻列物]",
+    DEFINE_VAR -> "吾有",
     VAR_NAME -> "曰[\\s\\S]+",
     VAR_VALUE -> ("名之(曰"+VAL_DEF+")+"),
     VAR_GET_NAME -> ("曰"+VAL_DEF),
@@ -142,7 +166,20 @@ object WenYanLib {
     MATH_START -> "[加減乘除]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)[以於]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)",
     MOD -> "所餘幾何",
     IT_CHANGE -> IT_CHANGE,
-    AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎"
+    AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎",
+    FOR_EACH -> "凡「[\\s\\S]+」中之「[\\s\\S]+」",
+    FUNCTION -> "一術",
+    NO_ARGS -> "是術曰",
+    RETURN -> "乃得[\\s\\S]+",
+    FUNCTION_END -> "是謂「[\\s\\S]+」之術也",
+    ARGS -> "欲行是術",
+    MUST -> "必先得",
+    DEFINE_ARG -> "[一二三四五六七八九十百千萬億零〇]+[數言爻列物]",
+    DEFINE_END -> "乃行是術曰",
+    RUN_FUNCTION -> "施「[\\s\\S]+」",
+    ARGS_RUN -> "於「[\\s\\S]+」",
+    IMPORT -> "吾嘗觀「「[\\s\\S]+」」之書",
+    IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義"
   )
 
 
@@ -159,7 +196,7 @@ object WenYanLib {
     FOR -> Pattern.compile("[一二三四五六七八九十百十千萬億]+"),
     VAR_NAME_FOR -> Pattern.compile(VAL_DEF),
     SPLIT_MATH ->Pattern.compile("[以於]"),
-    AND_OR -> Pattern.compile("(有陽|無陰)")
+    AND_OR -> Pattern.compile("(有陽|無陰)"),
   )
 
 

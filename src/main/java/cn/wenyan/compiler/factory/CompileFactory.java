@@ -1,6 +1,8 @@
-package cn.wenyan.compiler;
+package cn.wenyan.compiler.factory;
 
+import cn.wenyan.compiler.CompileResult;
 import cn.wenyan.compiler.exceptions.SyntaxException;
+import cn.wenyan.compiler.streams.CompileStream;
 import cn.wenyan.compiler.utils.Utils;
 
 import java.util.List;

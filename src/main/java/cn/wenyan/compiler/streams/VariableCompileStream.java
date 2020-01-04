@@ -1,5 +1,9 @@
-package cn.wenyan.compiler;
+package cn.wenyan.compiler.streams;
 
+import cn.wenyan.compiler.CompileResult;
+import cn.wenyan.compiler.utils.PinYinUtils;
+import cn.wenyan.compiler.WenYanCompilerImpl;
+import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.utils.ScalaUtils;
 import cn.wenyan.compiler.utils.Utils;
@@ -16,7 +20,7 @@ public class VariableCompileStream extends CompileStream{
 
     private long varIndex = 0;
 
-    VariableCompileStream(WenYanCompilerImpl compiler){
+    public VariableCompileStream(WenYanCompilerImpl compiler){
         super(compiler);
     }
     // 具之一句，而翻万里者也。
@@ -26,17 +30,21 @@ public class VariableCompileStream extends CompileStream{
             Utils.inputWenyan(compiler,0);
             return new CompileResult("println("+nowName+")");
         }
-        if(Utils.matches(wenyans[0],WenYanLib.DEFINE_VAR())){
-            String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[0]);
+        if(Utils.matches(wenyans[0], WenYanLib.DEFINE_VAR())){
             Utils.inputWenyan(compiler,0);
-            long number = getNumber(wuYiYan);
-            return new CompileResult(appendVar(
-                    (int)number+1,wenyans[(int)number+1],
-                    getNames(number,wenyans),
-                    getValues(number,wenyans),
-                    Utils.getString(WenYanLib.TYPE(),wenyans[0]).charAt(0)
+            if(Utils.matches(wenyans[1],WenYanLib.DEFINE_ARG())){
+                Utils.inputWenyan(compiler,1);
+                String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[1]);
+                long number = getNumber(wuYiYan)+1;
+                return new CompileResult(appendVar(
+                        (int)number+1,wenyans[(int)number+1],
+                        getNames(number,wenyans),
+                        getValues(number,wenyans),
+                        Utils.getString(WenYanLib.TYPE(),wenyans[1]).charAt(0)
                 )
-            );
+                );
+            }
+
         }
         if(Utils.matches(wenyans[0],WenYanLib.SIMPLE_VAR())){
             Utils.inputWenyan(compiler,0);
@@ -101,7 +109,7 @@ public class VariableCompileStream extends CompileStream{
                 return getVarString(true,head,name,values,this::getNumber);
             case '言':
                 return getVarString(true,head,name,values,
-                        val->"'"+val.substring(val.indexOf(WenYanLib.STRING_START())+2,val.lastIndexOf(WenYanLib.STRING_END()))+"'");
+                        val->getString(val));
             case '爻':
                 return getVarString(true,head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':
@@ -111,6 +119,10 @@ public class VariableCompileStream extends CompileStream{
             default:
                 throw new SyntaxException("此'"+type+"'为何物邪?");
         }
+    }
+
+    public String getString(String val){
+        return "'"+val.substring(val.indexOf(WenYanLib.STRING_START())+2,val.lastIndexOf(WenYanLib.STRING_END()))+"'";
     }
 
     private List<String> getNames(long number,String[] wenyans){
@@ -127,6 +139,7 @@ public class VariableCompileStream extends CompileStream{
 
     public String getName(String name,boolean define){
         String chinese = name.substring(name.indexOf(WenYanLib.NAME_START()) + 1, name.lastIndexOf(WenYanLib.NAME_END()));
+        //if(!define&&varMap.get(chinese) == null) throw new SyntaxException("此變量非定義也:"+name+" 於 「「 "+compiler.getNow()+" 」」");
         if(varMap.containsValue(chinese)){
             if(define)
                 throw new SyntaxException("物之名且唯一也: "+chinese);

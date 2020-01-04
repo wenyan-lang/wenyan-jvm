@@ -1,4 +1,7 @@
-package cn.wenyan.compiler;
+package cn.wenyan.compiler.streams;
+
+import cn.wenyan.compiler.CompileResult;
+import cn.wenyan.compiler.WenYanCompilerImpl;
 
 public abstract class CompileStream {
 

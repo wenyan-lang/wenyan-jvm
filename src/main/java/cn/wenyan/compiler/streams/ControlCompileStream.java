@@ -1,7 +1,12 @@
-package cn.wenyan.compiler;
+package cn.wenyan.compiler.streams;
 
+import cn.wenyan.compiler.CompileResult;
+import cn.wenyan.compiler.WenYanCompilerImpl;
+import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.utils.Utils;
+
+import java.util.List;
 
 import static cn.wenyan.compiler.utils.Utils.getValue;
 
@@ -17,14 +22,15 @@ public class ControlCompileStream extends CompileStream {
 
     @Override
     public CompileResult compile(String[] wenyan) {
-        if(Utils.matches(wenyan[0],WenYanLib.FOR())){
+        VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
+        if(Utils.matches(wenyan[0], WenYanLib.FOR())){
             Utils.inputWenyan(compiler,0);
             String str = Utils.getString(WenYanLib.FOR(),wenyan[0]);
             if(str != null) {
-                str = compiler.getStream(VariableCompileStream.class).getNumber(str)+"";
+                str = stream.getNumber(str)+"";
             }else{
                 String var = Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[0]);
-                str = compiler.getStream(VariableCompileStream.class).getName(var,false);
+                str = stream.getName(var,false);
 
             }
             index++;
@@ -59,6 +65,11 @@ public class ControlCompileStream extends CompileStream {
         if(Utils.matches(wenyan[0],WenYanLib.BREAK())){
             Utils.inputWenyan(compiler,0);
             return new CompileResult("break");
+        }
+        if(Utils.matches(wenyan[0],WenYanLib.FOR_EACH())){
+            Utils.inputWenyan(compiler,0);
+            List<String> names = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),wenyan[0]);
+            return new CompileResult("for("+stream.getName(names.get(0),false)+" in "+stream.getName(names.get(1),false)+"){");
         }
         return new CompileResult(false,wenyan);
     }

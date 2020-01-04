@@ -1,6 +1,6 @@
 package cn.wenyan.compiler.utils;
 
-import cn.wenyan.compiler.VariableCompileStream;
+import cn.wenyan.compiler.streams.VariableCompileStream;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
 
@@ -57,9 +57,11 @@ public class Utils {
 
     public static String getValue(String number, VariableCompileStream stream){
         if(number.equals("其"))return stream.getNowName();
-        if(number.startsWith(WenYanLib.NAME_START())&&number.endsWith(WenYanLib.NAME_END())){
+        if(number.startsWith(WenYanLib.STRING_START())&&number.endsWith(WenYanLib.STRING_END())){
+            return stream.getString(number);
+        }else if(number.startsWith(WenYanLib.NAME_START())&&number.endsWith(WenYanLib.NAME_END())){
             return stream.getName(number,false);
-        }else{
+        }else {
             return stream.getNumber(number)+"";
         }
     }

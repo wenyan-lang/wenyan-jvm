@@ -4,8 +4,12 @@ package cn.wenyan.compiler;
 import cn.wenyan.compiler.command.CommandHandler;
 import cn.wenyan.compiler.command.CompilerConfig;
 import cn.wenyan.compiler.exceptions.SyntaxException;
+import cn.wenyan.compiler.factory.CompileFactory;
+import cn.wenyan.compiler.factory.StreamBuilder;
 import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
+import cn.wenyan.compiler.streams.*;
+import cn.wenyan.compiler.utils.JuDouUtils;
 import cn.wenyan.compiler.utils.Utils;
 import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
@@ -15,6 +19,8 @@ import org.fusesource.jansi.AnsiConsole;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import static cn.wenyan.compiler.log.LogFormat.fg;
 
 
 /**
@@ -55,12 +61,13 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         this.handler = new CommandHandler(this);
         this.supportPinyin = supportPinyin;
         if(File.separator.equals("\\")) AnsiConsole.systemInstall();
-        this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+LogFormat.fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
+        this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+ fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
         this.factory = new StreamBuilder()
                 .put(new VariableCompileStream(this))
                 .put(new CommentCompileStream(this))
                 .put(new ControlCompileStream(this))
                 .put(new MathCompileStream(this))
+                .put(new FunctionCompileStream(this))
                 .build();
     }
 
@@ -73,8 +80,25 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return compile(wenyan);
     }
     public String compile(String wenyan){
+        try{
+            StringBuilder builder = new StringBuilder();
+            wenyans = base(wenyan);
+            while (wenyans.length != 0) {
+                now = Utils.getWenyanFromArray(wenyans);
+                builder.append("\n").append(factory.compile(wenyans)[0]);
+                this.clearCompiled();
+            }
+            return builder.toString();
+        }catch (Exception e){
+            String message = LogFormat.textFormat("[Syntax Error] "+e.getMessage(), Ansi.Color.RED)+fg(Ansi.Color.DEFAULT);
+            this.serverLogger.error(message,e);
+            return message;
+        }
+    }
+
+    private String[] base(String wenyan){
         index ++;
-        StringBuilder builder = new StringBuilder();
+
         serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
         //暂时草率的实现这个符号
         if(Utils.getStrings(WenYanLib.HASH(),wenyan).size()!=0){
@@ -89,14 +113,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         for(int j = 0;j<wenyans.length;j++){
             wenyans[j] = replaceWenYan(wenyans[j],nowMap).trim();
         }
-        List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
-        wenyans = newWenyans.toArray(new String[0]);
-        while (wenyans.length != 0) {
-            now = Utils.getWenyanFromArray(wenyans);
-            builder.append("\n").append(factory.compile(wenyans)[0]);
-            this.clearCompiled();
-        }
-        return builder.toString();
+        return new ArrayList<>(Arrays.asList(wenyans)).toArray(new String[0]);
     }
 
 
@@ -138,7 +155,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     public Object runDirectly(boolean out,String... wenyanString){
         serverLogger.info("---------------运行之--------------------");
-        return shell.evaluate(getGroovyCode(out,wenyanString));
+
+        return shell.evaluate(getGroovyCode(out, wenyanString));
+
     }
 
     public void runFile(String file){
@@ -244,7 +263,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return builder.toString();
     }
 
-    boolean isSupportPinyin() {
+    public boolean isSupportPinyin() {
         return supportPinyin;
     }
 

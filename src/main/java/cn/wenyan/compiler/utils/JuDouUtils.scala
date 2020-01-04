@@ -1,8 +1,10 @@
-package cn.wenyan.compiler
+package cn.wenyan.compiler.utils
 
 import java.util
-import scala.util.control._
 
+import cn.wenyan.compiler.WenYanLib
+
+import scala.util.control.Breaks
 
 /**
  * 实现断句
@@ -32,6 +34,15 @@ object JuDouUtils {
                 if(s.toString.equals("{")){
                     builder.append("{")
                     while (!builder.endsWith("}}")){
+                        index+=1
+                        builder.append(string(index))
+                    }
+                    isAppend = true
+                }
+
+                if(s.toString.equals(WenYanLib.NAME_START)){
+                    builder.append(WenYanLib.NAME_START)
+                    while (!builder.endsWith(WenYanLib.NAME_END)){
                         index+=1
                         builder.append(string(index))
                     }

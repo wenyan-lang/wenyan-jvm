@@ -119,7 +119,20 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
 
-    private String replaceWenYan(String wenyan,Map<String,String> map){
+
+
+    private boolean hasOne(String s,String thing){
+        return s.indexOf(thing) == s.lastIndexOf(thing);
+    }
+    //多句编译
+    public Class<?> compileToClass(String className,String... wenyanString){
+        Class<?> clz = groovyCompiler.compile(getGroovyCode(false,wenyanString),className);
+
+        this.serverLogger.info("得类为:"+clz.getName());
+        return clz;
+    }
+
+    public String replaceWenYan(String wenyan,Map<String,String> map){
         List<String> list = Utils.getStrings(WenYanLib.HASH(),wenyan);
         for(String s:list){
             wenyan = wenyan.replace(s,map.get(s));
@@ -131,7 +144,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
         return wenyan;
     }
-    private String wenYansToHASH(String wenyan,Map<String,String> map){
+    public String wenYansToHASH(String wenyan,Map<String,String> map){
         List<String> comments = Utils.getStrings(WenYanLib.STRING(),wenyan);
         for(String comment:comments){
             int count = index++;
@@ -142,17 +155,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             wenyan = wenYansToHASH(wenyan,map);
         }
         return wenyan;
-    }
-
-    private boolean hasOne(String s,String thing){
-        return s.indexOf(thing) == s.lastIndexOf(thing);
-    }
-    //多句编译
-    public Class<?> compileToClass(String className,String... wenyanString){
-        Class<?> clz = groovyCompiler.compile(getGroovyCode(false,wenyanString),className);
-
-        this.serverLogger.info("得类为:"+clz.getName());
-        return clz;
     }
 
     public Object runDirectly(boolean out,String... wenyanString){
@@ -231,7 +233,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         for(String code:wenyanString){
             String compile = compile(code);
             if(outInConsole){
-                serverLogger.info(SyntaxColor.getSyntaxColor(code)+" => "+ compile);
+                serverLogger.info(SyntaxColor.getSyntaxColor(code,this)+" => "+ compile);
             }
             groovyCode.append(compile).append("\n");
         }

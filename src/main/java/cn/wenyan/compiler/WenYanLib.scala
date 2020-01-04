@@ -88,6 +88,8 @@ object WenYanLib {
 
   final val WHILE : String = "while"
 
+  final val IT_CHANGE : String = "今其是矣"
+
   final val TRUE = "陽"
 
   final val FALSE = "陰"
@@ -127,7 +129,7 @@ object WenYanLib {
     CHANGE -> ("昔之"+VAL_DEF+"者"),
     AFTER_NAME -> ("今"+VAL_DEF+"是也"),
     COMMENT -> "[疏注批]曰",
-    FOR -> "為是([一二三四五六七八九十百十千萬億零〇]+|「[\\s\\S]+」)遍",
+    FOR -> "為是([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」)遍",
     FOR_END -> "云云",
     IF_START -> "若[\\s\\S]+者",
     IF_END -> "也",
@@ -135,8 +137,9 @@ object WenYanLib {
     IF_BREAK -> "若[\\s\\S]+者乃止也",
     WHILE -> "恆為是",
     ELSE -> "若非",
-    MATH_START -> "[加减乘除]([一二三四五六七八九十百十千萬億零〇]+|「[\\s\\S]+」|其)[以於]([一二三四五六七八九十百十千萬億零〇]+|「[\\s\\S]+」|其)",
-    MOD -> "所餘幾何"
+    MATH_START -> "[加減乘除]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)[以於]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)",
+    MOD -> "所餘幾何",
+    IT_CHANGE -> IT_CHANGE
   )
 
 
@@ -169,7 +172,7 @@ object WenYanLib {
 
   val math = Map[Char,String](
     '加' -> "+",
-    '减' -> "-",
+    '減' -> "-",
     '乘' -> "*",
     '除' -> "/"
   )

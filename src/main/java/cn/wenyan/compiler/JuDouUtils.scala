@@ -1,0 +1,77 @@
+package cn.wenyan.compiler
+
+import java.util
+import scala.util.control._
+
+
+/**
+ * 实现断句
+ */
+
+object JuDouUtils {
+
+    val loop = Breaks
+
+    def getWenYan(string: String) : String ={
+        val builder = new StringBuilder
+        splitWenYan(string).stream().forEach(
+            x=>if(!x.equals(""))builder.append(x).append("。")
+        )
+        builder.toString()
+    }
+
+    def splitWenYan(strings: String) : java.util.List[String] ={
+        var string = strings.replace(" ","")
+        val list = new util.ArrayList[String]()
+        var builder = new StringBuilder
+        var index = 0
+        while(index < string.length){
+            var isAppend = false
+            var s = string(index)
+            loop.breakable{
+                if(s.toString.equals("{")){
+                    builder.append("{")
+                    while (!builder.endsWith("}}")){
+                        index+=1
+                        builder.append(string(index))
+                    }
+                    isAppend = true
+                }
+
+                if(isNumber(s)){
+                    builder.append(s)
+                    while (isNumber(string(index+1))){
+                        index+=1
+                        builder.append(string(index))
+                    }
+                    isAppend = true
+                }
+
+
+                if(s.toString.matches(WenYanLib.SPLIT)){
+                    list.add(builder.toString())
+                    builder = new StringBuilder
+                    loop.break
+                }
+
+                if(!isAppend)builder.append(s)
+                if(getString(builder.toString())){
+                    list.add(builder.toString())
+                    builder = new StringBuilder
+                }
+            }
+            index+=1
+        }
+        list
+    }
+
+    private def isNumber(s:Char):Boolean = WenYanLib.numbers.contains(s)||WenYanLib.prefixs.contains(s);
+
+    private def getString(target: String): Boolean ={
+        val patterns = WenYanLib.syntaxs
+        for(p <- patterns){
+            if(target.matches(p._2))return true
+        }
+        false
+    }
+}

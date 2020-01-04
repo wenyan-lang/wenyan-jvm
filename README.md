@@ -17,10 +17,14 @@ You can run WenYan Programming Language in JVM.
 
 java版的编译器不支持没有标点分割，若有有意者，可以实现它
 
-> 与javascript版本的区别
+> 与javascript/python版本的区别
 
-1. 语法相对严格一些，由于实现的原理不同所导致。比如标点分割的要求
-2. 编译为groovy语言
+1. 这里支持了编译为groovy
+2. 对于标点要求已经解决，您可以写成
+```
+有數七名之曰「甲」有數五名之曰「乙」有數零名之曰「艾」
+```
+
 > 目前状态
 
 目前还在开发过程

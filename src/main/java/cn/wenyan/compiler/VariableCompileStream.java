@@ -57,7 +57,7 @@ public class VariableCompileStream extends CompileStream{
                 Utils.inputWenyan(compiler,1);
                 String afterName = this.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[1]),false);
                 return new CompileResult(beforeName+" = "+afterName);
-            }else if(wenyans[1].equals("今其是矣")){
+            }else if(wenyans[1].equals(WenYanLib.IT_CHANGE())){
                 Utils.inputWenyan(compiler,1);
                 return new CompileResult(beforeName+" = "+nowName);
             }

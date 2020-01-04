@@ -56,6 +56,10 @@ public class ControlCompileStream extends CompileStream {
             Utils.inputWenyan(compiler,0);
             return new CompileResult("}else{");
         }
+        if(Utils.matches(wenyan[0],WenYanLib.BREAK())){
+            Utils.inputWenyan(compiler,0);
+            return new CompileResult("break");
+        }
         return new CompileResult(false,wenyan);
     }
 

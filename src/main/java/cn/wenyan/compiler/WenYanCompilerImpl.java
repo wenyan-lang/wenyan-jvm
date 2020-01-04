@@ -11,6 +11,7 @@ import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.streams.*;
 import cn.wenyan.compiler.utils.JuDouUtils;
 import cn.wenyan.compiler.utils.Utils;
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
 import org.fusesource.jansi.Ansi;
@@ -158,6 +159,15 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
         return shell.evaluate(getGroovyCode(out, wenyanString));
 
+    }
+
+    /**
+     * 将简体转换为中文
+     * @param wenyan
+     * @return
+     */
+    public String getTraditionalChinese(String wenyan){
+        return ZhConverterUtil.convertToTraditional(wenyan);
     }
 
     public void runFile(String file){

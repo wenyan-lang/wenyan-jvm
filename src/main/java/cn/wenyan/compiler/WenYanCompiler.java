@@ -12,4 +12,6 @@ public interface WenYanCompiler extends Compile,RunCode{
     void runFile(File file) throws IOException;
 
     String dispatch(String wenyan);
+
+    String getTraditionalChinese(String wenyan);
 }

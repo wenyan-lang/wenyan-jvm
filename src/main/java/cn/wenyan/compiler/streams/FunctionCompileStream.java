@@ -34,6 +34,7 @@ public class FunctionCompileStream extends CompileStream {
                         StringBuilder args = new StringBuilder();
                         Utils.inputWenyan(compiler,count-1);
                         if (Utils.matches(wenyan[count++],WenYanLib.MUST())){
+
                             Utils.inputWenyan(compiler,count-1);
                             for(int i = count;i<wenyan.length;i++){
                                 if(Utils.matches(wenyan[i],WenYanLib.DEFINE_ARG())){

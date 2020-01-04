@@ -10,6 +10,7 @@ import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.streams.*;
 import cn.wenyan.compiler.utils.JuDouUtils;
+import cn.wenyan.compiler.utils.SyntaxColor;
 import cn.wenyan.compiler.utils.Utils;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import groovy.lang.GroovyShell;
@@ -230,7 +231,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         for(String code:wenyanString){
             String compile = compile(code);
             if(outInConsole){
-                serverLogger.info(code+" => "+ compile);
+                serverLogger.info(SyntaxColor.getSyntaxColor(code)+" => "+ compile);
             }
             groovyCode.append(compile).append("\n");
         }

@@ -121,6 +121,8 @@ object WenYanLib {
   final val IMPORT : String = "import"
 
   final val IMPORT_STATIC : String = "import_static"
+
+  final val YI : String = "yi"
   val prefixs = Map[Char,Int](
     '十' -> 10,
     '百' -> 100,
@@ -179,7 +181,8 @@ object WenYanLib {
     RUN_FUNCTION -> "施「[\\s\\S]+」",
     ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",
     IMPORT -> "吾嘗觀「「[\\s\\S]+」」之書",
-    IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義"
+    IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",
+    YI -> "噫"
   )
 
 

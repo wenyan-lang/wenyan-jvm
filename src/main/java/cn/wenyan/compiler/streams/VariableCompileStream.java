@@ -30,6 +30,9 @@ public class VariableCompileStream extends CompileStream{
             Utils.inputWenyan(compiler,0);
             return new CompileResult("println("+nowName+")");
         }
+        if(Utils.matches(wenyans[0],WenYanLib.YI())){
+            return new CompileResult("");
+        }
         if(Utils.matches(wenyans[0], WenYanLib.DEFINE_VAR())){
             Utils.inputWenyan(compiler,0);
             if(Utils.matches(wenyans[1],WenYanLib.DEFINE_ARG())){

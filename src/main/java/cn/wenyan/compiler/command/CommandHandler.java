@@ -21,6 +21,9 @@ public class CommandHandler {
     public static void registerCommands(){
         compileCommand.put("-p",new PinYinCommand());
         compileCommand.put("-c",new CompileFileCommand());
+        compileCommand.put("-o",new OutFileCommand());
+        compileCommand.put("-l",new CompileLibCommand());
+        compileCommand.put("-r",new RunCommand());
     }
 
     public CommandHandler(WenYanCompilerImpl compiler){
@@ -34,11 +37,17 @@ public class CommandHandler {
             Command command = compileCommand.get(args[index]);
             if(command!=null){
                 int len = command.getArgsLength();
-                for(int j = 0;j<len;j++,index++){
-                    if(compileCommand.get(args[index])!=null){
-                        throw new CommandException("指令之参数不足也");
+                if(len == -1){
+                    for(int j = 0;index<args.length;j++,index++){
+                        arr.add(args[index]);
                     }
-                    arr.add(args[index]);
+                }else {
+                    for (int j = 0; j < len; j++, index++) {
+                        if (compileCommand.get(args[index]) != null) {
+                            throw new CommandException("指令之参数不足也");
+                        }
+                        arr.add(args[index]);
+                    }
                 }
                 command.execute(arr.toArray(new String[0]),compilerConfig);
             }else{

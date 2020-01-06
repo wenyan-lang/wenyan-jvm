@@ -2,15 +2,15 @@ package cn.wenyan.compiler.command;
 
 public class CompilerConfig {
 
-    private boolean supportPinYin;
+    private boolean supportPinYin;//
 
-    private String[] compileFiles;
+    private String[] compileFiles;//
 
-    private String[] compileLib;
+    private String[] compileLib;//
 
-    private String outFile;
+    private String outFile;//
 
-    private boolean run;
+    private boolean run;//
 
     private String[] runArgs;
 

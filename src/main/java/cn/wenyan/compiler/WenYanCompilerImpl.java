@@ -20,6 +20,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import static cn.wenyan.compiler.log.LogFormat.fg;
@@ -54,7 +55,12 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private Map<Class<? extends CompileStream>,CompileStream> streamMap;
 
-    //此为天地之造物者，乃于此乎。
+    //***************************************************//
+    //*********************构造器*************************//
+    //**************此为天地之造物者，乃于此乎。**************//
+    //**************************************************//
+
+
     public WenYanCompilerImpl(boolean supportPinyin){
         this.streamMap = new HashMap<>();
         this.groovyCompiler = new GroovyCompiler();
@@ -73,67 +79,113 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 .build();
     }
 
+    //***************************************************//
+    //*********************编译主方法**********************//
+    //**************************************************//
+
     @Override
     public int compile(String... args) {
         return handler.executeCommand(args);
     }
 
+
+    //***************************************************//
+    //***********************PUBLIC**********************//
+    //**************************************************//
+
     public String dispatch(String wenyan){
         return compile(wenyan);
     }
-    public String compile(String wenyan){
-        try{
-            StringBuilder builder = new StringBuilder();
-            wenyans = base(wenyan);
-            while (wenyans.length != 0) {
-                now = Utils.getWenyanFromArray(wenyans);
-                builder.append("\n").append(factory.compile(wenyans)[0]);
-                this.clearCompiled();
-            }
-            return builder.toString();
-        }catch (Exception e){
-            String message = LogFormat.textFormat("[Syntax Error] "+e.getMessage(), Ansi.Color.RED)+fg(Ansi.Color.DEFAULT);
-            this.serverLogger.error(message,e);
-            return message;
-        }
-    }
 
-    private String[] base(String wenyan){
-        index ++;
-
-        serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
-        //暂时草率的实现这个符号
-        if(Utils.getStrings(WenYanLib.HASH(),wenyan).size()!=0){
-            throw new SyntaxException("此占位符不可存在: {{$numberHASH~}}");
-        }
-        Map<String,String> nowMap = new HashMap<>();
-        wenyan = wenYansToHASH(wenyan,nowMap);
-        wenyan = nameToHASH(wenyan,nowMap);
-        wenyan = JuDouUtils.getWenYan(wenyan);
-        serverLogger.info("断句者为: ");
-        serverLogger.info(wenyan);
-        wenyans = wenyan.split(WenYanLib.SPLIT());
-        for(int j = 0;j<wenyans.length;j++){
-            wenyans[j] = replaceName(wenyans[j],nowMap);
-        }
-        for(int j = 0;j<wenyans.length;j++){
-            wenyans[j] = replaceWenYan(wenyans[j],nowMap).trim();
-        }
-        return new ArrayList<>(Arrays.asList(wenyans)).toArray(new String[0]);
-    }
-
-
-
-
-    private boolean hasOne(String s,String thing){
-        return s.indexOf(thing) == s.lastIndexOf(thing);
-    }
-    //多句编译
     public Class<?> compileToClass(String className,String... wenyanString){
         Class<?> clz = groovyCompiler.compile(getGroovyCode(false,wenyanString),className);
 
         this.serverLogger.info("得类为:"+clz.getName());
         return clz;
+    }
+
+    public Class<?> compileToClass(String... wenyanString){
+        return groovyCompiler.compile(getGroovyCode(false,wenyanString));
+    }
+
+
+
+    public Object runDirectly(boolean out,String... wenyanString){
+        serverLogger.info("---------------运行之--------------------");
+
+        return shell.evaluate(getGroovyCode(out, wenyanString));
+
+    }
+
+    public String getTraditionalChinese(String wenyan){
+        return ZhConverterUtil.convertToTraditional(wenyan);
+    }
+
+    public void runFile(String file){
+        try {
+            runFile(new File(file));
+        }catch (IOException e){
+            serverLogger.info("",e);
+        }
+    }
+
+    public void runFile(String file,String[] args){
+
+    }
+
+    public void runFile(File file) throws IOException {
+
+        runDirectly(false,getGroovyCodeByFile(file));
+    }
+
+
+    //---------------不建议作为API使用-----------------------//
+
+    //***************************************************//
+    //***********************内部调用*********************//
+    //**************************************************//
+
+    public int init(CompilerConfig compilerConfig){
+        try {
+            supportPinyin = compilerConfig.isSupportPinYin();
+            String[] files = compilerConfig.getCompileFiles();
+            String[] libs = compilerConfig.getCompileLib();
+            String[] args = compilerConfig.getRunArgs();
+            boolean isRun = compilerConfig.isRun();
+            String out = compilerConfig.getOutFile();
+            if (out == null || files == null) {
+                serverLogger.info("必要: 输出文件路径和编译文件信息");
+                return 1;
+            }
+            for (String file : files) {
+                compileOut(new File(file), new File(out));
+            }
+
+            if(isRun){
+                //加载libs
+                for(String lib : libs){
+                    if(lib.endsWith(".jar")){
+                      shell.getClassLoader().addURL(new File(lib).toURI().toURL());
+                    }else runFile(lib);
+                }
+                for(String file:files){
+                    Class<?> clz = compileToClass(FileUtils.readLines(new File(file),System.getProperty("file.codings")).toArray(new String[0]));
+                    Method method = Utils.getMethod(clz,"main",String[].class);
+                    if(method!=null){
+                        try {
+                            method.invoke(null, clz,args);
+                        }catch (Exception e){
+                            serverLogger.error(e.getMessage());
+                        }
+                    }else {
+                        runFile(file);
+                    }
+                }
+            }
+        }catch (IOException e){
+            serverLogger.error("",e);
+        }
+        return 0;
     }
 
     public String replaceWenYan(String wenyan,Map<String,String> map){
@@ -157,6 +209,23 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             wenyan = wenyan.replace(s,map.get(s));
         }
         return wenyan;
+    }
+
+    public String compile(String wenyan){
+        try{
+            StringBuilder builder = new StringBuilder();
+            wenyans = base(wenyan);
+            while (wenyans.length != 0) {
+                now = Utils.getWenyanFromArray(wenyans);
+                builder.append("\n").append(factory.compile(wenyans)[0]);
+                this.clearCompiled();
+            }
+            return builder.toString();
+        }catch (Exception e){
+            String message = LogFormat.textFormat("[Syntax Error] "+e.getMessage(), Ansi.Color.RED)+fg(Ansi.Color.DEFAULT);
+            this.serverLogger.error(message,e);
+            return message;
+        }
     }
 
     public String nameToHASH(String wenyan,Map<String,String> map){
@@ -184,64 +253,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return wenyan;
     }
 
-    public Object runDirectly(boolean out,String... wenyanString){
-        serverLogger.info("---------------运行之--------------------");
-
-        return shell.evaluate(getGroovyCode(out, wenyanString));
-
-    }
-
-    /**
-     * 将简体转换为中文
-     * @param wenyan
-     * @return
-     */
-    public String getTraditionalChinese(String wenyan){
-        return ZhConverterUtil.convertToTraditional(wenyan);
-    }
-
-    public void runFile(String file){
-        try {
-            runFile(new File(file));
-        }catch (IOException e){
-            serverLogger.info("",e);
-        }
-    }
-
-    public int init(CompilerConfig compilerConfig){
-        try {
-            supportPinyin = compilerConfig.isSupportPinYin();
-            String[] files = compilerConfig.getCompileFiles();
-            String[] libs = compilerConfig.getCompileLib();
-            boolean isRun = compilerConfig.isRun();
-            String[] runArgs = compilerConfig.getRunArgs();
-            String out = compilerConfig.getOutFile();
-            if (out == null || files == null) {
-                serverLogger.info("必要: 输出文件路径和编译文件信息");
-                return 1;
-            }
-            for (String file : files) {
-                compileOut(new File(file), new File(out));
-            }
-        }catch (IOException e){
-            serverLogger.error("",e);
-        }
-        return 0;
-    }
-
-    private String compileOut(File file,File outDir) throws IOException{
-        String code = getGroovyCodeByFile(file);
-        FileUtils.write(new File(outDir,file.getName()),code,System.getProperty("file.coding"));
-        return code;
-    }
-
-    public void runFile(File file) throws IOException {
-
-        runDirectly(false,getGroovyCodeByFile(file));
-    }
-
-
-
     public int compileToGroovy(File file,boolean outInConsole,String... wenyanString){
         try {
             String code = getGroovyCode(outInConsole,wenyanString);
@@ -253,22 +264,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             return 1;
         }
     }
-
-
-    private String getGroovyCode(boolean outInConsole,String... wenyanString){
-        StringBuilder groovyCode = new StringBuilder();
-        for(String code:wenyanString){
-            String compile = compile(code);
-            if(outInConsole){
-                serverLogger.info(SyntaxColor.getSyntaxColor(code,this)+" => "+ compile);
-            }
-            groovyCode.append(compile).append("\n");
-        }
-        this.serverLogger.info("此事成也，得之");
-        System.out.println("----------------------------WenYanConsole--------------------------------");
-        return groovyCode.toString();
-    }
-
 
     public Map<Class<? extends CompileStream>, CompileStream> getStreamMap() {
         return streamMap;
@@ -291,18 +286,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         nowCompiling.clear();
     }
 
-
-
-
-    private String getGroovyCodeByFile(File wenyan) throws IOException{
-        List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
-        StringBuilder builder = new StringBuilder();
-        for(String str:list){
-            builder.append(str);
-        }
-        return builder.toString();
-    }
-
     public boolean isSupportPinyin() {
         return supportPinyin;
     }
@@ -314,4 +297,64 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     public String getNow() {
         return now;
     }
+
+
+    private String compileOut(File file,File outDir) throws IOException{
+        String code = getGroovyCodeByFile(file);
+        FileUtils.write(new File(outDir,file.getName()),code,System.getProperty("file.coding"));
+        return code;
+    }
+
+    private String getGroovyCodeByFile(File wenyan) throws IOException{
+        List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
+        StringBuilder builder = new StringBuilder();
+        for(String str:list){
+            builder.append(str);
+        }
+        return builder.toString();
+    }
+
+    private String[] base(String wenyan){
+        index ++;
+
+        serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
+        //暂时草率的实现这个符号
+        if(Utils.getStrings(WenYanLib.HASH(),wenyan).size()!=0){
+            throw new SyntaxException("此占位符不可存在: {{$numberHASH~}}");
+        }
+        Map<String,String> nowMap = new HashMap<>();
+        wenyan = wenYansToHASH(wenyan,nowMap);
+        wenyan = nameToHASH(wenyan,nowMap);
+        wenyan = JuDouUtils.getWenYan(wenyan);
+        serverLogger.info("断句者为: ");
+        serverLogger.info(wenyan);
+        wenyans = wenyan.split(WenYanLib.SPLIT());
+        for(int j = 0;j<wenyans.length;j++){
+            wenyans[j] = replaceName(wenyans[j],nowMap);
+        }
+        for(int j = 0;j<wenyans.length;j++){
+            wenyans[j] = replaceWenYan(wenyans[j],nowMap).trim();
+        }
+        return new ArrayList<>(Arrays.asList(wenyans)).toArray(new String[0]);
+    }
+
+    private boolean hasOne(String s,String thing){
+        return s.indexOf(thing) == s.lastIndexOf(thing);
+    }
+
+    private String getGroovyCode(boolean outInConsole,String... wenyanString){
+        StringBuilder groovyCode = new StringBuilder();
+        for(String code:wenyanString){
+            String compile = compile(code);
+            if(outInConsole){
+                serverLogger.info(SyntaxColor.getSyntaxColor(code,this)+" => "+ compile);
+            }
+            groovyCode.append(compile).append("\n");
+        }
+        this.serverLogger.info("此事成也，得之");
+        System.out.println("----------------------------WenYanConsole--------------------------------");
+        return groovyCode.toString();
+    }
+
+
 }

@@ -4,6 +4,7 @@ import cn.wenyan.compiler.streams.VariableCompileStream;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -53,6 +54,14 @@ public class Utils {
             builder.append(wenyan).append("。");
         }
         return builder.toString();
+    }
+
+    public static Method getMethod(Class<?> clz,String name,Class<?>... types){
+        try {
+            return clz.getDeclaredMethod(name, types);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     public static String getValue(String number, VariableCompileStream stream){

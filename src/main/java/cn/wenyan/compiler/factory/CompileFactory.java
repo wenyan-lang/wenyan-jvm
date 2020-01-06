@@ -1,9 +1,9 @@
 package cn.wenyan.compiler.factory;
 
 import cn.wenyan.compiler.CompileResult;
+import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.streams.CompileStream;
-import cn.wenyan.compiler.utils.Utils;
 
 import java.util.List;
 
@@ -11,9 +11,11 @@ public class CompileFactory {
 
     private List<CompileStream> streamList;
 
+    private WenYanCompilerImpl compiler;
 
-    public CompileFactory(List<CompileStream> streams){
-        streamList = streams;
+    public CompileFactory(List<CompileStream> streams,WenYanCompilerImpl compiler){
+        this.compiler = compiler;
+        this.streamList = streams;
     }
 
     public String[] compile(String[] wenyan){
@@ -24,13 +26,8 @@ public class CompileFactory {
             }
             wenyan = result.getResult();
         }
-        String prefix = "\n无是术也:";
-        StringBuilder w = new StringBuilder(Utils.getWenyanFromArray(wenyan)).append("\n");
-        int len = w.length()+prefix.length();
-        for(int i = 0;i<len;i++){
-            w.append(" ");
-        }
-        w.append("^");
-        throw new SyntaxException(prefix+ w);
+        compiler.clearCompiled();
+        String prefix = "\n于此言有误: ";
+        throw new SyntaxException(prefix+ wenyan[0]+"\n");
     }
 }

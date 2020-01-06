@@ -64,7 +64,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         this.supportPinyin = supportPinyin;
         if(File.separator.equals("\\")) AnsiConsole.systemInstall();
         this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+ fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
-        this.factory = new StreamBuilder()
+        this.factory = new StreamBuilder(this)
                 .put(new VariableCompileStream(this))
                 .put(new CommentCompileStream(this))
                 .put(new ControlCompileStream(this))
@@ -251,7 +251,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return nowCompiling;
     }
 
-    private void clearCompiled(){
+    public void clearCompiled(){
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
         for(int index:nowCompiling){
             newWenyans.set(index,null);

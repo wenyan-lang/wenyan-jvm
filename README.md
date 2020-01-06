@@ -133,9 +133,6 @@ java版的编译器不支持没有标点分割，若有有意者，可以实现�
 
 `-r` 值: 运行时的参数 注意: 这个选项必须放在最后面,会将文件运行
 
-wy4j.sh 参数/wy4j.bat 参数
-
-
 ```java
     package cn.wenyan.compiler;
     

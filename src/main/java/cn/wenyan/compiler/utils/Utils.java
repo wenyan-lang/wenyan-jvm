@@ -41,6 +41,11 @@ public class Utils {
 
     public static String getStringFrom(String patternId,String thing,String start,String end){
         String value = getString(patternId,thing);
+        if(patternId.equals(WenYanLib.STRING())||patternId.equals(WenYanLib.COMMENT())){
+            if(value == null){
+                value = getString(WenYanLib.ONLY_STRING(),thing);
+            }
+        }
         return value.substring(value.indexOf(start)+start.length(),value.lastIndexOf(end));
     }
 

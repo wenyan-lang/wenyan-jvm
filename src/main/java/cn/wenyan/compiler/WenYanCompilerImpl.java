@@ -239,8 +239,18 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             String hash = "{{"+count+"HASH~"+"}}";
             map.put(hash,comment);
             wenyan = wenyan.replace(comment,hash);
-
             wenyan = wenYansToHASH(wenyan,map);
+        }
+        return wenyan;
+    }
+
+    public String replaceOnlyString(String wenyan,Map<String,String> map){
+        List<String> comments = Utils.getStrings(WenYanLib.ONLY_STRING(),wenyan);
+        for(String comment:comments){
+            int count = index++;
+            String hash = "{{"+count+"HASH~"+"}}";
+            map.put(hash,comment);
+            wenyan = wenyan.replace(comment,hash);
         }
         return wenyan;
     }
@@ -317,6 +327,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
         Map<String,String> nowMap = new HashMap<>();
         wenyan = wenYansToHASH(wenyan,nowMap);
+        wenyan = replaceOnlyString(wenyan,nowMap);
         wenyan = nameToHASH(wenyan,nowMap);
         wenyan = JuDouUtils.getWenYan(wenyan);
         serverLogger.info("断句者为: ");
@@ -330,6 +341,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
         return new ArrayList<>(Arrays.asList(wenyans)).toArray(new String[0]);
     }
+
+    //防止注释对编译的影响
+
 
     private boolean hasOne(String s,String thing){
         return s.indexOf(thing) == s.lastIndexOf(thing);

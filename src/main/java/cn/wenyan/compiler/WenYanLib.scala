@@ -124,6 +124,8 @@ object WenYanLib {
 
   final val HASH_NAME : String = "hash_name"
   final val YI : String = "yi"
+
+  final val ONLY_STRING : String = "only_string"
   val prefixs = Map[Char,Int](
     '十' -> 10,
     '百' -> 100,
@@ -149,14 +151,14 @@ object WenYanLib {
 
 
   val syntaxs = Map[String,String](
-    DEFINE_VAR -> "吾有",
+    DEFINE_VAR -> "(吾有|今有)",
     VAR_NAME -> "曰[\\s\\S]+",
     VAR_VALUE -> ("名之(曰"+VAL_DEF+")+"),
     VAR_GET_NAME -> ("曰"+VAL_DEF),
     WRITE -> "書之",
     SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
     CHANGE -> ("昔之"+VAL_DEF+"者"),
-    AFTER_NAME -> ("今"+VAL_DEF+"是也"),
+    AFTER_NAME -> ("今"+VAL_DEF+"是[也矣]"),
     COMMENT -> "[疏注批]曰",
     FOR -> "為是([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」)遍",
     FOR_END -> "云云",
@@ -201,7 +203,8 @@ object WenYanLib {
     VAR_NAME_FOR -> Pattern.compile(VAL_DEF),
     SPLIT_MATH ->Pattern.compile("[以於]"),
     AND_OR -> Pattern.compile("(有陽|無陰)"),
-    HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」")
+    HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),
+    ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)")
 
   )
 

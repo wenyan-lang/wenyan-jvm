@@ -301,7 +301,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private String compileOut(File file,File outDir) throws IOException{
         String code = getGroovyCodeByFile(file);
-        FileUtils.write(new File(outDir,file.getName()),code,System.getProperty("file.coding"));
+        FileUtils.write(new File(outDir,file.getName()+".groovy"),code,System.getProperty("file.coding"));
         return code;
     }
 
@@ -311,13 +311,13 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         for(String str:list){
             builder.append(str);
         }
-        return builder.toString();
+        return compile(builder.toString());
     }
 
     private String[] base(String wenyan){
         index ++;
 
-        serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
+        serverLogger.info("吾译之于 "+index+" 行也,其为'"+SyntaxColor.getSyntaxColor(wenyan,this)+"'者乎");
         //暂时草率的实现这个符号
         if(Utils.getStrings(WenYanLib.HASH(),wenyan).size()!=0){
             throw new SyntaxException("此占位符不可存在: {{$numberHASH~}}");

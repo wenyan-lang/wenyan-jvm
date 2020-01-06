@@ -42,10 +42,8 @@ public class CommandHandler {
                         arr.add(args[index]);
                     }
                 }else {
-                    for (int j = 0; j < len; j++, index++) {
-                        if (compileCommand.get(args[index]) != null) {
-                            throw new CommandException("指令之参数不足也");
-                        }
+                    for (int j = 0; j < len; j++) {
+                        index++;
                         arr.add(args[index]);
                     }
                 }

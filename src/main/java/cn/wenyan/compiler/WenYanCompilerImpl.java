@@ -108,10 +108,14 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
         Map<String,String> nowMap = new HashMap<>();
         wenyan = wenYansToHASH(wenyan,nowMap);
+        wenyan = nameToHASH(wenyan,nowMap);
         wenyan = JuDouUtils.getWenYan(wenyan);
         serverLogger.info("断句者为: ");
         serverLogger.info(wenyan);
         wenyans = wenyan.split(WenYanLib.SPLIT());
+        for(int j = 0;j<wenyans.length;j++){
+            wenyans[j] = replaceName(wenyans[j],nowMap);
+        }
         for(int j = 0;j<wenyans.length;j++){
             wenyans[j] = replaceWenYan(wenyans[j],nowMap).trim();
         }
@@ -135,15 +139,38 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     public String replaceWenYan(String wenyan,Map<String,String> map){
         List<String> list = Utils.getStrings(WenYanLib.HASH(),wenyan);
         for(String s:list){
-            wenyan = wenyan.replace(s,map.get(s));
-            if(hasOne(wenyan,WenYanLib.NEW_START())&&hasOne(wenyan,WenYanLib.NEW_END())){
-                wenyan = wenyan.replace(WenYanLib.NEW_START(),WenYanLib.STRING_START())
-                        .replace(WenYanLib.NEW_END(),WenYanLib.STRING_END());
+            if(map.get(s)!=null) {
+                wenyan = wenyan.replace(s, map.get(s));
+                if (hasOne(wenyan, WenYanLib.NEW_START()) && hasOne(wenyan, WenYanLib.NEW_END())) {
+                    wenyan = wenyan.replace(WenYanLib.NEW_START(), WenYanLib.STRING_START())
+                            .replace(WenYanLib.NEW_END(), WenYanLib.STRING_END());
+                }
+                wenyan = replaceWenYan(wenyan, map);
             }
-            wenyan = replaceWenYan(wenyan,map);
         }
         return wenyan;
     }
+
+    public String replaceName(String wenyan,Map<String,String> map){
+        List<String> list = Utils.getStrings(WenYanLib.HASH_NAME(),wenyan);
+        for(String s : list){
+            wenyan = wenyan.replace(s,map.get(s));
+        }
+        return wenyan;
+    }
+
+    public String nameToHASH(String wenyan,Map<String,String> map){
+        List<String> list = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),wenyan);
+        for(String s : list){
+            int count = index++;
+            String hash = "「{{"+count+"HASH~"+"}}」";
+            wenyan = wenyan.replace(s,hash);
+            map.put(hash,s);
+        }
+        return wenyan;
+    }
+
+
     public String wenYansToHASH(String wenyan,Map<String,String> map){
         List<String> comments = Utils.getStrings(WenYanLib.STRING(),wenyan);
         for(String comment:comments){

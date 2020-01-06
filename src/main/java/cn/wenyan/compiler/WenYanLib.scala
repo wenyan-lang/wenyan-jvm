@@ -68,7 +68,7 @@ object WenYanLib {
 
   final val NOT_SMALL_THAN : String = NOT+SMALL_THAN
 
-  final val VAL_DEF : String= NAME_START+"[^(「「|」」|「|」)]+"+NAME_END
+  final val VAL_DEF : String= NAME_START+"[^(「|」)]+"+NAME_END
 
   final val VAR_NAME_FOR : String = "var_name_for"
 
@@ -122,6 +122,7 @@ object WenYanLib {
 
   final val IMPORT_STATIC : String = "import_static"
 
+  final val HASH_NAME : String = "hash_name"
   final val YI : String = "yi"
   val prefixs = Map[Char,Int](
     '十' -> 10,
@@ -200,6 +201,8 @@ object WenYanLib {
     VAR_NAME_FOR -> Pattern.compile(VAL_DEF),
     SPLIT_MATH ->Pattern.compile("[以於]"),
     AND_OR -> Pattern.compile("(有陽|無陰)"),
+    HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」")
+
   )
 
 

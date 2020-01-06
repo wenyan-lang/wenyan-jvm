@@ -327,7 +327,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 chars[i] = ' ';
             }
         }
-        return "";
+        return new String(chars);
     }
 
     private String[] base(String wenyan){

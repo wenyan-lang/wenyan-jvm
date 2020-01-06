@@ -4,6 +4,7 @@ import cn.wenyan.compiler.CompileResult;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.streams.CompileStream;
+import cn.wenyan.compiler.utils.Assert;
 
 import java.util.List;
 
@@ -27,7 +28,6 @@ public class CompileFactory {
             wenyan = result.getResult();
         }
         compiler.clearCompiled();
-        String prefix = "\n于此言有误: ";
-        throw new SyntaxException(prefix+ wenyan[0]+"\n");
+        return Assert.syntaxError(wenyan[0]);
     }
 }

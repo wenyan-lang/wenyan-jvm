@@ -4,6 +4,7 @@ import cn.wenyan.compiler.CompileResult;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.exceptions.SyntaxException;
+import cn.wenyan.compiler.utils.Assert;
 import cn.wenyan.compiler.utils.Utils;
 
 import java.util.List;
@@ -69,10 +70,7 @@ public class ControlCompileStream extends CompileStream {
         if(Utils.matches(wenyan[0],WenYanLib.FOR_EACH())){
             Utils.inputWenyan(compiler,0);
             List<String> names = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),wenyan[0]);
-            String type = stream.getNameType().get(names.get(1));
-            if(type.equals("爻")||type.equals("數")){
-                throw new SyntaxException("昔"+names.get(1)+"为"+type+"者，不能迭代之: "+wenyan[0]);
-            }
+            Assert.typeCheck(stream,names.get(1),wenyan[0],"爻","數");
             return new CompileResult("for("+stream.getName(names.get(0),false)+" in "+stream.getName(names.get(1),false)+"){");
         }
         return new CompileResult(false,wenyan);

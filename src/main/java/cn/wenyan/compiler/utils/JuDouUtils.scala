@@ -40,6 +40,7 @@ object JuDouUtils {
                     isAppend = true
                 }
 
+
                 if(s.toString.equals(WenYanLib.NAME_START)){
                     builder.append(WenYanLib.NAME_START)
                     while (!builder.endsWith(WenYanLib.NAME_END)){

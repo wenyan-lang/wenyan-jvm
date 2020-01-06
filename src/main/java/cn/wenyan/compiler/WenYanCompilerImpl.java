@@ -312,9 +312,22 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
         StringBuilder builder = new StringBuilder();
         for(String str:list){
-            builder.append(str);
+            String strNoT = trimWenYan(str);
+            builder.append(strNoT);
         }
         return builder.toString();
+    }
+
+    private String trimWenYan(String s){
+        char[] chars = s.toCharArray();
+        for(int i = 0;i<chars.length;i++){
+            if(chars[i]!='\t'){
+                break;
+            }else{
+                chars[i] = ' ';
+            }
+        }
+        return "";
     }
 
     private String[] base(String wenyan){

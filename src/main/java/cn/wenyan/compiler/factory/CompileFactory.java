@@ -28,6 +28,6 @@ public class CompileFactory {
             wenyan = result.getResult();
         }
         compiler.clearCompiled();
-        return Assert.syntaxError(wenyan[0]);
+        return Assert.syntaxError("Line: "+(compiler.getIndexCode()+1)+": "+wenyan[0]);
     }
 }

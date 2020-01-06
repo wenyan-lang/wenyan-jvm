@@ -42,6 +42,9 @@ public class VariableCompileStream extends CompileStream{
                 Utils.inputWenyan(compiler,1);
                 String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[1]);
                 long number = getNumber(wuYiYan)+1;
+                if(Utils.matches(wenyans[2],WenYanLib.VAR_VALUE())){
+                    number = 1;
+                }
                 return new CompileResult(appendVar(
                         (int)number+1,wenyans[(int)number+1],
                         getNames(number,wenyans),
@@ -132,10 +135,11 @@ public class VariableCompileStream extends CompileStream{
     }
 
     private List<String> getNames(long number,String[] wenyans){
+        int index = (int)number+1;
         List<String> names = new ArrayList<>();
-        if(Utils.matches(wenyans[(int)number+1],WenYanLib.VAR_VALUE())){
-            String[] ns = Utils.getString(WenYanLib.VAR_GET_NAME(),wenyans[(int)number+1]).split("曰");
-            Utils.inputWenyan(compiler,(int)number+1);
+        if(Utils.matches(wenyans[index],WenYanLib.VAR_VALUE())){
+            String[] ns = Utils.getString(WenYanLib.VAR_GET_NAME(),wenyans[index]).split("曰");
+            Utils.inputWenyan(compiler,index);
             for(int i = 1;i<ns.length;i++) {
                 names.add(getName(ns[i],true));
             }
@@ -184,11 +188,19 @@ public class VariableCompileStream extends CompileStream{
 
 
     private String getVarString(char type,boolean mustNameValue,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
-        if(mustNameValue&&name.size() == 0)throw new SyntaxException("此地无造物者: "+compiler.getNow());
-        if(mustNameValue&&name.size()!=values.size())throw new SyntaxException("君有"+name.size()+"之变量,而吾得"+values.size()+"也，嗟乎");
         for(int i = 0;i<name.size();i++){
             nameType.put(name.get(i),""+type);
-            String def = name.get(i) + "=" + (i >= values.size()?"":setValue.apply(values.get(i)));
+            String def;
+            if (i >= values.size()){
+                def = name.get(i) + "=" +WenYanLib.define().get(type).get();
+            }else if(
+                    values.get(i).startsWith("「")&&values.get(i).endsWith("」")
+            ){
+                def = name.get(i)+ " = " +Utils.getValue(values.get(i),this);
+            }else{
+                def = name.get(i) + "=" + setValue.apply(values.get(i));
+            }
+
             if(name.size() == 1||i == name.size()-1) {
                 head.append(def);
             }else {

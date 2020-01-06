@@ -123,9 +123,18 @@ object WenYanLib {
   final val IMPORT_STATIC : String = "import_static"
 
   final val HASH_NAME : String = "hash_name"
+
   final val YI : String = "yi"
 
+  final val ADD : String = "add"
+
+  final val VAL : String = "value"
+
   final val ONLY_STRING : String = "only_string"
+
+  final val VAL_1 : String = "val_1"
+
+  final val GET : String = "get"
   val prefixs = Map[Char,Int](
     '十' -> 10,
     '百' -> 100,
@@ -168,7 +177,7 @@ object WenYanLib {
     IF_BREAK -> "若[\\s\\S]+者乃止也",
     WHILE -> "恆為是",
     ELSE -> "若非",
-    MATH_START -> "[加減乘除]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)[以於]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)",
+    MATH_START -> "[加減乘除]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其|「「[\\s\\S]+」」)[以於]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)",
     MOD -> "所餘幾何",
     IT_CHANGE -> IT_CHANGE,
     AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎",
@@ -185,7 +194,10 @@ object WenYanLib {
     ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",
     IMPORT -> "吾嘗觀「「[\\s\\S]+」」之書",
     IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",
-    YI -> "噫"
+    YI -> "噫",
+    ADD -> "充「[\\s\\S]+」",
+    VAL -> "以(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)",
+    GET -> "夫「[\\s\\S]」之(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)。"
   )
 
 
@@ -204,7 +216,8 @@ object WenYanLib {
     SPLIT_MATH ->Pattern.compile("[以於]"),
     AND_OR -> Pattern.compile("(有陽|無陰)"),
     HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),
-    ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)")
+    ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)"),
+    VAL -> Pattern.compile("(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)")
 
   )
 
@@ -225,6 +238,14 @@ object WenYanLib {
     '減' -> "-",
     '乘' -> "*",
     '除' -> "/"
+  )
+
+  val define = Map[Char,String](
+    '數' -> "0",
+  '言' -> "''",
+  '爻' -> "false",
+  '列' -> "[]",
+  '物' -> "null",
   )
 
 }

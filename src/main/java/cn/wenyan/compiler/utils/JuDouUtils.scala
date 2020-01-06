@@ -22,6 +22,21 @@ object JuDouUtils {
         builder.toString()
     }
 
+    def getLine(string: String) : String ={
+        var index =0
+        val builder = new StringBuilder("\n")
+
+        splitWenYan(string).stream().forEach(
+            x=> {
+                if(!x.equals("")){
+                    builder.append(index).append(": ").append(x).append("\n")
+                    index+=1
+                }
+            }
+        )
+        builder.toString()
+    }
+
     def splitWenYan(strings: String) : java.util.List[String] ={
         val string = strings.replace(" ","")
         val list = new util.ArrayList[String]()

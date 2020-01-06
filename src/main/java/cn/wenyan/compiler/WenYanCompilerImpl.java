@@ -20,7 +20,6 @@ import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import static cn.wenyan.compiler.log.LogFormat.fg;
@@ -32,6 +31,8 @@ import static cn.wenyan.compiler.log.LogFormat.fg;
  * 君用[run]之洋文可走之。吾欲将其译为java者也。
  */
 public class WenYanCompilerImpl implements WenYanCompiler {
+
+    private int indexCode;
 
     private boolean supportPinyin;
 
@@ -76,6 +77,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 .put(new ControlCompileStream(this))
                 .put(new MathCompileStream(this))
                 .put(new FunctionCompileStream(this))
+                .put(new ArrayCompileStream(this))
                 .build();
     }
 
@@ -301,8 +303,15 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return now;
     }
 
+    public int getIndexCode() {
+        return indexCode;
+    }
 
-    private File compileOut(File file,File outDir) throws IOException{
+    public void setIndexCode() {
+        indexCode++;
+    }
+
+    private File compileOut(File file, File outDir) throws IOException{
         File out = new File(outDir+File.separator+file.getName().split("\\.")[0]+".groovy");
         compileToGroovy(out,false,getGroovyCodeByFile(file));
         return out;
@@ -344,7 +353,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         wenyan = nameToHASH(wenyan,nowMap);
         wenyan = JuDouUtils.getWenYan(wenyan);
         serverLogger.info("断句者为: ");
-        serverLogger.info(wenyan);
+        serverLogger.info(JuDouUtils.getLine(wenyan));
         wenyans = wenyan.split(WenYanLib.SPLIT());
         for(int j = 0;j<wenyans.length;j++){
             wenyans[j] = replaceName(wenyans[j],nowMap);
@@ -355,7 +364,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return new ArrayList<>(Arrays.asList(wenyans)).toArray(new String[0]);
     }
 
-    //防止注释对编译的影响
+
 
 
     private boolean hasOne(String s,String thing){
@@ -373,6 +382,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
         this.serverLogger.info("此事成也，得之");
         System.out.println("----------------------------WenYanConsole--------------------------------");
+        indexCode = 0;
         return groovyCode.toString();
     }
 

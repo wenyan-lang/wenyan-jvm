@@ -31,6 +31,7 @@ public class Utils {
     }
 
     public static void inputWenyan(WenYanCompilerImpl compiler, int wenyanIndex){
+        compiler.setIndexCode();
         compiler.getNowCompiling().add(wenyanIndex);
     }
 

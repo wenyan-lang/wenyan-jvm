@@ -152,6 +152,7 @@ public class VariableCompileStream extends CompileStream{
             Class.forName("net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination");
             name = PinYinUtils.getPingYin(chinese, compiler.isSupportPinyin());
         }catch (ClassNotFoundException e){
+            name = chinese;
         }
         if(varMap.containsKey(name)){
             varIndex++;

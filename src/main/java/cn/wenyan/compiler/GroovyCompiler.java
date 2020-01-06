@@ -1,6 +1,7 @@
 package cn.wenyan.compiler;
 
 import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyCodeSource;
 
 /**
  * groovy 编译器
@@ -35,4 +36,5 @@ public class GroovyCompiler {
         ClassLoader cl = GroovyCompiler.class.getClassLoader();
         return new GroovyClassLoader(cl);
     }
+
 }

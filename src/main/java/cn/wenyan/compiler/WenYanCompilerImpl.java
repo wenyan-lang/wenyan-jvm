@@ -134,10 +134,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
     public void runFile(File file) throws IOException {
-
         runDirectly(false,getGroovyCodeByFile(file));
     }
-
 
     //---------------不建议作为API使用-----------------------//
 
@@ -149,16 +147,17 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         try {
             supportPinyin = compilerConfig.isSupportPinYin();
             String[] files = compilerConfig.getCompileFiles();
-            String[] libs = compilerConfig.getCompileLib();
             String[] args = compilerConfig.getRunArgs();
+            String[] libs = compilerConfig.getCompileLib();
             boolean isRun = compilerConfig.isRun();
             String out = compilerConfig.getOutFile();
             if (out == null || files == null) {
                 serverLogger.info("必要: 输出文件路径和编译文件信息");
                 return 1;
             }
+            List<File> files1 = new ArrayList<>();
             for (String file : files) {
-                compileOut(new File(file), new File(out));
+                files1.add(compileOut(new File(file), new File(out)));
             }
 
             if(isRun){
@@ -170,20 +169,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                         }else runFile(lib);
                     }
                 }
-                if(files!=null) {
-                    for (String file : files) {
-                        Class<?> clz = compileToClass(FileUtils.readLines(new File(file), System.getProperty("file.codings")).toArray(new String[0]));
-                        Method method = Utils.getMethod(clz, "main", String[].class);
-                        if (method != null) {
-                            try {
-                                method.invoke(null, clz, args);
-                            } catch (Exception e) {
-                                serverLogger.error(e.getMessage());
-                            }
-                        } else {
-                            runFile(file);
-                        }
-                    }
+
+                for (File file : files1) {
+                    shell.run(file,args);
                 }
             }
         }catch (IOException e){
@@ -269,6 +257,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
     }
 
+
     public Map<Class<? extends CompileStream>, CompileStream> getStreamMap() {
         return streamMap;
     }
@@ -303,8 +292,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
 
-    private void compileOut(File file,File outDir) throws IOException{
-        compileToGroovy(new File(outDir+File.separator+file.getName().split("\\.")[0]+".groovy"),false,getGroovyCodeByFile(file));
+    private File compileOut(File file,File outDir) throws IOException{
+        File out = new File(outDir+File.separator+file.getName().split("\\.")[0]+".groovy");
+        compileToGroovy(out,false,getGroovyCodeByFile(file));
+        return out;
     }
 
     private String getGroovyCodeByFile(File wenyan) throws IOException{

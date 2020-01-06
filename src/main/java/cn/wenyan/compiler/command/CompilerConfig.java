@@ -12,7 +12,7 @@ public class CompilerConfig {
 
     private boolean run;//
 
-    private String[] runArgs;
+    private String[] runArgs = new String[0];
 
     public boolean isSupportPinYin() {
         return supportPinYin;

@@ -14,6 +14,9 @@ import java.util.function.Function;
 
 public class VariableCompileStream extends CompileStream{
 
+    private Map<String,String> nameType = new HashMap<>();
+
+
     private String nowName;
 
     private Map<String,String> varMap = new HashMap<>();
@@ -109,14 +112,14 @@ public class VariableCompileStream extends CompileStream{
         StringBuilder head = new StringBuilder("def ");
         switch (type){
             case '數':
-                return getVarString(true,head,name,values,this::getNumber);
+                return getVarString(type,true,head,name,values,this::getNumber);
             case '言':
-                return getVarString(true,head,name,values,
-                        val->getString(val));
+                return getVarString(type,true,head,name,values,
+                       this::getString);
             case '爻':
-                return getVarString(true,head,name,values,val->WenYanLib.bool().get(val).get());
+                return getVarString(type,true,head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':
-                return getVarString(false,head,name,values,val->"[]");
+                return getVarString(type,false,head,name,values,val->"[]");
             case '物':
                 return "";
             default:
@@ -180,11 +183,11 @@ public class VariableCompileStream extends CompileStream{
 
 
 
-    private String getVarString(boolean mustNameValue,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
+    private String getVarString(char type,boolean mustNameValue,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
         if(mustNameValue&&name.size() == 0)throw new SyntaxException("此地无造物者: "+compiler.getNow());
         if(mustNameValue&&name.size()!=values.size())throw new SyntaxException("君有"+name.size()+"之变量,而吾得"+values.size()+"也，嗟乎");
         for(int i = 0;i<name.size();i++){
-
+            nameType.put(name.get(i),""+type);
             String def = name.get(i) + "=" + (i >= values.size()?"":setValue.apply(values.get(i)));
             if(name.size() == 1||i == name.size()-1) {
                 head.append(def);
@@ -238,5 +241,9 @@ public class VariableCompileStream extends CompileStream{
 
     public String getNowName() {
         return nowName;
+    }
+
+    public Map<String, String> getNameType() {
+        return nameType;
     }
 }

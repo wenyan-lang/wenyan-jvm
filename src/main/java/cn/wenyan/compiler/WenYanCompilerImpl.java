@@ -163,22 +163,26 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
             if(isRun){
                 //加载libs
-                for(String lib : libs){
-                    if(lib.endsWith(".jar")){
-                      shell.getClassLoader().addURL(new File(lib).toURI().toURL());
-                    }else runFile(lib);
+                if(libs!=null){
+                    for(String lib : libs){
+                        if(lib.endsWith(".jar")){
+                            shell.getClassLoader().addURL(new File(lib).toURI().toURL());
+                        }else runFile(lib);
+                    }
                 }
-                for(String file:files){
-                    Class<?> clz = compileToClass(FileUtils.readLines(new File(file),System.getProperty("file.codings")).toArray(new String[0]));
-                    Method method = Utils.getMethod(clz,"main",String[].class);
-                    if(method!=null){
-                        try {
-                            method.invoke(null, clz,args);
-                        }catch (Exception e){
-                            serverLogger.error(e.getMessage());
+                if(files!=null) {
+                    for (String file : files) {
+                        Class<?> clz = compileToClass(FileUtils.readLines(new File(file), System.getProperty("file.codings")).toArray(new String[0]));
+                        Method method = Utils.getMethod(clz, "main", String[].class);
+                        if (method != null) {
+                            try {
+                                method.invoke(null, clz, args);
+                            } catch (Exception e) {
+                                serverLogger.error(e.getMessage());
+                            }
+                        } else {
+                            runFile(file);
                         }
-                    }else {
-                        runFile(file);
                     }
                 }
             }
@@ -299,10 +303,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
 
-    private String compileOut(File file,File outDir) throws IOException{
-        String code = getGroovyCodeByFile(file);
-        FileUtils.write(new File(outDir,file.getName()+".groovy"),code,System.getProperty("file.coding"));
-        return code;
+    private void compileOut(File file,File outDir) throws IOException{
+        compileToGroovy(new File(outDir+File.separator+file.getName().split("\\.")[0]+".groovy"),false,getGroovyCodeByFile(file));
     }
 
     private String getGroovyCodeByFile(File wenyan) throws IOException{
@@ -311,7 +313,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         for(String str:list){
             builder.append(str);
         }
-        return compile(builder.toString());
+        return builder.toString();
     }
 
     private String[] base(String wenyan){

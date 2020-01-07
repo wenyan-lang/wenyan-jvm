@@ -86,6 +86,12 @@ You can run WenYan Programming Language in JVM.
 |`有數五十。名之曰「大衍」。`|`def dayan = 50`|
 |`昔之「甲」者。今「大衍」是也。`|`jia = dayan`|
 
+##### 数组
+| wenyan | groovy|
+|---|---|
+|`吾有一列。名之曰「甲」。充「甲」以四。以二。`|	`def a = []; a.add(1);`|
+|`夫「甲」之一。`	| `a[0]`|
+|`夫「玫瑰」之「「名」」`|	`rose["name"]`|
 ##### 註釋
 | wenyan | groovy |
 |---|---|

@@ -251,7 +251,7 @@ object WenYanLib {
     '數' -> "0",
     '言' -> "''",
     '爻' -> "false",
-    '列' -> "[]",
+    '列' -> "new JSArray()",
     '物' -> "null",
   )
 

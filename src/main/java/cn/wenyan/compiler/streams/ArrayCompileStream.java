@@ -23,8 +23,7 @@ public class ArrayCompileStream extends CompileStream {
             int i = 1;
             while (Utils.matches(wenyan[i],WenYanLib.VAL())){
                 Utils.inputWenyan(compiler,i);
-                if(!wenyan[i].equals(""))
-                    result.append(name).append(".add(").append(Utils.getValue(wenyan[i].substring(wenyan[i].indexOf(wenyan[i].charAt(0))+1),stream)).append(")").append("\n");
+                result.append(name).append(".put(").append("null").append(",").append(Utils.getValue(wenyan[i].substring(wenyan[i].indexOf(wenyan[i].charAt(0)) + 1), stream)).append(")").append("\n");
                 i++;
             }
             return new CompileResult(result.toString());

@@ -6,6 +6,7 @@ import cn.wenyan.compiler.command.CompilerConfig;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.factory.CompileFactory;
 import cn.wenyan.compiler.factory.StreamBuilder;
+import cn.wenyan.compiler.lib.JSArray;
 import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.streams.*;
@@ -211,6 +212,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         try{
             StringBuilder builder = new StringBuilder();
             wenyans = base(wenyan);
+            builder.append("import "+ JSArray.class.getName());
             while (wenyans.length != 0) {
                 now = Utils.getWenyanFromArray(wenyans);
                 String result = factory.compile(wenyans)[0];

@@ -15,6 +15,7 @@ import java.util.function.Function;
 public class VariableCompileStream extends CompileStream{
 
 
+    private Map<String,Integer> arrIndex = new HashMap<>();
 
 
     private String nowName;
@@ -96,6 +97,9 @@ public class VariableCompileStream extends CompileStream{
                 end = "}";
             }
         }
+        if(wenyans[2].equals("是矣")||wenyans[2].equals("矣")){
+            Utils.inputWenyan(compiler,2);
+        }
         if(Utils.matches(changeCmd,WenYanLib.AFTER_NAME())){
             Utils.inputWenyan(compiler,1);
             int i = changeCmd.lastIndexOf("是")==-1?changeCmd.lastIndexOf("也")==-1?changeCmd.lastIndexOf("矣"):changeCmd.lastIndexOf("也"):changeCmd.lastIndexOf("是");
@@ -133,14 +137,14 @@ public class VariableCompileStream extends CompileStream{
         StringBuilder head = new StringBuilder("def ");
         switch (type){
             case '數':
-                return getVarString(type,true,head,name,values,this::getNumber);
+                return getVarString(type,head,name,values,this::getNumber);
             case '言':
-                return getVarString(type,true,head,name,values,
+                return getVarString(type,head,name,values,
                        this::getString);
             case '爻':
-                return getVarString(type,true,head,name,values,val->WenYanLib.bool().get(val).get());
+                return getVarString(type,head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':
-                return getVarString(type,false,head,name,values,val->"[]");
+                return getVarString(type,head,name,values,val->WenYanLib.define().get(type));
             case '物':
                 return "";
             default:
@@ -204,7 +208,7 @@ public class VariableCompileStream extends CompileStream{
 
 
 
-    private String getVarString(char type,boolean mustNameValue,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
+    private String getVarString(char type,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
         for(int i = 0;i<name.size();i++){
             String def;
             if (i >= values.size()){
@@ -216,6 +220,7 @@ public class VariableCompileStream extends CompileStream{
             }else{
                 def = name.get(i) + "=" + setValue.apply(values.get(i));
             }
+
 
             if(name.size() == 1||i == name.size()-1) {
                 head.append(def);
@@ -236,7 +241,8 @@ public class VariableCompileStream extends CompileStream{
         }else{
             indexNumber = "("+index+".class == java.lang.Integer.class?"+index+"-1:"+index+")";
         }
-        return name+"["+indexNumber+"]";
+        //(律.class == HashMap.Node.class?律.getValue():律)
+        return "("+name+".class==HashMap.Node.class?"+name+".getValue():"+name+")["+indexNumber+"]";
     }
 
     public long getNumber(String wenyanNumber){
@@ -278,6 +284,10 @@ public class VariableCompileStream extends CompileStream{
             }
         }
         return result;
+    }
+
+    public Map<String, Integer> getArrIndex() {
+        return arrIndex;
     }
 
     public String getNowName() {

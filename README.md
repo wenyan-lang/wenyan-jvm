@@ -70,7 +70,7 @@ You can run WenYan Programming Language in JVM.
 > 目前状态
 
 1. 目前还在开发过程
-2. 已经可以运行wenyan-lang的图灵机，完成图灵完备
+2. 已经可以运行wenyan-lang的[图灵机](https://github.com/LingDong-/wenyan-lang/blob/master/examples/turing.wy)，完成图灵完备
 > 目前实现的语法
 
 ##### 變量

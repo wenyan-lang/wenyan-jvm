@@ -6,10 +6,14 @@ import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.utils.Utils;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
 
+import java.util.Arrays;
 import java.util.List;
 
 
 public class FunctionCompileStream extends CompileStream {
+
+
+    private int funcIndex = 0;
 
     public FunctionCompileStream(WenYanCompilerImpl compiler) {
         super(compiler);
@@ -28,13 +32,12 @@ public class FunctionCompileStream extends CompileStream {
                     String name = stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[2]),false);
                     if(Utils.matches(wenyan[count],WenYanLib.NO_ARGS())){
                         Utils.inputWenyan(compiler,count);
-                        return new CompileResult("def "+name+"(){");
+                        return new CompileResult(defineFunc(name));
                     }else if(Utils.matches(wenyan[count],WenYanLib.ARGS())){
                         count++;
                         StringBuilder args = new StringBuilder();
                         Utils.inputWenyan(compiler,count-1);
                         if (Utils.matches(wenyan[count++],WenYanLib.MUST())){
-
                             Utils.inputWenyan(compiler,count-1);
                             for(int i = count;i<wenyan.length;i++){
                                 if(Utils.matches(wenyan[i],WenYanLib.DEFINE_ARG())){
@@ -53,12 +56,13 @@ public class FunctionCompileStream extends CompileStream {
                                         }
                                     }
                                 }
+                                if(Utils.matches(wenyan[i],WenYanLib.DEFINE_END()))break;
                             }
                         }
                         if(Utils.matches(wenyan[count],WenYanLib.DEFINE_END())){
                             Utils.inputWenyan(compiler,count);
                             String args_str = args.toString().substring(0,args.lastIndexOf(","));
-                            return new CompileResult("def "+name+"("+args_str+"){");
+                            return new CompileResult(defineFunc(name,args_str));
                         }
 
                     }
@@ -71,6 +75,7 @@ public class FunctionCompileStream extends CompileStream {
             return new CompileResult("return "+Utils.getValue(wenyan[0].substring(wenyan[0].indexOf("得")+1),stream));
         }
         if(Utils.matches(wenyan[0],WenYanLib.FUNCTION_END())){
+            funcIndex--;
             Utils.inputWenyan(compiler,0);
             return new CompileResult("}");
         }
@@ -86,6 +91,8 @@ public class FunctionCompileStream extends CompileStream {
                     Utils.inputWenyan(compiler,i);
 
                     builder.append(Utils.getValue(wenyan[i].substring(wenyan[i].indexOf("於")+1),stream)).append(",");
+                }else{
+                    break;
                 }
             }
             String result;
@@ -95,13 +102,15 @@ public class FunctionCompileStream extends CompileStream {
                 result = builder.toString();
             }
             String returnName;
-            if(Utils.matches(wenyan[end+1],WenYanLib.VAR_VALUE())){
+            if(end+1>=wenyan.length){
+                returnName = stream.getAnsName()+"=";
+            }else if(Utils.matches(wenyan[end+1],WenYanLib.VAR_VALUE())){
                 Utils.inputWenyan(compiler,end+1);
                 returnName = Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[end+1]),stream) +"= ";
             }else{
                 returnName = stream.getAnsName()+"=";
             }
-            return new CompileResult(returnName+result+")");
+            return new CompileResult("def "+returnName+result+")");
         }
 
         if(Utils.matches(wenyan[0],WenYanLib.IMPORT())){
@@ -123,5 +132,19 @@ public class FunctionCompileStream extends CompileStream {
         }
 
         return new CompileResult(false,wenyan);
+    }
+
+    //def a(a,b){
+    //def a = {a,b ->
+    private String defineFunc(String name,String args_str){
+        funcIndex++;
+        if(funcIndex == 1)return "def "+name+"("+args_str+"){";
+        return "def "+name+" = {\n"+args_str+"->";
+    }
+
+    private String defineFunc(String name){
+        funcIndex++;
+        if(funcIndex == 1)return "def "+name+"(){";
+        return "def "+name+" = {\n";
     }
 }

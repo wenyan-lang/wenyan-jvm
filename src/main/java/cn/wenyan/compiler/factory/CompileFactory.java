@@ -6,6 +6,7 @@ import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.streams.CompileStream;
 import cn.wenyan.compiler.utils.Assert;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class CompileFactory {
@@ -28,6 +29,6 @@ public class CompileFactory {
             wenyan = result.getResult();
         }
         compiler.clearCompiled();
-        return Assert.syntaxError("Line: "+(compiler.getIndexCode()+1)+": "+wenyan[0]);
+        return Assert.syntaxError("Line: "+(compiler.getIndexCode())+": "+wenyan[0]);
     }
 }

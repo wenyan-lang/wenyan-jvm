@@ -46,6 +46,7 @@ object JuDouUtils {
             var isAppend = false
             val s = string(index)
             loop.breakable{
+
                 if(s.toString.equals("{")){
                     builder.append("{")
                     while (!builder.endsWith("}}")){
@@ -67,9 +68,11 @@ object JuDouUtils {
 
                 if(isNumber(s)){
                     builder.append(s)
-                    while (isNumber(string(index+1))){
-                        index+=1
-                        builder.append(string(index))
+                    if(index+1<strings.length){
+                        while (isNumber(string(index+1))){
+                            index+=1
+                            builder.append(string(index))
+                        }
                     }
                     isAppend = true
                 }
@@ -83,6 +86,7 @@ object JuDouUtils {
 
                 if(!isAppend)builder.append(s)
                 if(getString(builder.toString())){
+
                     list.add(builder.toString())
                     builder = new StringBuilder
                 }

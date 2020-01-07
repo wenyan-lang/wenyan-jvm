@@ -58,6 +58,8 @@ object WenYanLib {
 
   final val EQUALS : String = "等於"
 
+  final val NOT_EQUALS : String = "不"+EQUALS
+
   final val ELSE : String = "若非"
 
   final val NOT : String = "不"
@@ -135,6 +137,9 @@ object WenYanLib {
   final val VAL_1 : String = "val_1"
 
   final val GET : String = "get"
+
+  final val REPLACE_ARRAY : String = "replace_arr"
+
   val prefixs = Map[Char,Int](
     '十' -> 10,
     '百' -> 100,
@@ -167,7 +172,7 @@ object WenYanLib {
     WRITE -> "書之",
     SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
     CHANGE -> ("昔之"+VAL_DEF+"者"),
-    AFTER_NAME -> ("今"+VAL_DEF+"是[也矣]"),
+    AFTER_NAME -> ("今("+VAL_DEF+"|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})是[也矣]"),
     COMMENT -> "[疏注批]曰",
     FOR -> "為是([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」)遍",
     FOR_END -> "云云",
@@ -177,7 +182,7 @@ object WenYanLib {
     IF_BREAK -> "若[\\s\\S]+者乃止也",
     WHILE -> "恆為是",
     ELSE -> "若非",
-    MATH_START -> "[加減乘除]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其|「「[\\s\\S]+」」)[以於]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其)",
+    MATH_START -> "[加減乘除]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
     MOD -> "所餘幾何",
     IT_CHANGE -> IT_CHANGE,
     AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎",
@@ -196,8 +201,9 @@ object WenYanLib {
     IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",
     YI -> "噫",
     ADD -> "充「[\\s\\S]+」",
-    VAL -> "以(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)",
-    GET -> "夫「[\\s\\S]」之(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)。"
+    VAL -> "[以於](「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
+    GET -> "夫「[\\s\\S]+」之(「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)",
+    REPLACE_ARRAY -> ("昔之"+VAL_DEF+"之("+VAL_DEF+"|「「[\\s\\S]+」」)者"),
   )
 
 
@@ -217,8 +223,8 @@ object WenYanLib {
     AND_OR -> Pattern.compile("(有陽|無陰)"),
     HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),
     ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)"),
-    VAL -> Pattern.compile("(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)")
-
+    VAL -> Pattern.compile("(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)"),
+    GET -> Pattern.compile("「[\\s\\S]+」之(「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)")
   )
 
 
@@ -230,7 +236,8 @@ object WenYanLib {
     NOT -> "=",
     NOT_BIG_THAN -> "<=",
     NOT_SMALL_THAN -> ">=",
-    EQUALS -> "=="
+    EQUALS -> "==",
+    NOT_EQUALS -> "!="
   )
 
   val math = Map[Char,String](
@@ -242,10 +249,10 @@ object WenYanLib {
 
   val define = Map[Char,String](
     '數' -> "0",
-  '言' -> "''",
-  '爻' -> "false",
-  '列' -> "[]",
-  '物' -> "null",
+    '言' -> "''",
+    '爻' -> "false",
+    '列' -> "[]",
+    '物' -> "null",
   )
 
 }

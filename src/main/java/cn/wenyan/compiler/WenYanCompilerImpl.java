@@ -32,6 +32,8 @@ import static cn.wenyan.compiler.log.LogFormat.fg;
  */
 public class WenYanCompilerImpl implements WenYanCompiler {
 
+    private Map<String,String> nameType = new HashMap<>();
+
     private int indexCode;
 
     private boolean supportPinyin;
@@ -211,8 +213,11 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             wenyans = base(wenyan);
             while (wenyans.length != 0) {
                 now = Utils.getWenyanFromArray(wenyans);
-                builder.append("\n").append(factory.compile(wenyans)[0]);
+                String result = factory.compile(wenyans)[0];
+                builder.append("\n").append(result);
                 this.clearCompiled();
+//                serverLogger.debug(result);
+//                serverLogger.debug(now);
             }
             return builder.toString();
         }catch (Exception e){
@@ -222,7 +227,11 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
     }
 
-    public String nameToHASH(String wenyan,Map<String,String> map){
+    public ServerLogger getServerLogger() {
+        return serverLogger;
+    }
+
+    public String nameToHASH(String wenyan, Map<String,String> map){
         List<String> list = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),wenyan);
         for(String s : list){
             int count = index++;
@@ -342,7 +351,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     private String[] base(String wenyan){
         index ++;
 
-        serverLogger.info("吾译之于 "+index+" 行也,其为'"+SyntaxColor.getSyntaxColor(wenyan,this)+"'者乎");
+        serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
         //暂时草率的实现这个符号
         if(Utils.getStrings(WenYanLib.HASH(),wenyan).size()!=0){
             throw new SyntaxException("此占位符不可存在: {{$numberHASH~}}");
@@ -376,7 +385,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         for(String code:wenyanString){
             String compile = compile(code);
             if(outInConsole){
-                serverLogger.info(SyntaxColor.getSyntaxColor(code,this)+" => "+ compile);
+                serverLogger.info(code+" => "+ compile);
             }
             groovyCode.append(compile).append("\n");
         }
@@ -386,5 +395,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return groovyCode.toString();
     }
 
+    public Map<String, String> getNameType() {
+        return nameType;
+    }
 
 }

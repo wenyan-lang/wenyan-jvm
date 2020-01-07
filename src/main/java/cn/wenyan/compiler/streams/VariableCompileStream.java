@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 public class VariableCompileStream extends CompileStream{
 
-    private Map<String,String> nameType = new HashMap<>();
+
 
 
     private String nowName;
@@ -29,11 +29,18 @@ public class VariableCompileStream extends CompileStream{
     // 具之一句，而翻万里者也。
     public CompileResult compile(String[] wenyans) {
 
+        if(Utils.matches(wenyans[0],WenYanLib.VAR_VALUE())){
+            Utils.inputWenyan(compiler,0);
+            String name = Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[0]);
+            String now = nowName;
+            return new CompileResult("def "+getName(name,false)+" = "+now);
+        }
         if(wenyans[0].equals("書之")){
             Utils.inputWenyan(compiler,0);
             return new CompileResult("println("+nowName+")");
         }
         if(Utils.matches(wenyans[0],WenYanLib.YI())){
+            Utils.inputWenyan(compiler,0);
             return new CompileResult("");
         }
         if(Utils.matches(wenyans[0], WenYanLib.DEFINE_VAR())){
@@ -70,18 +77,28 @@ public class VariableCompileStream extends CompileStream{
         if(Utils.matches(wenyans[0],WenYanLib.CHANGE())){
             Utils.inputWenyan(compiler,0);
             String beforeName = Utils.getStringFrom(WenYanLib.BEFORE_NAME(),wenyans[0],WenYanLib.NAME_START(),WenYanLib.NAME_END());
-            if(Utils.matches(wenyans[1],WenYanLib.AFTER_NAME())){
-                Utils.inputWenyan(compiler,1);
-                String afterName = this.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[1]),false);
-                return new CompileResult(beforeName+" = "+afterName);
-            }else if(wenyans[1].equals(WenYanLib.IT_CHANGE())){
-                Utils.inputWenyan(compiler,1);
-                return new CompileResult(beforeName+" = "+nowName);
-            }
+            return change(beforeName,wenyans[1],wenyans);
+        }
+        if(Utils.matches(wenyans[0],WenYanLib.REPLACE_ARRAY())){
+            Utils.inputWenyan(compiler,0);
+            String get = getArray(wenyans[0].substring(wenyans[0].indexOf("昔之")+2,wenyans[0].lastIndexOf("者")),this);
+            return change(get,wenyans[1],wenyans);
         }
         return new CompileResult(false,wenyans);
     }
 
+
+    public CompileResult change(String beforeName,String changeCmd,String[] wenyans){
+        if(Utils.matches(changeCmd,WenYanLib.AFTER_NAME())){
+            Utils.inputWenyan(compiler,1);
+            String afterName = Utils.getValue(changeCmd.substring(changeCmd.indexOf("今")+1,changeCmd.lastIndexOf("是")),this);
+            return new CompileResult(beforeName+" = "+afterName);
+        }else if(changeCmd.equals(WenYanLib.IT_CHANGE())){
+            Utils.inputWenyan(compiler,1);
+            return new CompileResult(beforeName+" = "+nowName);
+        }
+        return new CompileResult(false,wenyans);
+    }
 
     //变量者乎
     //TODO
@@ -89,20 +106,13 @@ public class VariableCompileStream extends CompileStream{
     public String appendVar(int endIndex,String end,List<String> name, List<String> values, char type){
         if(name.size()==0&&Utils.matches(end,WenYanLib.WRITE())){
             Utils.inputWenyan(compiler,endIndex);
-            String value = values.get(0);
-            if(
-                    (value.startsWith(WenYanLib.NAME_START())&&value.endsWith(WenYanLib.NAME_END())
-                    &&!value.startsWith(WenYanLib.STRING_START())&&!value.endsWith(WenYanLib.STRING_END()))
-            ){
-                String varName = getName(value,false);
-                return "println("+varName+")";
-            }else{
-                String systemName = getAnsName();
-                List<String> systemNames = new ArrayList<>();
-                systemNames.add(systemName);
-                return parseType(type, systemNames, values)+"\n" +
-                        "println("+systemName+")";
+            StringBuilder builder = new StringBuilder();
+            for(String value : values){
+                builder.append(Utils.getValue(value,this)).append("+");
+
             }
+            return "println("+builder.toString().substring(0,builder.lastIndexOf("+"))+")";
+
         }else return parseType(type, name, values);
     }
 
@@ -135,14 +145,13 @@ public class VariableCompileStream extends CompileStream{
     }
 
     private List<String> getNames(long number,String[] wenyans){
-        int index = (int)number+1;
+        int index = (int)number+1;//4
         List<String> names = new ArrayList<>();
-        if(Utils.matches(wenyans[index],WenYanLib.VAR_VALUE())){
-            String[] ns = Utils.getString(WenYanLib.VAR_GET_NAME(),wenyans[index]).split("曰");
+        while (Utils.matches(wenyans[index],WenYanLib.VAR_VALUE())||Utils.matches(wenyans[index],WenYanLib.VAR_GET_NAME())){
+            String ns = Utils.getString(WenYanLib.VAR_GET_NAME(),wenyans[index]);
             Utils.inputWenyan(compiler,index);
-            for(int i = 1;i<ns.length;i++) {
-                names.add(getName(ns[i],true));
-            }
+            names.add(getName(ns.substring(ns.indexOf(ns.charAt(0))+1),true));
+            index++;
         }
         return names;
     }
@@ -152,7 +161,7 @@ public class VariableCompileStream extends CompileStream{
         //if(!define&&varMap.get(chinese) == null) throw new SyntaxException("此變量非定義也:"+name+" 於 「「 "+compiler.getNow()+" 」」");
         if(varMap.containsValue(chinese)){
             if(define)
-                throw new SyntaxException("物之名且唯一也: "+chinese);
+                compiler.getServerLogger().warning(" 物之名且唯一也: "+name);
             return varMap.get(chinese);
         }
         try {
@@ -189,7 +198,6 @@ public class VariableCompileStream extends CompileStream{
 
     private String getVarString(char type,boolean mustNameValue,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
         for(int i = 0;i<name.size();i++){
-            nameType.put(name.get(i),""+type);
             String def;
             if (i >= values.size()){
                 def = name.get(i) + "=" +WenYanLib.define().get(type).get();
@@ -208,6 +216,19 @@ public class VariableCompileStream extends CompileStream{
             }
         }
         return head.toString();
+    }
+
+    public String getArray(String get,VariableCompileStream stream){
+        String[] gets = get.split("之");
+        String name = Utils.getValue(gets[0],stream);
+        String index = Utils.getValue(gets[1],stream);
+        String indexNumber;
+        if(index.matches("[0-9]+")){
+            indexNumber = index +"-1";
+        }else{
+            indexNumber = "("+index+".class == java.lang.Integer.class?"+index+"-1:"+index+")";
+        }
+        return name+"["+indexNumber+"]";
     }
 
     public long getNumber(String wenyanNumber){
@@ -255,7 +276,4 @@ public class VariableCompileStream extends CompileStream{
         return nowName;
     }
 
-    public Map<String, String> getNameType() {
-        return nameType;
-    }
 }

@@ -359,8 +359,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         wenyan = replaceOnlyString(wenyan,nowMap);
         wenyan = nameToHASH(wenyan,nowMap);
         wenyan = JuDouUtils.getWenYan(wenyan);
-        serverLogger.info("断句者为: ");
-        serverLogger.info(JuDouUtils.getLine(wenyan));
         wenyans = wenyan.split(WenYanLib.SPLIT());
         for(int j = 0;j<wenyans.length;j++){
             wenyans[j] = replaceName(wenyans[j],nowMap);
@@ -368,6 +366,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         for(int j = 0;j<wenyans.length;j++){
             wenyans[j] = replaceWenYan(wenyans[j],nowMap).trim();
         }
+        serverLogger.info("断句者为: ");
+        serverLogger.info(JuDouUtils.getLine(wenyans));
         return new ArrayList<>(Arrays.asList(wenyans)).toArray(new String[0]);
     }
 

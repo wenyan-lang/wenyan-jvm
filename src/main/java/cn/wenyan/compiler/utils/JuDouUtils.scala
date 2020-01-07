@@ -22,11 +22,10 @@ object JuDouUtils {
         builder.toString()
     }
 
-    def getLine(string: String) : String ={
+    def getLine(string: Array[String]) : String ={
         var index =0
         val builder = new StringBuilder("\n")
-
-        splitWenYan(string).stream().forEach(
+        string.foreach(
             x=> {
                 if(!x.equals("")){
                     builder.append(index).append(": ").append(x).append("\n")

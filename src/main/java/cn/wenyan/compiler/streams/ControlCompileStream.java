@@ -15,6 +15,7 @@ public class ControlCompileStream extends CompileStream {
 
     long index = 0;
 
+    long close = 0;
 
     public ControlCompileStream(WenYanCompilerImpl compiler) {
         super(compiler);
@@ -34,31 +35,38 @@ public class ControlCompileStream extends CompileStream {
 
             }
             index++;
+            close++;
             return new CompileResult("for(_ans" + index + " in 1.." +str + "){");
         }
         if(Utils.matches(wenyan[0],WenYanLib.FOR_END())){
+            close -- ;
             Utils.inputWenyan(compiler,0);
             return new CompileResult("}");
         }
         if(Utils.matches(wenyan[0],WenYanLib.IF_END())){
+            close --;
             Utils.inputWenyan(compiler,0);
             return new CompileResult("}");
         }
         if(Utils.matches(wenyan[0],WenYanLib.IF_START())){
+            close++;
             Utils.inputWenyan(compiler,0);
             String bool = getBooleanSyntax(wenyan[0].substring(wenyan[0].indexOf("若")+1,wenyan[0].indexOf("者")));
             return new CompileResult("if("+bool+"){");
         }
         if(Utils.matches(wenyan[0],WenYanLib.IF_BREAK())){
+            close++;
             Utils.inputWenyan(compiler,0);
             String bool = getBooleanSyntax(wenyan[0].substring(wenyan[0].indexOf("若")+1,wenyan[0].indexOf("者")));
             return new CompileResult("if("+bool+")break");
         }
         if(Utils.matches(wenyan[0],WenYanLib.WHILE())){
+            close++;
             Utils.inputWenyan(compiler,0);
             return new CompileResult("while(true){");
         }
         if(Utils.matches(wenyan[0],WenYanLib.ELSE())){
+            close++;
             Utils.inputWenyan(compiler,0);
             return new CompileResult("}else{");
         }
@@ -68,6 +76,7 @@ public class ControlCompileStream extends CompileStream {
         }
         if(Utils.matches(wenyan[0],WenYanLib.FOR_EACH())){
             Utils.inputWenyan(compiler,0);
+            close++;
             List<String> names = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),wenyan[0]);
             return new CompileResult("for("+stream.getName(names.get(1),false)+" in "+stream.getName(names.get(0),false)+"){");
         }

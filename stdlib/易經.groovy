@@ -1,42 +1,31 @@
-def 角谷猜想(甲){
-    def 助手 = {
-        乙->
-            def 埃=0
-            println(乙.class)
-            def 積= (Integer(乙))==乙?((Integer)乙)%2:
-            if(積!=0){
-                def ans_1=3*乙
-                def ans_2=1+ans_1
-                埃 = ans_2
-            }else{
-                def ans_3=乙/2
-                埃 = ans_3
-            }
-            return 埃
-    }
-    def 回=[]
-    回.add(甲)
-
-    while(true){
+def 考拉茲(甲){
+    def 總=0
+    for(_ans1 in 1..9999){
         if(甲==1){
-            break
+            return 總
+        }else {
+            def 丙 = ((Integer) 甲) % 2
+            if (丙 == 0) {
+                def 半 = 甲 / 2
+                甲 = 半
+            } else {
+                def 丁 = 甲 * 3
+                def 戊 = 丁 + 1
+                甲 = 戊
+            }
+                def 己 = 總 + 1
+                總 = 己
         }
-        def ans_4=助手(甲)
-        甲 = ans_4
-        回.add(甲)
-
+        }
     }
-    回.add(1)
-
-    return 回
-}
-def ans_5=角谷猜想(12)
-println(ans_5)
-def ans_6=角谷猜想(19)
-println(ans_6)
-def ans_7=角谷猜想(27)
-println(ans_7)
-
+    def ans_1=考拉茲(18)
+    println(ans_1)
+    def ans_2=考拉茲(123)
+    println(ans_2)
+    def ans_3=考拉茲(978)
+    println(ans_3)
+    def ans_4=考拉茲(6)
+    println(ans_4)
 //def 圖靈機(諸律,始態,終態){
 //    def 帶=[]
 //    帶.add('白')

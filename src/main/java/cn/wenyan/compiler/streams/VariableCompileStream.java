@@ -89,13 +89,21 @@ public class VariableCompileStream extends CompileStream{
 
 
     public CompileResult change(String beforeName,String changeCmd,String[] wenyans){
+        String end = "";
+        if(wenyans[2].equals("是也")||wenyans[2].equals("也")){
+            Utils.inputWenyan(compiler,2);
+            if(!wenyans[3].equals("若非")){
+                end = "}";
+            }
+        }
         if(Utils.matches(changeCmd,WenYanLib.AFTER_NAME())){
             Utils.inputWenyan(compiler,1);
-            String afterName = Utils.getValue(changeCmd.substring(changeCmd.indexOf("今")+1,changeCmd.lastIndexOf("是")),this);
-            return new CompileResult(beforeName+" = "+afterName);
+            int i = changeCmd.lastIndexOf("是")==-1?changeCmd.lastIndexOf("也")==-1?changeCmd.lastIndexOf("矣"):changeCmd.lastIndexOf("也"):changeCmd.lastIndexOf("是");
+            String afterName = Utils.getValue(i <= 0?changeCmd.substring(changeCmd.indexOf("今")+1):changeCmd.substring(changeCmd.indexOf("今")+1,i),this);
+            return new CompileResult(beforeName+" = "+afterName+"\n"+end);
         }else if(changeCmd.equals(WenYanLib.IT_CHANGE())){
             Utils.inputWenyan(compiler,1);
-            return new CompileResult(beforeName+" = "+nowName);
+            return new CompileResult(beforeName+" = "+nowName+"\n"+end);
         }
         return new CompileResult(false,wenyans);
     }

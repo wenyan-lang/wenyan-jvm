@@ -216,8 +216,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 String result = factory.compile(wenyans)[0];
                 builder.append("\n").append(result);
                 this.clearCompiled();
-                serverLogger.debug(result);
-                serverLogger.debug(now);
             }
             return builder.toString();
         }catch (Exception e){

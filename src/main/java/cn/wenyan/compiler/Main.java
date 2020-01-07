@@ -112,7 +112,7 @@ public class Main {
                 "施「考拉茲」於一百二十三。書之。\n" +
                 "施「考拉茲」於九百七十八。書之。\n" +
                 "施「考拉茲」於六。書之。").replace("\t","").replace("\n","");;
-        compiler.runDirectly(true,code1);
+        compiler.runDirectly(false,code1);
 //        compiler.runDirectly(true,"" +
 //                "吾有一言。名之曰「畫帶」。" +
 //                "吾有一言。曰「畫帶」。名之曰「其」。" +

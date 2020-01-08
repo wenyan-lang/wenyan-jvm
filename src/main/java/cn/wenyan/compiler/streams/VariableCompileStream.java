@@ -281,7 +281,7 @@ public class VariableCompileStream extends CompileStream{
             return result;
         }
 
-        if(wenyanNumber.startsWith("十")){
+        if(wenyanNumber.startsWith("十")||wenyanNumber.startsWith("廿")||wenyanNumber.startsWith("卅")||wenyanNumber.startsWith("卌")||wenyanNumber.startsWith("皕")){
             wenyanNumber = "一"+wenyanNumber;
         }
         char[] chars = wenyanNumber.toCharArray();

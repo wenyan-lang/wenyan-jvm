@@ -74,6 +74,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         this.supportPinyin = supportPinyin;
         if(File.separator.equals("\\")) AnsiConsole.systemInstall();
         this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+ fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
+        this.serverLogger.info("@CopyRight wy-lang.org MagicLu550 || github: https://github.com/MagicLu550/wenyan-lang_jvm/blob/master/README.md");
         this.factory = new StreamBuilder(this)
                 .put(new VariableCompileStream(this))
                 .put(new CommentCompileStream(this))

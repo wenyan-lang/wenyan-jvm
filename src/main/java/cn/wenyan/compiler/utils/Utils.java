@@ -5,8 +5,7 @@ import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,13 +30,24 @@ public class Utils {
     }
 
     public static void inputWenyan(WenYanCompilerImpl compiler, int wenyanIndex){
-        compiler.setIndexCode();
         compiler.getNowCompiling().add(wenyanIndex);
     }
 
     public static String getStringFrom(String patternId,String thing,String start){
         String value = getString(patternId,thing);
         return value.substring(value.indexOf(start)+1);
+    }
+
+    public static void removeDuplicateWithOrder(List list) {
+        Set set = new HashSet();
+        List newList = new ArrayList();
+        for (Iterator iter = list.iterator(); iter.hasNext();) {
+            Object element = iter.next();
+            if (set.add(element))
+                newList.add(element);
+        }
+        list.clear();
+        list.addAll(newList);
     }
 
     public static String getStringFrom(String patternId,String thing,String start,String end){

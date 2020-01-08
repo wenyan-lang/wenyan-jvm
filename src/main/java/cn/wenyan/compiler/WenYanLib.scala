@@ -38,7 +38,7 @@ object WenYanLib {
 
   final val IF_END : String = "if_end"
 
-  final val SPLIT : String = "[。!,！，、]"
+  final val SPLIT : String = "[。！，、]"
 
   final val STRING_START : String = "「「"
 

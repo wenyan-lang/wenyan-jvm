@@ -33,7 +33,7 @@ object JuDouUtils {
                 }
             }
         )
-        splitComment(builder.toString())
+        builder.toString()
     }
 
     def splitWenYan(strings: String) : java.util.List[String] ={
@@ -41,6 +41,7 @@ object JuDouUtils {
         val list = new util.ArrayList[String]()
         var builder = new StringBuilder
         var index = 0
+        println(strings)
         while(index < string.length){
             var isAppend = false
             val s = string(index)
@@ -100,13 +101,15 @@ object JuDouUtils {
     private def getString(target: String): Boolean ={
         val patterns = WenYanLib.syntaxs
         for(p <- patterns){
-            if(target.matches(p._2))return true
+            if(target.matches(p._2)){
+                return true
+            }
         }
         false
     }
 
     var patterns = WenYanLib.patterns
-    private def splitComment(now : String): String ={
+    def splitComment(now : String): String ={
         var string = now
         var index = 0
         while(index < string.length){
@@ -132,8 +135,10 @@ object JuDouUtils {
                 }
                 //得到index
                 val builder = new StringBuilder(string)
-                builder.insert(index+1,"。")
-                string = builder.toString()
+                if(!string(index+1).toString.matches(WenYanLib.SPLIT)){
+                    builder.insert(index+1,"。")
+                    string = builder.toString()
+                }
             }
             index+=1
         }

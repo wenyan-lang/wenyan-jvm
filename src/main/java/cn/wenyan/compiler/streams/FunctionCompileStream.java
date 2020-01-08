@@ -81,7 +81,13 @@ public class FunctionCompileStream extends CompileStream {
         }
         if(Utils.matches(wenyan[0],WenYanLib.RUN_FUNCTION())){
             Utils.inputWenyan(compiler,0);
-            String name = Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[0]).replace("之",".");
+            String find = Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[0]);
+            String name;
+            if(find != null) {
+                name = find.replace("之", ".");
+            }else{
+                name = wenyan[0].substring(wenyan[0].indexOf("施")+1).replace("之", ".");
+            }
             StringBuilder builder = new StringBuilder();
             builder.append(Utils.getValue(name,stream)).append("(");
             int end = 0;

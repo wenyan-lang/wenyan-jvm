@@ -219,6 +219,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 String result = factory.compile(wenyans)[0];
                 builder.append("\n").append(result);
                 this.clearCompiled();
+
             }
             return builder.toString();
         }catch (Exception e){
@@ -289,7 +290,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     public void clearCompiled(){
         List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
+        Utils.removeDuplicateWithOrder(nowCompiling);
         for(int index:nowCompiling){
+            setIndexCode();
             newWenyans.set(index,null);
         }
         Iterator<String> str = newWenyans.iterator();
@@ -357,6 +360,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             throw new SyntaxException("此占位符不可存在: {{$numberHASH~}}");
         }
         Map<String,String> nowMap = new HashMap<>();
+        wenyan = JuDouUtils.splitComment(wenyan);
         wenyan = wenYansToHASH(wenyan,nowMap);
         wenyan = replaceOnlyString(wenyan,nowMap);
         wenyan = nameToHASH(wenyan,nowMap);

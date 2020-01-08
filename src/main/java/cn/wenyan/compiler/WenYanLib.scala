@@ -140,6 +140,8 @@ object WenYanLib {
 
   final val REPLACE_ARRAY : String = "replace_arr"
 
+  final val NEW_COMMENT : String = "new_comment"
+
   val prefixs = Map[Char,Int](
     '十' -> 10,
     '百' -> 100,
@@ -167,7 +169,7 @@ object WenYanLib {
   val syntaxs = Map[String,String](
     DEFINE_VAR -> "(吾有|今有)",
     VAR_NAME -> "曰[\\s\\S]+",
-    VAR_VALUE -> ("名之(曰"+VAL_DEF+")+"),
+    VAR_VALUE -> ("([以]|)名之(曰"+VAL_DEF+")+"),
     VAR_GET_NAME -> ("曰"+VAL_DEF),
     WRITE -> "書之",
     SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
@@ -204,6 +206,7 @@ object WenYanLib {
     VAL -> "[以於](「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
     GET -> "夫「[\\s\\S]+」之(「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)",
     REPLACE_ARRAY -> ("昔之"+VAL_DEF+"之("+VAL_DEF+"|「「[\\s\\S]+」」)者"),
+    NEW_COMMENT -> "[批注疏]曰"
   )
 
 

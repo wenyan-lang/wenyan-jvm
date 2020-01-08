@@ -29,7 +29,7 @@ public class CommentCompileStream extends CompileStream {
      */
     @Override
     public CompileResult compile(String[] wenyan) {
-        if(!wenyan[0].equals("也")&&!wenyan[0].equals("是也")&&Utils.matches(wenyan[0], WenYanLib.COMMENT())){
+        if(Utils.matches(wenyan[0], WenYanLib.NEW_COMMENT())){
             Utils.inputWenyan(compiler,0);
             Utils.inputWenyan(compiler,1);
             return new CompileResult("/*"+Utils.getStringFrom(WenYanLib.COMMENT(),wenyan[1],WenYanLib.STRING_START(),WenYanLib.STRING_END())+"*/");

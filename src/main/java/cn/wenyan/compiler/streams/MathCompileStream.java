@@ -35,11 +35,11 @@ public class MathCompileStream extends CompileStream {
                             symbol = "%";
                         }
                     }
-                    if (Utils.matches(wenyan[index + 1], WenYanLib.VAR_VALUE())) {
-                        index++;
-                        Utils.inputWenyan(compiler, index);
-                        name = stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(), wenyan[index]), false);
-                    }
+//                    if (Utils.matches(wenyan[index + 1], WenYanLib.VAR_VALUE())) {
+//                        index++;
+//                        Utils.inputWenyan(compiler, index);
+//                        name = stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(), wenyan[index]), false);
+//                    }
                 }
                 if (name.equals("")) name = stream.getAnsName();
 

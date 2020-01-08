@@ -20,6 +20,8 @@ public class VariableCompileStream extends CompileStream{
 
     private String nowName;
 
+    private List<String> nowNames = new ArrayList<>();
+
     private Map<String,String> varMap = new HashMap<>();
 
     private long varIndex = 0;
@@ -29,12 +31,28 @@ public class VariableCompileStream extends CompileStream{
     }
     // 具之一句，而翻万里者也。
     public CompileResult compile(String[] wenyans) {
-
         if(Utils.matches(wenyans[0],WenYanLib.VAR_VALUE())){
             Utils.inputWenyan(compiler,0);
-            String name = Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[0]);
-            String now = nowName;
-            return new CompileResult("def "+getName(name,false)+" = "+now);
+            wenyans[0] = "曰"+Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[0]);
+            int index = 0;
+            StringBuilder builder = new StringBuilder();
+            int last = nowNames.size() - 1;
+            int defineNumber = 0;
+            while (Utils.matches(wenyans[index],WenYanLib.VAR_GET_NAME())){
+                defineNumber ++;
+                Utils.inputWenyan(compiler,index);
+                index++;
+            }
+            index = 0;
+            Stack<String> strings = new Stack<>();
+            for(int i = 0;i<defineNumber;i++){
+                strings.push(nowNames.get(last--));
+            }
+            int size = strings.size();
+            for(int i = 0;i<size;i++){
+                builder.append("def "+getName(wenyans[index++].substring(wenyans[index].indexOf("曰")+1),true)).append(" = ").append(strings.pop()).append("\n");
+            }
+            return new CompileResult(builder.toString());
         }
         if(wenyans[0].equals("書之")){
             Utils.inputWenyan(compiler,0);
@@ -190,6 +208,7 @@ public class VariableCompileStream extends CompileStream{
             varMap.put(name,chinese);
         }
         nowName = name;
+        nowNames.add(name);
         return name;
     }
 

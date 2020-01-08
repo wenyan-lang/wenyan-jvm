@@ -65,7 +65,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     //**************************************************//
 
 
-    public WenYanCompilerImpl(boolean supportPinyin){
+    WenYanCompilerImpl(boolean supportPinyin){
         this.streamMap = new HashMap<>();
         this.groovyCompiler = new GroovyCompiler();
         this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());

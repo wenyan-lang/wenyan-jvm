@@ -237,7 +237,8 @@ object WenYanLib {
     HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),
     ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)"),
     VAL -> Pattern.compile("(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)"),
-    GET -> Pattern.compile("「[\\s\\S]+」之(「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)")
+    GET -> Pattern.compile("「[\\s\\S]+」之(「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)"),
+    NEW_COMMENT -> Pattern.compile("[批注疏]")
   )
 
 

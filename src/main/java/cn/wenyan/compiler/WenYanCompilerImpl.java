@@ -279,7 +279,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
     }
 
-
     public Map<Class<? extends CompileStream>, CompileStream> getStreamMap() {
         return streamMap;
     }

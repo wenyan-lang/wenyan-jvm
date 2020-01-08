@@ -66,7 +66,6 @@ You can run WenYan Programming Language in JVM.
 ```
 有數七名之曰「甲」有數五名之曰「乙」有數零名之曰「艾」
 ```
-3. 注释后面必须有标点,目前还没有解决这个问题
 
 > 目前状态
 

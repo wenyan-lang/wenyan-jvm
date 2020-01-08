@@ -1,6 +1,8 @@
 package cn.wenyan.compiler.lib;
 
 
+import cn.wenyan.compiler.exceptions.SyntaxException;
+
 import java.util.*;
 
 public class JSArray<T> extends HashMap<Object,T> {
@@ -10,6 +12,9 @@ public class JSArray<T> extends HashMap<Object,T> {
 
     @Override
     public T put(Object key, T value) {
+        if(key!=null&&!this.containsKey(key)&&key instanceof Integer&&(Integer)key>0){
+            throw new SyntaxException("汝不可用"+key+"以为初key");
+        }
         if(key == null){
             return super.put((index++) ,value);
         }else{
@@ -24,16 +29,14 @@ public class JSArray<T> extends HashMap<Object,T> {
         return obj;
     }
 
-    public static void main(String[] args) {
-        JSArray<String> jsArray = new JSArray<>();
-        jsArray.put(null,"1");
-        jsArray.put(null,"2");
-        jsArray.put(null,"3");
-        System.out.println(jsArray);
-        System.out.println(jsArray.remove(0));
-        System.out.println(jsArray);
+    public JSArray<T> slice(int index){
+        if(index > this.size())return new JSArray<>();
+        JSArray jsArray = (JSArray) this.clone();
+        for(int i = 0;i<index;i++){
+            jsArray.remove(i);
+        }
+        return jsArray;
     }
-
     @Override
     public T remove(Object key1) {
         String key = key1.toString();
@@ -58,4 +61,23 @@ public class JSArray<T> extends HashMap<Object,T> {
         return super.remove(key);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("[");
+        List<Entry<Object,T>> list = new ArrayList<>(entrySet());
+        for(int i = 0;i<list.size();i++){
+            Entry<Object,T> entry = list.get(i);
+            if(entry.getKey().toString().matches("[0-9]+")){
+                builder.append(entry.getValue()).append(",");
+            }else{
+                builder.append(entry.getKey()).append(":").append(entry.getValue()).append(",");
+            }
+        }
+        int index = builder.lastIndexOf(",");
+        if(index!=-1) {
+            return builder.substring(0, index) + "]";
+        }else{
+            return builder.append("]").toString();
+        }
+    }
 }

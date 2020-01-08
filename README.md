@@ -185,28 +185,15 @@ You can run WenYan Programming Language in JVM.
 
 `-r` 值: 运行时的参数 注意: 这个选项必须放在最后面,会将文件运行
 
-```java
-    package cn.wenyan.compiler;
-    
-    
-    public class Main {
-    
-        public static void main(String[] args) {
-            WenYanCompiler compiler = new WenYanCompilerImpl(false);
-            compiler.runDirectly(true,
-                    "" +
-                            "有數七，名之曰「甲」。" +
-                            "有數九，名之曰「乙」。" +
-                            "有數零，名之曰「艾」。" +
-                            "恆為是，若「艾」大於「甲」者乃止也。" +
-                            "   若「艾」等於「乙」者。" +
-                            "       有言『ssr』，書之。" +
-                            "   若非。" +
-                            "       加一以「甲」，乘其以三，書之。" +
-                            "   也。" +
-                            "   加一以「艾」，昔之「艾」者，今其是矣。" +
-                            "云云。");
-        }
-    }
+LIB_USE:
+
+```groovy
+import cn.wenyan.compiler.WenYanTools
+
+def compiler = WenYanTools.makeCompiler()
+
+def javaClass = compiler.compileToClass("HelloWorld","吾有一言，曰『问天地好在』，書之。")
+
+javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 
 ```

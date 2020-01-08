@@ -142,6 +142,10 @@ object WenYanLib {
 
   final val NEW_COMMENT : String = "new_comment"
 
+  final val OTHER : String = "!"
+
+  final val LENGTH : String = "「[\\s\\S]+」之(長|其餘)"
+
   val prefixs = Map[Char,Int](
     '十' -> 10,
     '百' -> 100,
@@ -206,7 +210,9 @@ object WenYanLib {
     VAL -> "[以於](「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
     GET -> "夫「[\\s\\S]+」之(「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)",
     REPLACE_ARRAY -> ("昔之"+VAL_DEF+"之("+VAL_DEF+"|「「[\\s\\S]+」」)者"),
-    NEW_COMMENT -> "[批注疏]曰"
+    NEW_COMMENT -> "[批注疏]曰",
+    OTHER -> "變「[\\s\\S]+」",
+    LENGTH -> ("夫"+LENGTH)
   )
 
 

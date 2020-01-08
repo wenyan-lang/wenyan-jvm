@@ -14,6 +14,11 @@ public class ArrayCompileStream extends CompileStream {
     @Override
     public CompileResult compile(String[] wenyan) {
         VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
+
+        if(Utils.matches(wenyan[0],WenYanLib.LENGTH())){
+            Utils.inputWenyan(compiler,0);
+            return new CompileResult("def "+stream.getAnsName()+" = "+Utils.getValue(wenyan[0].substring(wenyan[0].indexOf("夫")+1),stream));
+        }
         if(Utils.matches(wenyan[0], WenYanLib.ADD())){
 
             String name = Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[0]),stream);

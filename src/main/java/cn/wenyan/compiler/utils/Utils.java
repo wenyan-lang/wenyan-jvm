@@ -71,8 +71,18 @@ public class Utils {
     }
 
     public static String getValue(String number, VariableCompileStream stream){
+        if(number.matches(WenYanLib.LENGTH())){
+            //其餘
+            if(number.endsWith("其餘")){
+                return stream.getName(number.substring(0,number.lastIndexOf("之")),false)+".slice(1)";
+            }
+            return stream.getName(number.substring(0,number.lastIndexOf("之")),false)+".size()";
+        }
         if(Utils.getString(WenYanLib.GET(),number)!=null)return stream.getArray(number,stream);
         if(number.equals("其"))return stream.getNowName();
+        if(number.equals(WenYanLib.FALSE())||number.equals(WenYanLib.TRUE())){
+            return WenYanLib.bool().get(number).get();
+        }
         if(number.startsWith(WenYanLib.STRING_START())&&number.endsWith(WenYanLib.STRING_END())){
             return stream.getString(number);
         }else if(number.startsWith(WenYanLib.NAME_START())&&number.endsWith(WenYanLib.NAME_END())){

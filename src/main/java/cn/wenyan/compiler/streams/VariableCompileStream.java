@@ -81,6 +81,10 @@ public class VariableCompileStream extends CompileStream{
             }
 
         }
+        if(Utils.matches(wenyans[0],WenYanLib.OTHER())){
+            Utils.inputWenyan(compiler,0);
+            return new CompileResult("def "+getAnsName()+" = !"+Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[0]),this));
+        }
         if(Utils.matches(wenyans[0],WenYanLib.SIMPLE_VAR())){
             Utils.inputWenyan(compiler,0);
             List<String> values = new ArrayList<>();

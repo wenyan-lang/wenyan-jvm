@@ -1,7 +1,6 @@
 package cn.wenyan.compiler;
 
 import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyCodeSource;
 
 /**
  * groovy 编译器

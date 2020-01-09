@@ -2,6 +2,15 @@
 
 # wenyan-lang_jvm
 You can run WenYan Programming Language in JVM.
+> 声明
+
+1. 关注本项目不要忘记关注一下[LingDong的项目](https://github.com/LingDong-/wenyan-lang),因为本项目基于LingDong项目标准开发
+2. 语法非作者(MagicLu)原创。
+3. 本项目预计未来成形后，将会考虑贡献给WenYan本库。
+4. 本项目与LingDong项目一样，遵循MIT许可证
+5. 本项目非商业用途，任何人均可贡献，任何人也可以在合适范围内修改README
+6. 本项目使用方法可以参见[文档](document/Java-Compiler.md)
+7. 关于项目开启的原因可以参见 [#411](https://github.com/LingDong-/wenyan-lang/issues/411)
 
 > 关于作者
 

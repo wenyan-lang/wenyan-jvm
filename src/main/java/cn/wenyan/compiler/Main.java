@@ -13,7 +13,5 @@ public class Main {
         }
         WenYanCompiler compiler = new WenYanCompilerImpl(false, Language.GROOVY);
         compiler.compile(args);
-        compiler.runDirectly(false,"" +
-                compiler.getTraditionalChinese("吾有一言，曰「「问天地好在」」，书之"));
     }
 }

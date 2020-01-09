@@ -1,5 +1,8 @@
 package cn.wenyan.compiler.script.libs
 
+import cn.wenyan.compiler.GroovyCompiler
+import cn.wenyan.compiler.LanguageCompiler
+
 enum Language {
 
     GROOVY(
@@ -53,7 +56,7 @@ enum Language {
                     (Syntax.NUMBER_SUGAR)          : "((Integer)$NAME)",
                     (Syntax.STRING_APPEND)         : "+",
                     (Syntax.ARRAY_GET)             : "($NAME .class==HashMap.Node.class?$NAME .getValue():$NAME)[($INDEX .class == Integer.class?$INDEX-1:$INDEX)]"
-            ]
+            ],new GroovyCompiler()
     );
 
     static final String NAME = "%{name}%"
@@ -81,11 +84,18 @@ enum Language {
 
     protected Map<Syntax,String> syntaxLib
 
-    Language(syntaxLib){
+    protected LanguageCompiler compiler
+
+    Language(syntaxLib,compiler){
         this.syntaxLib = syntaxLib
+        this.compiler = compiler
     }
 
     String getSyntax(Syntax property){
         return syntaxLib[property]
+    }
+
+    LanguageCompiler languageCompiler(){
+        return compiler
     }
 }

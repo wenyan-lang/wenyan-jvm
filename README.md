@@ -12,6 +12,11 @@ You can run WenYan Programming Language in JVM.
 6. 本项目使用方法可以参见[文档](document/Java-Compiler.md)
 7. 关于项目开启的原因可以参见 [#411](https://github.com/LingDong-/wenyan-lang/issues/411)
 
+> 项目的自定义系统
+
+您可以通过项目的自定义系统自由的将文言文代码翻译为其他语言，通过添加Language.groovy的配置
+
+
 > 关于作者
 
 1. 作者由于为一高中生，技术水平有限，所以不能很快实现全部语法，并且不能非常严谨的实现，不能确保全部

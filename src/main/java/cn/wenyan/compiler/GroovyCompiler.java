@@ -5,7 +5,7 @@ import groovy.lang.GroovyClassLoader;
 /**
  * groovy 编译器
  */
-public class GroovyCompiler {
+public class GroovyCompiler implements LanguageCompiler{
 
     /**
      * 获取脚本的class
@@ -31,7 +31,7 @@ public class GroovyCompiler {
      * 默认的父加载器为GroovyCompiler().getClass().getClassLoader()
      * @return  返回groovy的类加载器
      */
-    public GroovyClassLoader getDefaultParentGroovyClassLoader() {
+    private GroovyClassLoader getDefaultParentGroovyClassLoader() {
         ClassLoader cl = GroovyCompiler.class.getClassLoader();
         return new GroovyClassLoader(cl);
     }

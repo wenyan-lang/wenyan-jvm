@@ -45,7 +45,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private List<Integer> nowCompiling = new ArrayList<>();
 
-    private GroovyCompiler groovyCompiler;
+    private LanguageCompiler groovyCompiler;
 
     private ServerLogger serverLogger;
 
@@ -70,7 +70,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     WenYanCompilerImpl(boolean supportPinyin, Language language){
         this.languageType = language;
         this.streamMap = new HashMap<>();
-        this.groovyCompiler = new GroovyCompiler();
+        this.groovyCompiler = language.languageCompiler();
         this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
         this.shell = new GroovyShell();
         this.handler = new CommandHandler(this);

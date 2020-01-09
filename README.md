@@ -24,6 +24,8 @@ You can run WenYan Programming Language in JVM.
 
 4. 由于作者尚未系统学习编译原理，没有使用抽象语法树，通过「正则」和「流程」(Stream) 完成了语言编译。
 
+5. 作者是也是一名文言文爱好者(或者是文学爱好者)
+
 > 关于项目
 
 语法源: https://github.com/LingDong-/wenyan-lang 

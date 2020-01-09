@@ -2,6 +2,8 @@ package cn.wenyan.compiler
 
 import java.util.regex.Pattern
 
+import cn.wenyan.compiler.script.libs.Syntax
+
 object WenYanLib {
 
   final val NUMBER : String = "number"
@@ -242,24 +244,34 @@ object WenYanLib {
   )
 
 
-  val bool = Map[String,String](
-    FALSE -> "false",
-    TRUE -> "true",
-    BIG_THAN -> ">",
-    SMALL_THAN -> "<",
-    NOT -> "=",
-    NOT_BIG_THAN -> "<=",
-    NOT_SMALL_THAN -> ">=",
-    EQUALS -> "==",
-    NOT_EQUALS -> "!="
-  )
+  val MMap = scala.collection.mutable.Map
 
-  val math = Map[Char,String](
-    '加' -> "+",
-    '減' -> "-",
-    '乘' -> "*",
-    '除' -> "/"
-  )
+  val bool = MMap[String,Syntax]()
+
+  registerBool()
+
+  def registerBool(): Unit ={
+    bool(FALSE)= Syntax.FALSE
+    bool(TRUE) = Syntax.TRUE
+    bool(BIG_THAN) = Syntax.BIGGER
+    bool(SMALL_THAN) = Syntax.SMALLER
+    bool(NOT) = Syntax.NEGATE
+    bool(NOT_BIG_THAN) = Syntax.NOT_BIG_THAN
+    bool(NOT_SMALL_THAN) = Syntax.NOT_SMALL_THAN
+    bool(EQUALS) = Syntax.EQUAL
+    bool(NOT_EQUALS) = Syntax.NEGATE_EQUAL
+  }
+
+  val math = MMap[Char,Syntax]()
+
+  registerMath()
+
+  def registerMath(): Unit ={
+    math('加') = Syntax.MATH_ADD
+    math('減') = Syntax.MATH_LESS
+    math('乘') = Syntax.MATH_MULTI
+    math('除') = Syntax.MATH_EXCEPT
+  }
 
   val define = Map[Char,String](
     '數' -> "0",

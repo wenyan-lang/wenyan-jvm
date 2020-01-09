@@ -1,5 +1,7 @@
 package cn.wenyan.compiler.utils;
 
+import cn.wenyan.compiler.script.libs.Language;
+import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.streams.VariableCompileStream;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
@@ -81,17 +83,18 @@ public class Utils {
     }
 
     public static String getValue(String number, VariableCompileStream stream){
+        Language language = stream.getLanguage();
         if(number.matches(WenYanLib.LENGTH())){
             //其餘
             if(number.endsWith("其餘")){
-                return stream.getName(number.substring(0,number.lastIndexOf("之")),false)+".slice(1)";
+                return LanguageUtils.slice(language,stream.getName(number.substring(0,number.lastIndexOf("之")),false));
             }
-            return stream.getName(number.substring(0,number.lastIndexOf("之")),false)+".size()";
+            return LanguageUtils.size(language,stream.getName(number.substring(0,number.lastIndexOf("之")),false));
         }
         if(Utils.getString(WenYanLib.GET(),number)!=null)return stream.getArray(number,stream);
         if(number.equals("其"))return stream.getNowName();
         if(number.equals(WenYanLib.FALSE())||number.equals(WenYanLib.TRUE())){
-            return WenYanLib.bool().get(number).get();
+            return language.getSyntax(WenYanLib.bool().get(number).get());
         }
         if(number.startsWith(WenYanLib.STRING_START())&&number.endsWith(WenYanLib.STRING_END())){
             return stream.getString(number);

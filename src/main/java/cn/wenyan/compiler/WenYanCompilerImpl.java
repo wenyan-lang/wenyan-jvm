@@ -9,9 +9,9 @@ import cn.wenyan.compiler.factory.StreamBuilder;
 import cn.wenyan.compiler.lib.JSArray;
 import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
+import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.streams.*;
 import cn.wenyan.compiler.utils.JuDouUtils;
-import cn.wenyan.compiler.utils.SyntaxColor;
 import cn.wenyan.compiler.utils.Utils;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import groovy.lang.GroovyShell;
@@ -57,6 +57,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private CommandHandler handler;
 
+    private Language languageType;
+
     private Map<Class<? extends CompileStream>,CompileStream> streamMap;
 
     //***************************************************//
@@ -65,7 +67,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     //**************************************************//
 
 
-    WenYanCompilerImpl(boolean supportPinyin){
+    WenYanCompilerImpl(boolean supportPinyin, Language language){
+        this.languageType = language;
         this.streamMap = new HashMap<>();
         this.groovyCompiler = new GroovyCompiler();
         this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
@@ -405,4 +408,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return nameType;
     }
 
+    public Language getLanguageType() {
+        return languageType;
+    }
 }

@@ -4,6 +4,8 @@ import cn.wenyan.compiler.CompileResult;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.exceptions.SyntaxException;
+import cn.wenyan.compiler.script.libs.LanguageUtils;
+import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.utils.Utils;
 
 import java.util.List;
@@ -36,49 +38,50 @@ public class ControlCompileStream extends CompileStream {
             }
             index++;
             close++;
-            return new CompileResult("for(_ans" + index + " in 1.." +str + "){");
+            return new CompileResult(LanguageUtils.forNumber(language,index+"",str));
         }
         if(Utils.matches(wenyan[0],WenYanLib.FOR_END())){
             close -- ;
             Utils.inputWenyan(compiler,0);
-            return new CompileResult("}");
+            return new CompileResult(language.getSyntax(Syntax.FOR_END));
         }
         if(Utils.matches(wenyan[0],WenYanLib.IF_END())){
             close --;
             Utils.inputWenyan(compiler,0);
-            return new CompileResult("}");
+            return new CompileResult(language.getSyntax(Syntax.IF_END));
         }
         if(Utils.matches(wenyan[0],WenYanLib.IF_START())){
             close++;
             Utils.inputWenyan(compiler,0);
             String bool = getBooleanSyntax(wenyan[0].substring(wenyan[0].indexOf("若")+1,wenyan[0].indexOf("者")));
-            return new CompileResult("if("+bool+"){");
+            return new CompileResult(LanguageUtils.defineIf(language,bool));
         }
         if(Utils.matches(wenyan[0],WenYanLib.IF_BREAK())){
             close++;
             Utils.inputWenyan(compiler,0);
             String bool = getBooleanSyntax(wenyan[0].substring(wenyan[0].indexOf("若")+1,wenyan[0].indexOf("者")));
-            return new CompileResult("if("+bool+")break");
+            return new CompileResult(LanguageUtils.ifBreak(language,bool));
         }
         if(Utils.matches(wenyan[0],WenYanLib.WHILE())){
             close++;
             Utils.inputWenyan(compiler,0);
-            return new CompileResult("while(true){");
+            return new CompileResult(language.getSyntax(Syntax.WHILE_TRUE));
         }
         if(Utils.matches(wenyan[0],WenYanLib.ELSE())){
             close++;
             Utils.inputWenyan(compiler,0);
-            return new CompileResult("}else{");
+            return new CompileResult(language.getSyntax(Syntax.ELSE));
         }
         if(Utils.matches(wenyan[0],WenYanLib.BREAK())){
             Utils.inputWenyan(compiler,0);
-            return new CompileResult("break");
+            return new CompileResult(language.getSyntax(Syntax.BREAK));
         }
         if(Utils.matches(wenyan[0],WenYanLib.FOR_EACH())){
             Utils.inputWenyan(compiler,0);
             close++;
             List<String> names = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),wenyan[0]);
-            return new CompileResult("for("+stream.getName(names.get(1),false)+" in "+stream.getName(names.get(0),false)+"){");
+
+            return new CompileResult(LanguageUtils.forEach(language,stream.getName(names.get(1),false),stream.getName(names.get(0),false)));
         }
         return new CompileResult(false,wenyan);
     }
@@ -107,7 +110,7 @@ public class ControlCompileStream extends CompileStream {
         VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
         StringBuilder builder = new StringBuilder();
         builder.append(getValue(numbers[0],stream));
-        builder.append(WenYanLib.bool().get(type).get());
+        builder.append(language.getSyntax(WenYanLib.bool().get(type).get()));
         builder.append(getValue(numbers[1],stream));
         return builder.toString();
     }

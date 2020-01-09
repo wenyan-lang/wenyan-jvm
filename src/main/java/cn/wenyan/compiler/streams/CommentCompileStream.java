@@ -3,6 +3,7 @@ package cn.wenyan.compiler.streams;
 import cn.wenyan.compiler.CompileResult;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
+import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.utils.Utils;
 
 /**
@@ -32,7 +33,10 @@ public class CommentCompileStream extends CompileStream {
         if(Utils.matches(wenyan[0], WenYanLib.NEW_COMMENT())){
             Utils.inputWenyan(compiler,0);
             Utils.inputWenyan(compiler,1);
-            return new CompileResult("/*"+Utils.getStringFrom(WenYanLib.COMMENT(),wenyan[1],WenYanLib.STRING_START(),WenYanLib.STRING_END())+"*/");
+            return new CompileResult(LanguageUtils.addComment(language,
+                    Utils.getStringFrom(WenYanLib.COMMENT(),wenyan[1],WenYanLib.STRING_START(),WenYanLib.STRING_END())
+
+            ));
         }
         return new CompileResult(false,wenyan);
     }

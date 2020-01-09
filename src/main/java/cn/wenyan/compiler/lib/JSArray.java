@@ -12,9 +12,7 @@ public class JSArray<T> extends HashMap<Object,T> {
 
     @Override
     public T put(Object key, T value) {
-        if(key!=null&&!this.containsKey(key)&&key instanceof Integer&&(Integer)key>0){
-            throw new SyntaxException("汝不可用"+key+"以为初key");
-        }
+
         if(key == null){
             return super.put((index++) ,value);
         }else{

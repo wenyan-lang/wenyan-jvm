@@ -55,7 +55,7 @@ enum Language {
                     (Syntax.OBJECT_INNER)          : ".",
                     (Syntax.NUMBER_SUGAR)          : "((Integer)$NAME)",
                     (Syntax.STRING_APPEND)         : "+",
-                    (Syntax.ARRAY_GET)             : "($NAME .class==HashMap.Node.class?$NAME .getValue():$NAME)[($INDEX .class == Integer.class?$INDEX-1:$INDEX)]"
+                    (Syntax.ARRAY_GET)             : "("+NAME+".getClass() == HashMap.Node.class?"+NAME+".getValue():$NAME)[("+INDEX+".class == Integer.class?$INDEX-1:$INDEX)]"
             ],new GroovyCompiler()
     );
 

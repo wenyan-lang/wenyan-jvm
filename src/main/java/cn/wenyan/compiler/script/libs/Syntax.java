@@ -50,7 +50,8 @@ public enum Syntax {
     OBJECT_INNER("object_inner"),
     NUMBER_SUGAR("number_sugar"),//取余数时，对于数字的隐性强转
     STRING_APPEND("string_append"),
-    ARRAY_GET("array_get");
+    ARRAY_GET("array_get"),
+    LIBS("libs");
 
 
 

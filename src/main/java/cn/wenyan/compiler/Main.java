@@ -13,9 +13,5 @@ public class Main {
         }
         WenYanCompiler compiler = new WenYanCompilerImpl(false, Language.GROOVY);
         compiler.compile(args);
-        WenYanCompiler wenYanCompiler = WenYanTools.makeCompiler(Language.GROOVY);
-        wenYanCompiler.runDirectly(true,"" +
-                "吾嘗觀「「算經」」之書。方悟「正弦」「餘弦」之義。\t" +
-                "");
     }
 }

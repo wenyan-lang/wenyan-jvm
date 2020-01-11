@@ -1,8 +1,6 @@
 package cn.wenyan.compiler.lib;
 
 
-import cn.wenyan.compiler.exceptions.SyntaxException;
-
 import java.util.*;
 
 public class JSArray<T> extends HashMap<Object,T> {

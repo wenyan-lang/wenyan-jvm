@@ -41,7 +41,7 @@ enum Language {
                     (Syntax.CHANGE)                : "$NAME = $VALUE",
                     (Syntax.REPLACE_ARRAY)         : "$NAME[$INDEX] = $VALUE",
                     (Syntax.STRING)                : "'",
-                    (Syntax.ARRAY_ADD)             : NAME+".put(null,$VALUE)",
+                    (Syntax.ARRAY_ADD)             : NAME+".add($VALUE)",
                     (Syntax.INNER_FUNCTION)        : "def $NAME = {\n $ARGS->",
                     (Syntax.INNER_FUNCTION_NO_ARGS): "def $NAME = {\n ",
                     (Syntax.TRUE)                  : "true",

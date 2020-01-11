@@ -18,6 +18,10 @@ public class JSArray<T> extends HashMap<Object,T> {
         }
     }
 
+    public T add(T value){
+        return put(null,value);
+    }
+
     @Override
     public T get(Object key) {
         T obj = super.get(key);

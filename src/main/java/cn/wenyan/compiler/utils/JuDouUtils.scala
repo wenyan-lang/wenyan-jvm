@@ -108,6 +108,39 @@ object JuDouUtils {
         false
     }
 
+    class Counter{
+        var count = 0
+        def add(): Unit = count += 1
+        def cut(): Unit = count -= 1
+    }
+
+
+    def trimWenYanX(s: String):String = {
+
+        val counter = new Counter
+
+        s.trim.filter(x=>{
+            var bool = true
+            if (x == '「' || x == '『') {
+                counter.add()
+            }
+            if (x == '」' || x == '』'){
+                counter.cut()
+            }
+            if(counter.count == 0){
+                if(x == '\t'||x == '\n'){
+                    bool = false
+                }
+            }
+
+            bool
+
+        })
+    }
+
+
+
+
     var patterns = WenYanLib.patterns
     def splitComment(now : String): String ={
         var string = now

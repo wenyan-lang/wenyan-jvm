@@ -22,22 +22,7 @@ public class SyntaxColor {
             "於","嘗觀","書","方悟","義","是","乃","之","欲"
     };
     public static String getSyntaxColor(String wenyan, WenYanCompilerImpl compiler){
-        Map<String,String> stringMap = new HashMap<>();
-        wenyan = compiler.wenYansToHASH(wenyan,stringMap);
-        wenyan = compiler.nameToHASH(wenyan,stringMap);
-        for(String cmd : command){
-            wenyan = wenyan.replace(cmd, LogFormat.textFormat(cmd,Ansi.Color.MAGENTA)+LogFormat.fg(Ansi.Color.DEFAULT));
-        }
-        wenyan = compiler.replaceWenYan(wenyan,stringMap);
-        wenyan = compiler.replaceName(wenyan,stringMap);
-        List<String> stringList = Utils.getStrings(WenYanLib.FOR(),wenyan);
-        for(String str : stringList){
-            wenyan = wenyan.replaceAll(WenYanLib.patterns().get(WenYanLib.FOR()).get().toString(),LogFormat.textFormat(str,Ansi.Color.BLUE)+LogFormat.fg(Ansi.Color.DEFAULT));
-        }
-        stringList = Utils.getStrings(WenYanLib.STRING(),wenyan);
-        for(String str : stringList){
-            wenyan = wenyan.replaceAll(str,LogFormat.textFormat(str,Ansi.Color.GREEN)+LogFormat.fg(Ansi.Color.DEFAULT));
-        }
+
         return wenyan;
     }
 }

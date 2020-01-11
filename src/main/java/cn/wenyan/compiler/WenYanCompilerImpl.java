@@ -345,17 +345,12 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return builder.toString();
     }
 
+
     private String trimWenYan(String s){
-        char[] chars = s.toCharArray();
-        for(int i = 0;i<chars.length;i++){
-            if(chars[i]!='\t'){
-                break;
-            }else{
-                chars[i] = ' ';
-            }
-        }
-        return new String(chars);
+       return JuDouUtils.trimWenYanX(s);
     }
+
+
 
     private String[] base(String wenyan){
         index ++;
@@ -366,6 +361,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             throw new SyntaxException("此占位符不可存在: {{$numberHASH~}}");
         }
         Map<String,String> nowMap = new HashMap<>();
+        wenyan = trimWenYan(wenyan);
         wenyan = JuDouUtils.splitComment(wenyan);
         wenyan = wenYansToHASH(wenyan,nowMap);
         wenyan = replaceOnlyString(wenyan,nowMap);

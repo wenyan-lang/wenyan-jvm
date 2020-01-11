@@ -148,7 +148,7 @@ object WenYanLib {
 
   final val LENGTH : String = "「[\\s\\S]+」之(長|其餘)"
 
-  val prefixs = Map[Char,Int](
+  val prefixs = Map[Char,Double](
     '十' -> 10,
     '百' -> 100,
     '千' -> 1000,
@@ -158,8 +158,10 @@ object WenYanLib {
     '卅' -> 30,
     '卌' -> 40,
     '皕' -> 200,
+    '兆' -> 10000000000000000l
   )
-  val numbers = Map[Char,Int](
+
+  val numbers = Map[Char,Double](
     '〇' -> 0,
     '零' -> 0,
     '一' -> 1,

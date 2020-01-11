@@ -30,7 +30,7 @@ public class ControlCompileStream extends CompileStream {
             Utils.inputWenyan(compiler,0);
             String str = Utils.getString(WenYanLib.FOR(),wenyan[0]);
             if(str != null) {
-                str = stream.getNumber(str)+"";
+                str = stream.getNumberString(str)+"";
             }else{
                 String var = Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[0]);
                 str = stream.getName(var,false);

@@ -108,7 +108,7 @@ public class Utils {
         }else if(number.startsWith(WenYanLib.NAME_START())&&number.endsWith(WenYanLib.NAME_END())){
             return stream.getName(number,false);
         }else {
-            return stream.getNumber(number)+"";
+            return stream.getNumberString(number)+"";
         }
     }
 

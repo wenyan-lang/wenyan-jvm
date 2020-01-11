@@ -1,11 +1,10 @@
 package cn.wenyan.compiler.streams;
 
-import cn.wenyan.compiler.CompileResult;
+import cn.wenyan.compiler.*;
+import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.utils.PinYinUtils;
-import cn.wenyan.compiler.WenYanCompilerImpl;
-import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.utils.ScalaUtils;
 import cn.wenyan.compiler.utils.Utils;
@@ -70,7 +69,7 @@ public class VariableCompileStream extends CompileStream{
             if(Utils.matches(wenyans[1],WenYanLib.DEFINE_ARG())){
                 Utils.inputWenyan(compiler,1);
                 String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[1]);
-                long number = getNumber(wuYiYan)+1;
+                double number = getNumber(wuYiYan)+1;
                 if(Utils.matches(wenyans[2],WenYanLib.VAR_VALUE())){
                     number = 1;
                 }
@@ -165,7 +164,7 @@ public class VariableCompileStream extends CompileStream{
         Syntax syntax = WenYanLib.types().get(type+"").get();
         switch (type){
             case '數':
-                return getVarString(syntax,type,head,name,values,this::getNumber);
+                return getVarString(syntax,type,head,name,values,this::getNumberString);
             case '言':
                 return getVarString(syntax,type,head,name,values,
                        this::getString);
@@ -184,7 +183,7 @@ public class VariableCompileStream extends CompileStream{
         return language.getSyntax(Syntax.STRING)+val.substring(val.indexOf(WenYanLib.STRING_START())+2,val.lastIndexOf(WenYanLib.STRING_END()))+language.getSyntax(Syntax.STRING);
     }
 
-    private List<String> getNames(long number,String[] wenyans){
+    private List<String> getNames(double number,String[] wenyans){
         int index = (int)number+1;//4
         List<String> names = new ArrayList<>();
         while (Utils.matches(wenyans[index],WenYanLib.VAR_VALUE())||Utils.matches(wenyans[index],WenYanLib.VAR_GET_NAME())){
@@ -223,7 +222,7 @@ public class VariableCompileStream extends CompileStream{
         return name;
     }
 
-    private List<String> getValues(long number,String[] wenyans){
+    private List<String> getValues(double number,String[] wenyans){
         List<String> values = new ArrayList<>();
         for(int i = 1;i<=number;i++){
             if(wenyans.length == 1)break;
@@ -275,14 +274,30 @@ public class VariableCompileStream extends CompileStream{
         return LanguageUtils.getArray(language,name,index);
     }
 
-    public long getNumber(String wenyanNumber){
-        int maxNumber = 0;
-        long result = 0;
+    public static void main(String[] args) {
+        WenYanCompilerImpl compiler =(WenYanCompilerImpl) WenYanTools.makeCompiler(Language.GROOVY);
+        System.out.println(compiler.
+                getStream(VariableCompileStream.class).getNumberString("十一")+"");
+    }
+    public String getNumberString(String wenyanNumber){
+        String number = getNumber(wenyanNumber)+"";
+        String intNumber = number.substring(number.lastIndexOf(".")+1);
+        for(int i = 0;i<intNumber.length();i++){
+            if(intNumber.charAt(i) != '0'){
+                return number;
+            }
+        }
+        return number.split("\\.")[0];
+    }
+
+    public double getNumber(String wenyanNumber){
+        double maxNumber = 0;
+        double result = 0;
         if(!ScalaUtils.containsCommonNumber(wenyanNumber)){
             int len = wenyanNumber.length()-1;
             char[] numberChar = wenyanNumber.toCharArray();
             for(char str : numberChar){
-                result += (Integer)WenYanLib.numbers().get(str).get() * Math.pow(10,len);
+                result += (double) WenYanLib.numbers().get(str).get() * Math.pow(10,len);
                 len -- ;
             }
             return result;
@@ -295,22 +310,22 @@ public class VariableCompileStream extends CompileStream{
         for(int i = 0;i<chars.length;i++){
             if(i+1<=chars.length-1){
                 if(WenYanLib.prefixs().contains(chars[i+1])){
-                    int max = (Integer)WenYanLib.prefixs().get(chars[i+1]).get();
+                    double max = (double)WenYanLib.prefixs().get(chars[i+1]).get();
                     if(maxNumber == 0||max < maxNumber) {
                         result += max *
-                                (Integer) WenYanLib.numbers().get(chars[i]).get();
+                                (double) WenYanLib.numbers().get(chars[i]).get();
                         if(maxNumber == 0)maxNumber = max;
                     }else{
-                        result += (Integer) WenYanLib.numbers().get(chars[i]).get();
+                        result += (double) WenYanLib.numbers().get(chars[i]).get();
                         result = result * max;
                         maxNumber = max;
                     }
                     i++;
                 }else{
-                    result += (Integer)WenYanLib.numbers().get(chars[i]).get();
+                    result += (double) WenYanLib.numbers().get(chars[i]).get();
                 }
             }else{
-                result += (Integer)WenYanLib.numbers().get(chars[i]).get();
+                result += (double) WenYanLib.numbers().get(chars[i]).get();
             }
         }
         return result;

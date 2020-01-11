@@ -4,6 +4,7 @@ import java.util.regex.Pattern
 
 import cn.wenyan.compiler.script.libs.Syntax
 
+
 object WenYanLib {
 
   final val NUMBER : String = "number"
@@ -148,33 +149,54 @@ object WenYanLib {
 
   final val LENGTH : String = "「[\\s\\S]+」之(長|其餘)"
 
-  val prefixs = Map[Char,Double](
-    '十' -> 10,
-    '百' -> 100,
-    '千' -> 1000,
-    '萬' -> 10000,
-    '億' -> 100000000,
-    '廿' -> 20,
-    '卅' -> 30,
-    '卌' -> 40,
-    '皕' -> 200,
-    '兆' -> 10000000000000000l
+
+
+  private type BigDecimal0 = java.math.BigDecimal
+
+  val prefixs = Map[Char,BigDecimal0](
+    '十' -> new BigDecimal0(10),
+    '百' -> new BigDecimal0(100),
+    '千' -> new BigDecimal0(1000),
+    '萬' -> new BigDecimal0(10000),
+    '億' -> new BigDecimal0(1E8),
+    '廿' -> new BigDecimal0(20),
+    '卅' -> new BigDecimal0(30),
+    '卌' -> new BigDecimal0(40),
+    '皕' -> new BigDecimal0(200),
+    '兆' -> new BigDecimal0("1E12"),
+    '京' -> new BigDecimal0("1E16"),
+    '垓' -> new BigDecimal0("10E20"),
+    '秭' -> new BigDecimal0("10E24"),
+    '穣' -> new BigDecimal0("10E28"),
+    '溝' -> new BigDecimal0("10E32"),
+    '澗' -> new BigDecimal0("10E36"),
+    '正' -> new BigDecimal0("10E40"),
+    '載' -> new BigDecimal0("10E44"),
+    '分' -> new BigDecimal0("0.1"),
+    '釐' -> new BigDecimal0("0.01"),
+    '毫' -> new BigDecimal0("0.001"),
+    '絲' -> new BigDecimal0("0.0001"),
+    '忽' -> new BigDecimal0("0.00001"),
+    '微' -> new BigDecimal0("0.000001")
+
+  )
+  //二分三釐八毫八絲三忽八微
+
+  val numbers = Map[Char,BigDecimal0](
+    '〇' -> new BigDecimal0(0),
+    '零' -> new BigDecimal0(0),
+    '一' -> new BigDecimal0(1),
+    '二' -> new BigDecimal0(2),
+    '两' -> new BigDecimal0(2),
+    '三' -> new BigDecimal0(3),
+    '四' -> new BigDecimal0(4),
+    '五' -> new BigDecimal0(5),
+    '六' -> new BigDecimal0(6),
+    '七' -> new BigDecimal0(7),
+    '八' -> new BigDecimal0(8),
+    '九' -> new BigDecimal0(9),
   )
 
-  val numbers = Map[Char,Double](
-    '〇' -> 0,
-    '零' -> 0,
-    '一' -> 1,
-    '二' -> 2,
-    '两' -> 2,
-    '三' -> 3,
-    '四' -> 4,
-    '五' -> 5,
-    '六' -> 6,
-    '七' -> 7,
-    '八' -> 8,
-    '九' -> 9,
-  )
 
   def getNumber(): String ={
     val stringBuilder = new StringBuilder("[")
@@ -233,7 +255,7 @@ object WenYanLib {
     REPLACE_ARRAY -> ("昔之"+VAL_DEF+"之("+VAL_DEF+"|「「[\\s\\S]+」」)者"),
     NEW_COMMENT -> "[批注疏]曰",
     OTHER -> "變「[\\s\\S]+」",
-    LENGTH -> ("夫"+LENGTH)
+    LENGTH -> s"夫$LENGTH"
   )
 
 

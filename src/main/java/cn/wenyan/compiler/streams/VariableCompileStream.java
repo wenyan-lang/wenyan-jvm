@@ -1,14 +1,14 @@
 package cn.wenyan.compiler.streams;
 
 import cn.wenyan.compiler.*;
-import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
+import cn.wenyan.compiler.utils.GroovyUtils;
 import cn.wenyan.compiler.utils.PinYinUtils;
 import cn.wenyan.compiler.exceptions.SyntaxException;
-import cn.wenyan.compiler.utils.ScalaUtils;
 import cn.wenyan.compiler.utils.Utils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 
@@ -69,12 +69,12 @@ public class VariableCompileStream extends CompileStream{
             if(Utils.matches(wenyans[1],WenYanLib.DEFINE_ARG())){
                 Utils.inputWenyan(compiler,1);
                 String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[1]);
-                double number = getNumber(wuYiYan)+1;
+                int number = Integer.parseInt(getNumber(wuYiYan).toString())+1;
                 if(Utils.matches(wenyans[2],WenYanLib.VAR_VALUE())){
                     number = 1;
                 }
                 return new CompileResult(appendVar(
-                        (int)number+1,wenyans[(int)number+1],
+                        number+1,wenyans[number+1],
                         getNames(number,wenyans),
                         getValues(number,wenyans),
                         Utils.getString(WenYanLib.TYPE(),wenyans[1]).charAt(0)
@@ -274,11 +274,6 @@ public class VariableCompileStream extends CompileStream{
         return LanguageUtils.getArray(language,name,index);
     }
 
-    public static void main(String[] args) {
-        WenYanCompilerImpl compiler =(WenYanCompilerImpl) WenYanTools.makeCompiler(Language.GROOVY);
-        System.out.println(compiler.
-                getStream(VariableCompileStream.class).getNumberString("十一")+"");
-    }
     public String getNumberString(String wenyanNumber){
         String number = getNumber(wenyanNumber)+"";
         String intNumber = number.substring(number.lastIndexOf(".")+1);
@@ -290,45 +285,8 @@ public class VariableCompileStream extends CompileStream{
         return number.split("\\.")[0];
     }
 
-    public double getNumber(String wenyanNumber){
-        double maxNumber = 0;
-        double result = 0;
-        if(!ScalaUtils.containsCommonNumber(wenyanNumber)){
-            int len = wenyanNumber.length()-1;
-            char[] numberChar = wenyanNumber.toCharArray();
-            for(char str : numberChar){
-                result += (double) WenYanLib.numbers().get(str).get() * Math.pow(10,len);
-                len -- ;
-            }
-            return result;
-        }
-
-        if(wenyanNumber.startsWith("十")||wenyanNumber.startsWith("廿")||wenyanNumber.startsWith("卅")||wenyanNumber.startsWith("卌")||wenyanNumber.startsWith("皕")){
-            wenyanNumber = "一"+wenyanNumber;
-        }
-        char[] chars = wenyanNumber.toCharArray();
-        for(int i = 0;i<chars.length;i++){
-            if(i+1<=chars.length-1){
-                if(WenYanLib.prefixs().contains(chars[i+1])){
-                    double max = (double)WenYanLib.prefixs().get(chars[i+1]).get();
-                    if(maxNumber == 0||max < maxNumber) {
-                        result += max *
-                                (double) WenYanLib.numbers().get(chars[i]).get();
-                        if(maxNumber == 0)maxNumber = max;
-                    }else{
-                        result += (double) WenYanLib.numbers().get(chars[i]).get();
-                        result = result * max;
-                        maxNumber = max;
-                    }
-                    i++;
-                }else{
-                    result += (double) WenYanLib.numbers().get(chars[i]).get();
-                }
-            }else{
-                result += (double) WenYanLib.numbers().get(chars[i]).get();
-            }
-        }
-        return result;
+    public BigDecimal getNumber(String wenyanNumber){
+        return GroovyUtils.getNumber(wenyanNumber);
     }
 
     public Map<String, Integer> getArrIndex() {

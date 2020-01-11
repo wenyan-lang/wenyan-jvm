@@ -6,9 +6,6 @@ import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.utils.Utils;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
-
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -48,7 +45,7 @@ public class FunctionCompileStream extends CompileStream {
                                     Syntax type = WenYanLib.types().get(Utils.getString(WenYanLib.TYPE(),wenyan[i])).get();
                                     String langType = language.getSyntax(type);//獲得intdeng
                                     String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyan[i]);
-                                    double len = stream.getNumber(wuYiYan);
+                                    int len = Integer.parseInt(stream.getNumber(wuYiYan).toString());
                                     int now = i;
                                     for(int j = i+1;j<len+now+1;j++,i++){
                                         if(Utils.matches(wenyan[j],WenYanLib.VAR_GET_NAME())){

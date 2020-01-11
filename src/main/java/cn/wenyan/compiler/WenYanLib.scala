@@ -172,12 +172,16 @@ object WenYanLib {
     '澗' -> new BigDecimal0("10E36"),
     '正' -> new BigDecimal0("10E40"),
     '載' -> new BigDecimal0("10E44"),
-    '分' -> new BigDecimal0("0.1"),
-    '釐' -> new BigDecimal0("0.01"),
-    '毫' -> new BigDecimal0("0.001"),
-    '絲' -> new BigDecimal0("0.0001"),
-    '忽' -> new BigDecimal0("0.00001"),
-    '微' -> new BigDecimal0("0.000001")
+    '分' -> new BigDecimal0("1E-1"),
+    '釐' -> new BigDecimal0("1E-2"),
+    '毫' -> new BigDecimal0("1E-3"),
+    '絲' -> new BigDecimal0("1E-4"),
+    '忽' -> new BigDecimal0("1E-5"),
+    '微' -> new BigDecimal0("1E-6"),
+    '塵' -> new BigDecimal0("1E-7"),
+    '埃' -> new BigDecimal0("1E-8"),
+    '渺' -> new BigDecimal0("1E-9"),
+    '漠' -> new BigDecimal0("1E-10")
 
   )
   //二分三釐八毫八絲三忽八微
@@ -206,6 +210,7 @@ object WenYanLib {
     for((k,v)<-prefixs){
       stringBuilder.append(k)
     }
+    stringBuilder.append("又")
     stringBuilder.append("]+")
     stringBuilder.toString()
   }

@@ -3,7 +3,7 @@ package cn.wenyan.compiler.utils
 import cn.wenyan.compiler.WenYanLib
 
 class GroovyUtils {
-
+    
     static BigDecimal getNumber(String wenyanNumber){
         BigDecimal maxNumber = 0
         BigDecimal result = 0
@@ -11,10 +11,24 @@ class GroovyUtils {
         def prefixs = WenYanLib.prefixs()
         if(!ScalaUtils.containsCommonNumber(wenyanNumber)){
             int len = wenyanNumber.length()-1
+            if(wenyanNumber.contains("又")){
+                len = wenyanNumber.split("又")[0].length() -1
+            }
+            boolean doubleNumber = false
             char[] numberChar = wenyanNumber.toCharArray()
             for(char str : numberChar){
-                result += numbers.get(str).get() * new BigDecimal(10).pow(len)
-                len --
+                if(str == '又'){
+                    doubleNumber = true
+                    len = 1
+                    continue
+                }
+                if(!doubleNumber){
+                    result += numbers.get(str).get() * new BigDecimal(10).pow(len)
+                    len --
+                }else{
+                    result += numbers.get(str).get() * 0.1.pow(len)
+                    len++;
+                }
             }
             return result
         }

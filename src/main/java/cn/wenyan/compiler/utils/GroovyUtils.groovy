@@ -3,7 +3,7 @@ package cn.wenyan.compiler.utils
 import cn.wenyan.compiler.WenYanLib
 
 class GroovyUtils {
-    
+
     static BigDecimal getNumber(String wenyanNumber){
         BigDecimal maxNumber = 0
         BigDecimal result = 0

@@ -7,7 +7,6 @@ public class JSArray<T> extends HashMap<Object,T> {
 
     private int index = 0;
 
-
     @Override
     public T put(Object key, T value) {
 

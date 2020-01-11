@@ -2,6 +2,8 @@ package cn.wenyan.compiler.script.libs
 
 import cn.wenyan.compiler.GroovyCompiler
 import cn.wenyan.compiler.LanguageCompiler
+import cn.wenyan.compiler.lib.ArrayUtils
+import cn.wenyan.compiler.lib.JSArray
 
 enum Language {
 
@@ -39,7 +41,7 @@ enum Language {
                     (Syntax.PRINT)                 : "println($VALUE)",
                     (Syntax.NEGATE)                : "!",
                     (Syntax.CHANGE)                : "$NAME = $VALUE",
-                    (Syntax.REPLACE_ARRAY)         : "$NAME[$INDEX] = $VALUE",
+                    (Syntax.REPLACE_ARRAY)         : "$NAME[getIndex($INDEX)] = $VALUE",
                     (Syntax.STRING)                : "'",
                     (Syntax.ARRAY_ADD)             : NAME+".add($VALUE)",
                     (Syntax.INNER_FUNCTION)        : "def $NAME = {\n $ARGS->",
@@ -49,13 +51,13 @@ enum Language {
                     (Syntax.NOT_BIG_THAN)          : "<=",
                     (Syntax.NOT_SMALL_THAN)        : ">=",
                     (Syntax.NEGATE_EQUAL)          : "!=",
-                    (Syntax.SLICE)                 : NAME+".slice(1)",
-                    (Syntax.SIZE)                  : NAME+".size()",
+                    (Syntax.SLICE)                 : "getArray($NAME).slice(1)",
+                    (Syntax.SIZE)                  : "getArray($NAME).size()",
                     (Syntax.RUN_FUNCTION)          : "def $VALUE = $NAME($ARGS)",
                     (Syntax.OBJECT_INNER)          : ".",
                     (Syntax.NUMBER_SUGAR)          : "((Integer)$NAME)",
                     (Syntax.STRING_APPEND)         : "+",
-                    (Syntax.ARRAY_GET)             : "("+NAME+".getClass() == HashMap.Node.class?"+NAME+".getValue():$NAME)[("+INDEX+".class == Integer.class?$INDEX-1:$INDEX)]",
+                    (Syntax.ARRAY_GET)             : "getArray($NAME)[getIndex($INDEX)]",
                     (Syntax.INT_TYPE)              : "int",
                     (Syntax.STRING_TYPE)           : "String",
                     (Syntax.ARRAY_TYPE)            : "JSArray",
@@ -66,7 +68,8 @@ enum Language {
                     (Syntax.NULL)                  : "null",
                     (Syntax.DEFINE_ARRAY)          : "new JSArray()",
                     (Syntax.DEFINE_INT)            : "0",
-                    (Syntax.DEFINE_STRING)         : "''"
+                    (Syntax.DEFINE_STRING)         : "''",
+                    (Syntax.IMPORT_WITH)           : ("import "+ JSArray.name+"\nimport static "+ArrayUtils.name+".getArray\nimport static "+ArrayUtils.name+".getIndex")
             ],new GroovyCompiler()
     );
 

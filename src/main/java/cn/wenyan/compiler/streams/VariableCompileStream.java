@@ -240,15 +240,17 @@ public class VariableCompileStream extends CompileStream{
     private String getVarString(Syntax typeInfo,char type,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
         for(int i = 0;i<name.size();i++){
             String def;
-            if(values.get(i).contains(".")) {
-                if(typeInfo.equals(Syntax.INT_TYPE)){
+            if(values.size()!=0) {
+                if (values.get(i).contains(".")) {
+                    if (typeInfo.equals(Syntax.INT_TYPE)) {
 
-                    typeInfo = Syntax.DOUBLE_TYPE;
-                }
-            }else{
-                if(typeInfo.equals(Syntax.DOUBLE_TYPE)){
+                        typeInfo = Syntax.DOUBLE_TYPE;
+                    }
+                } else {
+                    if (typeInfo.equals(Syntax.DOUBLE_TYPE)) {
 
-                    typeInfo = Syntax.INT_TYPE;
+                        typeInfo = Syntax.INT_TYPE;
+                    }
                 }
             }
             if (i >= values.size()){

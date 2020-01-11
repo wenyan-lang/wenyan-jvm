@@ -67,7 +67,9 @@ public enum Syntax {
 
     DEFINE_INT("define_int"),
 
-    DEFINE_STRING("define_string");
+    DEFINE_STRING("define_string"),
+
+    IMPORT_WITH("import_with");
 
 
 

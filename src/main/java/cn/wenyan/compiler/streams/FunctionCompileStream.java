@@ -45,6 +45,8 @@ public class FunctionCompileStream extends CompileStream {
                                 if(Utils.matches(wenyan[i],WenYanLib.DEFINE_ARG())){
                                     count++;
                                     Utils.inputWenyan(compiler,i);
+                                    Syntax type = WenYanLib.types().get(Utils.getString(WenYanLib.TYPE(),wenyan[i])).get();
+                                    String langType = language.getSyntax(type);//獲得intdeng
                                     String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyan[i]);
                                     long len = stream.getNumber(wuYiYan);
                                     int now = i;
@@ -52,7 +54,8 @@ public class FunctionCompileStream extends CompileStream {
                                         if(Utils.matches(wenyan[j],WenYanLib.VAR_GET_NAME())){
                                             count++;
                                             Utils.inputWenyan(compiler,j);
-                                            args.append(stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[j]),false)).append(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT));
+                                            String defined = LanguageUtils.defineArg(language,stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[j]),true),langType);
+                                            args.append(defined).append(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT));
                                         }else{
                                             break;
                                         }

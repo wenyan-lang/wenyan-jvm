@@ -281,4 +281,11 @@ object WenYanLib {
     '物' -> "null",
   )
 
+  val types = Map[String,Syntax](
+    "數" -> Syntax.INT_TYPE,
+    "言" -> Syntax.STRING_TYPE,
+    "爻" -> Syntax.BOOL_TYPE,
+    "列" -> Syntax.BOOL_TYPE
+  )
+
 }

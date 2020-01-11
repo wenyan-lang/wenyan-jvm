@@ -162,16 +162,17 @@ public class VariableCompileStream extends CompileStream{
 
     private String parseType(char type,List<String> name,List<String> values){
         StringBuilder head = new StringBuilder();
+        Syntax syntax = WenYanLib.types().get(type+"").get();
         switch (type){
             case '數':
-                return getVarString(type,head,name,values,this::getNumber);
+                return getVarString(syntax,type,head,name,values,this::getNumber);
             case '言':
-                return getVarString(type,head,name,values,
+                return getVarString(syntax,type,head,name,values,
                        this::getString);
             case '爻':
-                return getVarString(type,head,name,values,val->WenYanLib.bool().get(val).get());
+                return getVarString(syntax,type,head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':
-                return getVarString(type,head,name,values,val->WenYanLib.define().get(type));
+                return getVarString(syntax,type,head,name,values,val->WenYanLib.define().get(type));
             case '物':
                 return "";
             default:
@@ -191,6 +192,7 @@ public class VariableCompileStream extends CompileStream{
             Utils.inputWenyan(compiler,index);
             names.add(getName(ns.substring(ns.indexOf(ns.charAt(0))+1),true));
             index++;
+            if(index >= wenyans.length)break;
         }
         return names;
     }
@@ -236,17 +238,28 @@ public class VariableCompileStream extends CompileStream{
 
 
 
-    private String getVarString(char type,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
+    private String getVarString(Syntax typeInfo,char type,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
         for(int i = 0;i<name.size();i++){
             String def;
+            if(values.get(i).contains(".")) {
+                if(typeInfo.equals(Syntax.INT_TYPE)){
+
+                    typeInfo = Syntax.DOUBLE_TYPE;
+                }
+            }else{
+                if(typeInfo.equals(Syntax.DOUBLE_TYPE)){
+
+                    typeInfo = Syntax.INT_TYPE;
+                }
+            }
             if (i >= values.size()){
-                def = LanguageUtils.defineVar(language,name.get(i),WenYanLib.define().get(type).get());
+                def = LanguageUtils.defineVar(language,name.get(i),WenYanLib.define().get(type).get(),typeInfo);
             }else if(
                     values.get(i).startsWith("「")&&values.get(i).endsWith("」")
             ){
-                def = LanguageUtils.defineVar(language,name.get(i),Utils.getValue(values.get(i),this));
+                def = LanguageUtils.defineVar(language,name.get(i),Utils.getValue(values.get(i),this),typeInfo);
             }else{
-                def = LanguageUtils.defineVar(language,name.get(i),setValue.apply(values.get(i)).toString());
+                def = LanguageUtils.defineVar(language,name.get(i),setValue.apply(values.get(i)).toString(),typeInfo);
             }
 
 

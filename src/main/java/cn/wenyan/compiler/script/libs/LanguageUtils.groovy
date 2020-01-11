@@ -9,6 +9,19 @@ class LanguageUtils {
                 .replace(Language.VALUE, value)
     }
 
+    static String defineVar(Language language,String name,String value,Syntax type){
+        return language.getSyntax(Syntax.VAR_DEFINE)
+                .replace(Language.NAME,name)
+                .replace(Language.VALUE, value)
+                .replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(type))
+    }
+
+    static String defineArg(Language language,String name,String type){
+        return language.getSyntax(Syntax.FUNCTION_ARG_DEFINE)
+                .replace(Language.NAME,name)
+                .replace(Language.TYPE,type)
+    }
+
     static String addArray(Language language,String name,String value){
         return language.getSyntax(Syntax.ARRAY_ADD)
                 .replace(Language.NAME,name)

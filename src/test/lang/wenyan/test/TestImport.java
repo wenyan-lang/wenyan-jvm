@@ -11,7 +11,7 @@ public class TestImport {
     public void test(){
         WenYanCompiler wenYanCompiler = WenYanTools.makeCompiler(Language.GROOVY);
         wenYanCompiler.runDirectly(true,"" +
-                "吾當觀「「算經」」之書，方悟「正弦」之義" +
+                "吾有一言，曰「「好」」，名之曰「價」" +
                 "");
     }
 }

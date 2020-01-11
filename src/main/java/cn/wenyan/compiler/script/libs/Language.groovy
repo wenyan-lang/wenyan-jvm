@@ -56,8 +56,17 @@ enum Language {
                     (Syntax.NUMBER_SUGAR)          : "((Integer)$NAME)",
                     (Syntax.STRING_APPEND)         : "+",
                     (Syntax.ARRAY_GET)             : "("+NAME+".getClass() == HashMap.Node.class?"+NAME+".getValue():$NAME)[("+INDEX+".class == Integer.class?$INDEX-1:$INDEX)]",
+                    (Syntax.INT_TYPE)              : "int",
+                    (Syntax.STRING_TYPE)           : "String",
+                    (Syntax.ARRAY_TYPE)            : "JSArray",
+                    (Syntax.BOOL_TYPE)             : "boolean",
+                    (Syntax.VAR_TYPE)              : "def",
+                    (Syntax.DOUBLE_TYPE)           : "double",
+                    (Syntax.FUNCTION_ARG_DEFINE)   : "$TYPE $NAME"
             ],new GroovyCompiler()
     );
+
+    static final String TYPE = "%{type}%"
 
     static final String NAME = "%{name}%"
 

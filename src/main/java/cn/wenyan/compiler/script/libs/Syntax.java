@@ -51,8 +51,15 @@ public enum Syntax {
     NUMBER_SUGAR("number_sugar"),//取余数时，对于数字的隐性强转
     STRING_APPEND("string_append"),
     ARRAY_GET("array_get"),
-    LIBS("libs");
 
+    ARRAY_TYPE("array_type"),
+    INT_TYPE("int_type"),
+    STRING_TYPE("string_type"),
+    BOOL_TYPE("bool_type"),
+    DOUBLE_TYPE("double_type"),
+    VAR_TYPE("var_type"),
+
+    FUNCTION_ARG_DEFINE("function_arg_define");
 
 
 

@@ -13,5 +13,7 @@ public class Main {
         }
         WenYanCompiler compiler = new WenYanCompilerImpl(false, Language.GROOVY);
         compiler.compile(args);
+        compiler.runDirectly(true,
+                "乃得其");
     }
 }

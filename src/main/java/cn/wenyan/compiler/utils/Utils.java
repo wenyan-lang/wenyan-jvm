@@ -2,6 +2,7 @@ package cn.wenyan.compiler.utils;
 
 import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
+import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.VariableCompileStream;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
@@ -84,6 +85,12 @@ public class Utils {
 
     public static String getValue(String number, VariableCompileStream stream){
         Language language = stream.getLanguage();
+        if(number.equals("空無")){
+            return language.getSyntax(Syntax.NULL);
+        }
+        if(number.equals("矣")){
+            return "";
+        }
         if(number.matches(WenYanLib.LENGTH())){
             //其餘
             if(number.endsWith("其餘")){
@@ -92,7 +99,7 @@ public class Utils {
             return LanguageUtils.size(language,stream.getName(number.substring(0,number.lastIndexOf("之")),false));
         }
         if(Utils.getString(WenYanLib.GET(),number)!=null)return stream.getArray(number,stream);
-        if(number.equals("其"))return stream.getNowName();
+        if(number.equals("其"))return stream.getNowName()==null?language.getSyntax(Syntax.NULL):stream.getNowName();
         if(number.equals(WenYanLib.FALSE())||number.equals(WenYanLib.TRUE())){
             return language.getSyntax(WenYanLib.bool().get(number).get());
         }

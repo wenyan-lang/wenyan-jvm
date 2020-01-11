@@ -59,7 +59,15 @@ public enum Syntax {
     DOUBLE_TYPE("double_type"),
     VAR_TYPE("var_type"),
 
-    FUNCTION_ARG_DEFINE("function_arg_define");
+    FUNCTION_ARG_DEFINE("function_arg_define"),
+
+    NULL("null"),
+
+    DEFINE_ARRAY("define_array"),
+
+    DEFINE_INT("define_int"),
+
+    DEFINE_STRING("define_string");
 
 
 

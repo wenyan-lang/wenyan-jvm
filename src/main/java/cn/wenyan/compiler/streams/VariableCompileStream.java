@@ -253,7 +253,7 @@ public class VariableCompileStream extends CompileStream{
                 }
             }
             if (i >= values.size()){
-                def = LanguageUtils.defineVar(language,name.get(i),WenYanLib.define().get(type).get(),typeInfo);
+                def = LanguageUtils.defineVar(language,name.get(i),language.getSyntax(WenYanLib.define().get(type).get()),typeInfo);
             }else if(
                     values.get(i).startsWith("「")&&values.get(i).endsWith("」")
             ){

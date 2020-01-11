@@ -174,19 +174,32 @@ object WenYanLib {
     '九' -> 9,
   )
 
+  def getNumber(): String ={
+    val stringBuilder = new StringBuilder("[")
+    for((k,v)<-numbers){
+      stringBuilder.append(k)
+    }
+    for((k,v)<-prefixs){
+      stringBuilder.append(k)
+    }
+    stringBuilder.append("]+")
+    stringBuilder.toString()
+  }
+
+  val numbersGet = getNumber()
 
 
   val syntaxs = Map[String,String](
     DEFINE_VAR -> "(吾有|今有)",
     VAR_NAME -> "曰[\\s\\S]+",
-    VAR_VALUE -> ("([以]|)名之(曰"+VAL_DEF+")+"),
-    VAR_GET_NAME -> ("曰"+VAL_DEF),
+    VAR_VALUE -> s"([以]|)名之(曰$VAL_DEF)+",
+    VAR_GET_NAME -> s"曰$VAL_DEF",
     WRITE -> "書之",
     SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
-    CHANGE -> ("昔之"+VAL_DEF+"者"),
-    AFTER_NAME -> ("今("+VAL_DEF+"|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})(是|)"),
+    CHANGE -> (s"昔之$VAL_DEF"+"者"),
+    AFTER_NAME -> s"今($VAL_DEF|$numbersGet|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})(是|)",
     COMMENT -> "[也矣]",
-    FOR -> "為是([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」)遍",
+    FOR -> s"為是($numbersGet|「[\\s\\S]+」)遍",
     FOR_END -> "云云",
     IF_START -> "若[\\s\\S]+者",
     IF_END -> "[也]",
@@ -194,18 +207,18 @@ object WenYanLib {
     IF_BREAK -> "若[\\s\\S]+者乃止也",
     WHILE -> "恆為是",
     ELSE -> "若非",
-    MATH_START -> "[加減乘除]([一二三四五六七八九十百千萬億零〇]+|「[\\s\\S]+」|其|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
+    MATH_START -> s"[加減乘除]($numbersGet|「[\\s\\S]+」|其|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
     MOD -> "所餘幾何",
     IT_CHANGE -> IT_CHANGE,
     AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎",
     FOR_EACH -> "凡「[\\s\\S]+」中之「[\\s\\S]+」",
     FUNCTION -> "一術",
     NO_ARGS -> "是術曰",
-    RETURN -> "乃得[\\s\\S]+",
+    RETURN -> s"乃得(「「[\\s\\S]+」」|『[\\s\\S]+』|「[\\s\\S]+」|$numbersGet|空無|其)",
     FUNCTION_END -> "是謂「[\\s\\S]+」之術也",
     ARGS -> "欲行是術",
     MUST -> "必先得",
-    DEFINE_ARG -> "[一二三四五六七八九十百千萬億零〇]+[數言爻列物]",
+    DEFINE_ARG -> s"$numbersGet[數言爻列物]",
     DEFINE_END -> "乃行是術曰",
     RUN_FUNCTION -> "施「[\\s\\S]+」",
     ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",
@@ -213,8 +226,8 @@ object WenYanLib {
     IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",
     YI -> "噫",
     ADD -> "充「[\\s\\S]+」",
-    VAL -> "[以於](「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
-    GET -> "夫「[\\s\\S]+」之(「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)",
+    VAL -> s"[以於](「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
+    GET -> s"夫「[\\s\\S]+」之(「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」)",
     REPLACE_ARRAY -> ("昔之"+VAL_DEF+"之("+VAL_DEF+"|「「[\\s\\S]+」」)者"),
     NEW_COMMENT -> "[批注疏]曰",
     OTHER -> "變「[\\s\\S]+」",
@@ -223,7 +236,7 @@ object WenYanLib {
 
 
   val patterns = Map[String,Pattern](
-    NUMBER -> Pattern.compile("[一二三四五六七八九十]+"),
+    NUMBER -> Pattern.compile(numbersGet),
     ALL -> Pattern.compile("[\\s\\S]+"),
     TYPE -> Pattern.compile("[數言爻列物]"),
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
@@ -232,14 +245,14 @@ object WenYanLib {
     COMMENT -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
     STRING -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
     HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}"),
-    FOR -> Pattern.compile("[一二三四五六七八九十百十千萬億]+"),
+    FOR -> Pattern.compile(numbersGet),
     VAR_NAME_FOR -> Pattern.compile(VAL_DEF),
     SPLIT_MATH ->Pattern.compile("[以於]"),
     AND_OR -> Pattern.compile("(有陽|無陰)"),
     HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),
     ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)"),
-    VAL -> Pattern.compile("(「\\s\\S」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)"),
-    GET -> Pattern.compile("「[\\s\\S]+」之(「[\\s\\S]+」|[一二三四五六七八九十百千萬億零〇]+|「「[\\s\\S]+」」)"),
+    VAL -> Pattern.compile(s"(「\\s\\S」|$numbersGet|「「[\\s\\S]+」」)"),
+    GET -> Pattern.compile(s"「[\\s\\S]+」之(「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」)"),
     NEW_COMMENT -> Pattern.compile("[批注疏]")
   )
 
@@ -273,13 +286,17 @@ object WenYanLib {
     math('除') = Syntax.MATH_EXCEPT
   }
 
-  val define = Map[Char,String](
-    '數' -> "0",
-    '言' -> "''",
-    '爻' -> "false",
-    '列' -> "new JSArray()",
-    '物' -> "null",
-  )
+  val define = MMap[Char,Syntax]()
+
+  addDefine()
+
+  def addDefine(): Unit ={
+    define('數') = Syntax.DEFINE_INT
+    define('言') = Syntax.DEFINE_STRING
+    define('爻') = Syntax.FALSE
+    define('列') = Syntax.DEFINE_ARRAY
+    define('物') = Syntax.NULL
+  }
 
   val types = Map[String,Syntax](
     "數" -> Syntax.INT_TYPE,

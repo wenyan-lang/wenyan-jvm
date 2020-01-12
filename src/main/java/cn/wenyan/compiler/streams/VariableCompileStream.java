@@ -31,107 +31,100 @@ public class VariableCompileStream extends CompileStream{
         super(compiler);
     }
     // 具之一句，而翻万里者也。
-    public CompileResult compile(String[] wenyans) {
-        if(Utils.matches(wenyans[0],WenYanLib.VAR_VALUE())){
-            Utils.inputWenyan(compiler,0);
-            wenyans[0] = "曰"+Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[0]);
-            int index = 0;
+    public CompileResult compile(List<String> wenyans) {
+        if(Utils.matches(wenyans,WenYanLib.VAR_VALUE())){
+            List<String> nowWenYans = new ArrayList<>();
+            wenyans.set(0,"曰"+Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans.get(0)));
             StringBuilder builder = new StringBuilder();
             int last = nowNames.size() - 1;
             int defineNumber = 0;
-            while (Utils.matches(wenyans[index],WenYanLib.VAR_GET_NAME())){
+            while (Utils.matches(wenyans,WenYanLib.VAR_GET_NAME())){
                 defineNumber ++;
-                Utils.inputWenyan(compiler,index);
-                index++;
+                nowWenYans.add(compiler.removeWenyan());
             }
-            index = 0;
             Stack<String> strings = new Stack<>();
             for(int i = 0;i<defineNumber;i++){
                 strings.push(nowNames.get(last--));
             }
             int size = strings.size();
             for(int i = 0;i<size;i++){
-                builder.append(LanguageUtils.defineVar(language,getName(wenyans[index++].substring(wenyans[index].indexOf("曰")+1),true),strings.pop())).append("\n");
+                builder.append(LanguageUtils.defineVar(language,getName(nowWenYans.get(i).substring(nowWenYans.get(i).indexOf("曰")+1),true),strings.pop())).append("\n");
             }
             return new CompileResult(builder.toString());
         }
-        if(wenyans[0].equals("書之")){
-            Utils.inputWenyan(compiler,0);
+        if(Utils.matches(wenyans,WenYanLib.WRITE())){
+            compiler.removeWenyan();
             return new CompileResult(LanguageUtils.println(language,nowName));
         }
-        if(Utils.matches(wenyans[0],WenYanLib.YI())){
-            Utils.inputWenyan(compiler,0);
+        if(Utils.matches(wenyans,WenYanLib.YI())){
+            compiler.removeWenyan();
             return new CompileResult("");
         }
         //TODO
-        if(Utils.matches(wenyans[0], WenYanLib.DEFINE_VAR())){
-            Utils.inputWenyan(compiler,0);
-            if(Utils.matches(wenyans[1],WenYanLib.DEFINE_ARG())){
-                Utils.inputWenyan(compiler,1);
-                String wuYiYan = Utils.getString(WenYanLib.NUMBER(),wenyans[1]);
+        if(Utils.matches(wenyans, WenYanLib.DEFINE_VAR())){
+            compiler.removeWenyan();
+            if(Utils.matches(wenyans,WenYanLib.DEFINE_ARG())){
+                String value = compiler.removeWenyan();//吾有一言
+                String wuYiYan = Utils.getString(WenYanLib.NUMBER(),value);
                 int number = Integer.parseInt(getNumber(wuYiYan).toString())+1;
-                if(Utils.matches(wenyans[2],WenYanLib.VAR_VALUE())){
-                    number = 1;
-                }
-                return new CompileResult(appendVar(
-                        number+1,wenyans[number+1],
-                        getNames(number,wenyans),
-                        getValues(number,wenyans),
-                        Utils.getString(WenYanLib.TYPE(),wenyans[1]).charAt(0)
+                List<String> values = getValues(wenyans);//曰...
+                List<String> names = getNames(wenyans);//名之曰...
+                //number 为数的数目
+                //吾有一数，曰三，名之曰「和」
+                return new CompileResult(appendVar(number,
+                        names,
+                        values,
+                        Utils.getString(WenYanLib.TYPE(),value).charAt(0)
                 )
                 );
             }
 
         }
-        if(Utils.matches(wenyans[0],WenYanLib.OTHER())){
-            Utils.inputWenyan(compiler,0);
-            return new CompileResult(LanguageUtils.defineVar(language,getAnsName(),language.getSyntax(Syntax.NOT)+Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[0]),this)));
+        if(Utils.matches(wenyans,WenYanLib.OTHER())){
+            String value = compiler.removeWenyan();
+            return new CompileResult(LanguageUtils.defineVar(language,getAnsName(),language.getSyntax(Syntax.NOT)+Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),value),this)));
         }
         //TODO
-        if(Utils.matches(wenyans[0],WenYanLib.SIMPLE_VAR())){
-            Utils.inputWenyan(compiler,0);
+        if(Utils.matches(wenyans,WenYanLib.SIMPLE_VAR())){
+            String value = compiler.removeWenyan();
             List<String> values = new ArrayList<>();
-            values.add(wenyans[0].substring(2));
-            int number = 0;
-            return new CompileResult(appendVar(
-                    number+1,wenyans[number+1],
-                    getNames(number,wenyans),
+            values.add(value.substring(2));
+            return new CompileResult(appendVar(1,
+                    getNames(wenyans),
                     values,
-                    Utils.getString(WenYanLib.TYPE(),wenyans[0]).charAt(0)
+                    Utils.getString(WenYanLib.TYPE(),value).charAt(0)
             ));
         }
-        if(Utils.matches(wenyans[0],WenYanLib.CHANGE())){
-            Utils.inputWenyan(compiler,0);
-            String beforeName = Utils.getStringFrom(WenYanLib.BEFORE_NAME(),wenyans[0],WenYanLib.NAME_START(),WenYanLib.NAME_END());
-            return change(beforeName,wenyans[1],wenyans);
+        if(Utils.matches(wenyans,WenYanLib.CHANGE())){
+            String value = compiler.removeWenyan();
+            String beforeName = Utils.getStringFrom(WenYanLib.BEFORE_NAME(),value,WenYanLib.NAME_START(),WenYanLib.NAME_END());
+            return change(beforeName,compiler.removeWenyan(),wenyans);
         }
-        if(Utils.matches(wenyans[0],WenYanLib.REPLACE_ARRAY())){
-            Utils.inputWenyan(compiler,0);
-            String get = getArray(wenyans[0].substring(wenyans[0].indexOf("昔之")+2,wenyans[0].lastIndexOf("者")),this);
-            return change(get,wenyans[1],wenyans);
+        if(Utils.matches(wenyans,WenYanLib.REPLACE_ARRAY())){
+            String value = compiler.removeWenyan();
+            String get = getArray(value.substring(value.indexOf("昔之")+2,value.lastIndexOf("者")),this);
+            return change(get,compiler.removeWenyan(),wenyans);
         }
         return new CompileResult(false,wenyans);
     }
 
 
-    public CompileResult change(String beforeName,String changeCmd,String[] wenyans){
+    public CompileResult change(String beforeName,String changeCmd,List<String> wenyans){
         String end = "";
-        if(wenyans[2].equals("是也")||wenyans[2].equals("也")){
-            Utils.inputWenyan(compiler,2);
-            if(!wenyans[3].equals("若非")){
+        if(wenyans.get(0).equals("是也")||wenyans.get(0).equals("也")){
+            compiler.removeWenyan();
+            if(!wenyans.get(0).equals("若非")){
+                compiler.removeWenyan();
                 end = language.getSyntax(Syntax.IF_END);
             }
-        }
-        if(wenyans[2].equals("是矣")||wenyans[2].equals("矣")){
-            Utils.inputWenyan(compiler,2);
+        }else if(wenyans.get(0).equals("是矣")||wenyans.get(0).equals("矣")){
+            compiler.removeWenyan();
         }
         if(Utils.matches(changeCmd,WenYanLib.AFTER_NAME())){
-            Utils.inputWenyan(compiler,1);
             int i = changeCmd.lastIndexOf("是")==-1?changeCmd.lastIndexOf("也")==-1?changeCmd.lastIndexOf("矣"):changeCmd.lastIndexOf("也"):changeCmd.lastIndexOf("是");
             String afterName = Utils.getValue(i <= 0?changeCmd.substring(changeCmd.indexOf("今")+1):changeCmd.substring(changeCmd.indexOf("今")+1,i),this);
             return new CompileResult(LanguageUtils.change(language,beforeName,afterName)+"\n"+end);
         }else if(changeCmd.equals(WenYanLib.IT_CHANGE())){
-            Utils.inputWenyan(compiler,1);
             return new CompileResult(LanguageUtils.change(language,beforeName,nowName)+"\n"+end);
         }
         return new CompileResult(false,wenyans);
@@ -140,18 +133,15 @@ public class VariableCompileStream extends CompileStream{
     //变量者乎
     //TODO
     //endIndex就是结尾，为value定义后
-    public String appendVar(int endIndex,String end,List<String> name, List<String> values, char type){
-        if(name.size()==0&&Utils.matches(end,WenYanLib.WRITE())){
-            String append = language.getSyntax(Syntax.STRING_APPEND);
-            Utils.inputWenyan(compiler,endIndex);
-            StringBuilder builder = new StringBuilder();
+    public String appendVar(int number,List<String> name, List<String> values, char type){
+        if(name.size() == 0&&number > 1){
+            StringBuilder builder = new StringBuilder("''");
             for(String value : values){
-                builder.append(Utils.getValue(value,this)).append(append);
-
+                builder.append(language.getSyntax(Syntax.STRING_APPEND)).append(Utils.getValue(value,this)).append(language.getSyntax(Syntax.STRING_APPEND)).append("''");
             }
-            return LanguageUtils.println(language,builder.toString().substring(0,builder.lastIndexOf(append)));
-
-        }else return parseType(type, name, values);
+            return LanguageUtils.defineVar(language,getAnsName(),builder.toString());
+        }
+        return parseType(type, name, values);
     }
 
     public String getAnsName(){
@@ -183,15 +173,12 @@ public class VariableCompileStream extends CompileStream{
         return language.getSyntax(Syntax.STRING)+val.substring(val.indexOf(WenYanLib.STRING_START())+2,val.lastIndexOf(WenYanLib.STRING_END()))+language.getSyntax(Syntax.STRING);
     }
 
-    private List<String> getNames(double number,String[] wenyans){
-        int index = (int)number+1;//4
+    private List<String> getNames(List<String> wenyans){
         List<String> names = new ArrayList<>();
-        while (Utils.matches(wenyans[index],WenYanLib.VAR_VALUE())||Utils.matches(wenyans[index],WenYanLib.VAR_GET_NAME())){
-            String ns = Utils.getString(WenYanLib.VAR_GET_NAME(),wenyans[index]);
-            Utils.inputWenyan(compiler,index);
-            names.add(getName(ns.substring(ns.indexOf(ns.charAt(0))+1),true));
-            index++;
-            if(index >= wenyans.length)break;
+        while (Utils.matches(wenyans, WenYanLib.VAR_VALUE()) || Utils.matches(wenyans, WenYanLib.VAR_GET_NAME())) {
+            String val = compiler.removeWenyan();
+            String ns = Utils.getString(WenYanLib.VAR_GET_NAME(), val);
+            names.add(getName(ns.substring(ns.indexOf(ns.charAt(0)) + 1), true));
         }
         return names;
     }
@@ -222,13 +209,15 @@ public class VariableCompileStream extends CompileStream{
         return name;
     }
 
-    private List<String> getValues(double number,String[] wenyans){
+    private List<String> getValues(List<String> wenyans){
         List<String> values = new ArrayList<>();
-        for(int i = 1;i<=number;i++){
-            if(wenyans.length == 1)break;
-            if(Utils.matches(wenyans[i],WenYanLib.VAR_NAME())){
-                Utils.inputWenyan(compiler,i);
-                values.add(Utils.getStringFrom(WenYanLib.ALL(),wenyans[i],"曰"));
+        for(;;){
+            if(wenyans.size() == 1)break;
+            if(Utils.matches(wenyans,WenYanLib.VAR_NAME())){
+                String val = compiler.removeWenyan();
+                values.add(Utils.getStringFrom(WenYanLib.ALL(),val,"曰"));
+            }else{
+                break;
             }
         }
         return values;
@@ -238,7 +227,7 @@ public class VariableCompileStream extends CompileStream{
 
 
     private String getVarString(Syntax typeInfo,char type,StringBuilder head,List<String> name, List<String> values, Function<String,Object> setValue){
-        for(int i = 0;i<name.size();i++){
+        for(int i = 0;i<Math.max(name.size(),values.size());i++){
             String def;
             if(values.size()!=0) {
                 if (values.get(i).contains(".")) {
@@ -253,14 +242,15 @@ public class VariableCompileStream extends CompileStream{
                     }
                 }
             }
+            String getName =  i>name.size()?getAnsName():name.get(i);
             if (i >= values.size()){
-                def = LanguageUtils.defineVar(language,name.get(i),language.getSyntax(WenYanLib.define().get(type).get()),typeInfo);
+                def = LanguageUtils.defineVar(language,getName,language.getSyntax(WenYanLib.define().get(type).get()),typeInfo);
             }else if(
                     values.get(i).startsWith("「")&&values.get(i).endsWith("」")
             ){
-                def = LanguageUtils.defineVar(language,name.get(i),Utils.getValue(values.get(i),this),typeInfo);
+                def = LanguageUtils.defineVar(language,getName,Utils.getValue(values.get(i),this),typeInfo);
             }else{
-                def = LanguageUtils.defineVar(language,name.get(i),setValue.apply(values.get(i)).toString(),typeInfo);
+                def = LanguageUtils.defineVar(language,getName,setValue.apply(values.get(i)).toString(),typeInfo);
             }
 
 

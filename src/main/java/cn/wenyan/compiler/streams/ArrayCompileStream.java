@@ -6,6 +6,8 @@ import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.utils.Utils;
 
+import java.util.List;
+
 public class ArrayCompileStream extends CompileStream {
 
     public ArrayCompileStream(WenYanCompilerImpl compiler) {
@@ -13,40 +15,35 @@ public class ArrayCompileStream extends CompileStream {
     }
 
     @Override
-    public CompileResult compile(String[] wenyan) {
+    public CompileResult compile(List<String> wenyan) {
         VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
 
-        if(Utils.matches(wenyan[0],WenYanLib.LENGTH())){
-            Utils.inputWenyan(compiler,0);
-
+        if(Utils.matches(wenyan,WenYanLib.LENGTH())){
+            String value = compiler.removeWenyan();
             return new CompileResult(
-                    LanguageUtils.defineVar(language,stream.getAnsName(),Utils.getValue(wenyan[0].substring(wenyan[0].indexOf("夫")+1),stream))
+                    LanguageUtils.defineVar(language,stream.getAnsName(),Utils.getValue(value.substring(value.indexOf("夫")+1),stream))
             );
         }
-        if(Utils.matches(wenyan[0], WenYanLib.ADD())){
-
-            String name = Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyan[0]),stream);
+        if(Utils.matches(wenyan, WenYanLib.ADD())){
+            String value01 = compiler.removeWenyan();
+            String name = Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),value01),stream);
             StringBuilder result = new StringBuilder();
-            Utils.inputWenyan(compiler,0);
-            Utils.inputWenyan(compiler,1);
-            int i = 1;
-            while (Utils.matches(wenyan[i],WenYanLib.VAL())){
-                Utils.inputWenyan(compiler,i);
+            while (Utils.matches(wenyan,WenYanLib.VAL())){
+                String value02 = compiler.removeWenyan();
 
                 result.append(LanguageUtils.addArray(
                         language,
                         name,
-                        Utils.getValue(wenyan[i].substring(wenyan[i].indexOf(wenyan[i].charAt(0)) + 1), stream)
+                        Utils.getValue(value02.substring(value02.indexOf(value02.charAt(0)) + 1), stream)
                         )
                 ).append("\n");
-                i++;
             }
             return new CompileResult(result.toString());
         }
-        if(Utils.matches(wenyan[0],WenYanLib.GET())){
+        if(Utils.matches(wenyan,WenYanLib.GET())){
 
-            Utils.inputWenyan(compiler,0);
-            String get = wenyan[0].substring(wenyan[0].indexOf("夫")+1);
+            String value = compiler.removeWenyan();
+            String get = value.substring(value.indexOf("夫")+1);
 
             return new CompileResult(
                     LanguageUtils.defineVar(language,stream.getAnsName(),stream.getArray(get,stream))

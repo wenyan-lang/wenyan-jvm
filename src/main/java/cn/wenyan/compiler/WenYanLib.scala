@@ -218,46 +218,47 @@ object WenYanLib {
   val numbersGet = getNumber()
 
 
+  private val value = s"$VAL_DEF|$numbersGet|「「[\\s\\S]+」」|空無|其|陽|陰"
   val syntaxs = MMap[String,String](
-    DEFINE_VAR -> "(吾有|今有)",
-    VAR_NAME -> "曰[\\s\\S]+",
-    VAR_VALUE -> s"([以]|)名之(曰$VAL_DEF)+",
-    VAR_GET_NAME -> s"曰$VAL_DEF",
-    WRITE -> "書之",
-    SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
-    CHANGE -> (s"昔之$VAL_DEF"+"者"),
-    AFTER_NAME -> s"今($VAL_DEF|$numbersGet|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})(是|)",
-    COMMENT -> "[也矣]",
-    FOR -> s"為是($numbersGet|「[\\s\\S]+」)遍",
-    FOR_END -> "云云",
-    IF_START -> "若[\\s\\S]+者",
-    IF_END -> "[也]",
-    BREAK -> "乃止",
-    IF_BREAK -> "若[\\s\\S]+者乃止也",
-    WHILE -> "恆為是",
-    ELSE -> "若非",
-    MATH_START -> s"[加減乘除]($numbersGet|「[\\s\\S]+」|其|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
-    MOD -> "所餘幾何",
-    IT_CHANGE -> IT_CHANGE,
-    AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎",
-    FOR_EACH -> "凡「[\\s\\S]+」中之「[\\s\\S]+」",
-    FUNCTION -> "一術",
-    NO_ARGS -> "是術曰",
-    RETURN -> s"乃得(「「[\\s\\S]+」」|『[\\s\\S]+』|「[\\s\\S]+」|$numbersGet|空無|其)",
-    FUNCTION_END -> "是謂「[\\s\\S]+」之術也",
-    ARGS -> "欲行是術",
-    MUST -> "必先得",
-    DEFINE_ARG -> s"$numbersGet[數言爻列物]",
-    DEFINE_END -> "乃行是術曰",
-    RUN_FUNCTION -> "施「[\\s\\S]+」",
-    ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",
-    IMPORT -> "吾嘗觀「「[\\s\\S]+」」之書",
-    IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",
+    DEFINE_VAR -> "(吾有|今有)",//
+    VAR_NAME -> "曰[\\s\\S]+",//
+    VAR_VALUE -> s"([以]|)名之(曰$VAL_DEF)+",//
+    VAR_GET_NAME -> s"曰$VAL_DEF",//
+    WRITE -> "書之",//
+    SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",//
+    CHANGE -> (s"昔之$VAL_DEF"+"者"),//
+    AFTER_NAME -> s"今($value)(是|)",////
+    COMMENT -> "(也|是矣)",//
+    FOR -> s"為是($numbersGet|「[\\s\\S]+」)遍",//
+    FOR_END -> "云云",//
+    IF_START -> "若[\\s\\S]+者",//
+    IF_END -> "[也]",//
+    BREAK -> "乃止",//
+    IF_BREAK -> "若[\\s\\S]+者乃止也",//
+    WHILE -> "恆為是",//
+    ELSE -> "若非",//
+    MATH_START -> s"[加減乘除]($value)",////
+    MOD -> "所餘幾何",//
+    IT_CHANGE -> IT_CHANGE,//
+    AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎",//
+    FOR_EACH -> "凡「[\\s\\S]+」中之「[\\s\\S]+」",//
+    FUNCTION -> "一術",//
+    NO_ARGS -> "是術曰",//
+    RETURN -> s"乃得($value)",//
+    FUNCTION_END -> "是謂「[\\s\\S]+」之術也",//
+    ARGS -> "欲行是術",//
+    MUST -> "必先得",//
+    DEFINE_ARG -> s"$numbersGet[數言爻列物]",//
+    DEFINE_END -> "乃行是術曰",//
+    RUN_FUNCTION -> "施「[\\s\\S]+」",//
+    ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",//
+    IMPORT -> "吾嘗觀「「[\\s\\S]+」」之書",//
+    IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",//
     YI -> "噫",
-    ADD -> "充「[\\s\\S]+」",
-    VAL -> s"[以於](「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
-    GET -> s"夫「[\\s\\S]+」之(「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」)",
-    REPLACE_ARRAY -> ("昔之"+VAL_DEF+"之("+VAL_DEF+"|「「[\\s\\S]+」」)者"),
+    ADD -> s"充($value)",////
+    VAL -> s"[以於]($value)",////
+    GET -> s"夫「[\\s\\S]+」之($value)",
+    REPLACE_ARRAY -> (s"昔之"+VAL_DEF+"之("+value+")者"),
     NEW_COMMENT -> "[批注疏]曰",
     OTHER -> "變「[\\s\\S]+」",
     LENGTH -> s"夫$LENGTH"
@@ -273,15 +274,15 @@ object WenYanLib {
     AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
     COMMENT -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
     STRING -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
-    HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}"),
+    HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}"),//淘汰
     FOR -> Pattern.compile(numbersGet),
     VAR_NAME_FOR -> Pattern.compile(VAL_DEF),
     SPLIT_MATH ->Pattern.compile("[以於]"),
     AND_OR -> Pattern.compile("(有陽|無陰)"),
-    HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),
+    HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),//淘汰
     ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)"),
-    VAL -> Pattern.compile(s"(「\\s\\S」|$numbersGet|「「[\\s\\S]+」」)"),
-    GET -> Pattern.compile(s"「[\\s\\S]+」之(「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」)"),
+    VAL -> Pattern.compile(s"($value)"),
+    GET -> Pattern.compile(s"「[\\s\\S]+」之($value)"),
     NEW_COMMENT -> Pattern.compile("[批注疏]")
   )
 

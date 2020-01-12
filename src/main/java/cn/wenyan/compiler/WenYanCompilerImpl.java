@@ -40,10 +40,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private boolean supportPinyin;
 
-    private int index = 0;
-
-    private String now;
-
     private List<Integer> nowCompiling = new ArrayList<>();
 
     private LanguageCompiler groovyCompiler;
@@ -54,7 +50,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private CompileFactory factory;
 
-    private String[] wenyans;
+    private List<String> wenyans;
 
     private CommandHandler handler;
 
@@ -192,40 +188,17 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return 0;
     }
 
-    public String replaceWenYan(String wenyan,Map<String,String> map){
-        List<String> list = Utils.getStrings(WenYanLib.HASH(),wenyan);
-        for(String s:list){
-            if(map.get(s)!=null) {
-                wenyan = wenyan.replace(s, map.get(s));
-                if (hasOne(wenyan, WenYanLib.NEW_START()) && hasOne(wenyan, WenYanLib.NEW_END())) {
-                    wenyan = wenyan.replace(WenYanLib.NEW_START(), WenYanLib.STRING_START())
-                            .replace(WenYanLib.NEW_END(), WenYanLib.STRING_END());
-                }
-                wenyan = replaceWenYan(wenyan, map);
-            }
-        }
-        return wenyan;
-    }
 
-    public String replaceName(String wenyan,Map<String,String> map){
-        List<String> list = Utils.getStrings(WenYanLib.HASH_NAME(),wenyan);
-        for(String s : list){
-            wenyan = wenyan.replace(s,map.get(s));
-        }
-        return wenyan;
-    }
 
     public String compile(String wenyan){
         try{
             StringBuilder builder = new StringBuilder();
-            wenyans = base(wenyan);
+            wenyans = JuDouUtils.splitWenYan(wenyan);
+            serverLogger.info(JuDouUtils.getLine(wenyans));
             builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
-            while (wenyans.length != 0) {
-                now = Utils.getWenyanFromArray(wenyans);
-                String result = factory.compile(wenyans)[0];
+            while (wenyans.size() != 0) {
+                String result = factory.compile(0,wenyans).get(0);
                 builder.append("\n").append(result);
-                this.clearCompiled();
-
             }
             return builder.toString();
         }catch (Exception e){
@@ -239,40 +212,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return serverLogger;
     }
 
-    public String nameToHASH(String wenyan, Map<String,String> map){
-        List<String> list = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),wenyan);
-        for(String s : list){
-            int count = index++;
-            String hash = "「{{"+count+"HASH~"+"}}」";
-            wenyan = wenyan.replace(s,hash);
-            map.put(hash,s);
-        }
-        return wenyan;
-    }
 
-
-    public String wenYansToHASH(String wenyan,Map<String,String> map){
-        List<String> comments = Utils.getStrings(WenYanLib.STRING(),wenyan);
-        for(String comment:comments){
-            int count = index++;
-            String hash = "{{"+count+"HASH~"+"}}";
-            map.put(hash,comment);
-            wenyan = wenyan.replace(comment,hash);
-            wenyan = wenYansToHASH(wenyan,map);
-        }
-        return wenyan;
-    }
-
-    public String replaceOnlyString(String wenyan,Map<String,String> map){
-        List<String> comments = Utils.getStrings(WenYanLib.ONLY_STRING(),wenyan);
-        for(String comment:comments){
-            int count = index++;
-            String hash = "{{"+count+"HASH~"+"}}";
-            map.put(hash,comment);
-            wenyan = wenyan.replace(comment,hash);
-        }
-        return wenyan;
-    }
 
     public int compileToGroovy(File file,boolean outInConsole,String... wenyanString){
         try {
@@ -294,31 +234,12 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return nowCompiling;
     }
 
-    public void clearCompiled(){
-        List<String> newWenyans = new ArrayList<>(Arrays.asList(wenyans));
-        Utils.removeDuplicateWithOrder(nowCompiling);
-        for(int index:nowCompiling){
-            setIndexCode();
-            newWenyans.set(index,null);
-        }
-        Iterator<String> str = newWenyans.iterator();
-        while (str.hasNext()){
-            if(str.next() == null)str.remove();
-        }
-        wenyans = newWenyans.toArray(new String[0]);
-        nowCompiling.clear();
-    }
-
     public boolean isSupportPinyin() {
         return supportPinyin;
     }
 
     public <T extends CompileStream> T getStream(Class<T> stream){
         return stream.cast(streamMap.get(stream));
-    }
-
-    public String getNow() {
-        return now;
     }
 
     public int getIndexCode() {
@@ -350,37 +271,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
        return JuDouUtils.trimWenYanX(s);
     }
 
-
-
-    private String[] base(String wenyan){
-        index ++;
-
-        serverLogger.info("吾译之于 "+index+" 行也,其为'"+wenyan+"'者乎");
-        //暂时草率的实现这个符号
-        if(Utils.getStrings(WenYanLib.HASH(),wenyan).size()!=0){
-            throw new SyntaxException("此占位符不可存在: {{$numberHASH~}}");
-        }
-        Map<String,String> nowMap = new HashMap<>();
-        wenyan = trimWenYan(wenyan);
-        wenyan = JuDouUtils.splitComment(wenyan);
-        wenyan = wenYansToHASH(wenyan,nowMap);
-        wenyan = replaceOnlyString(wenyan,nowMap);
-        wenyan = nameToHASH(wenyan,nowMap);
-        wenyan = JuDouUtils.getWenYan(wenyan);
-        wenyans = wenyan.split(WenYanLib.SPLIT());
-        for(int j = 0;j<wenyans.length;j++){
-            wenyans[j] = replaceName(wenyans[j],nowMap);
-        }
-        for(int j = 0;j<wenyans.length;j++){
-            wenyans[j] = replaceWenYan(wenyans[j],nowMap).trim();
-        }
-        serverLogger.info("断句者为: ");
-        serverLogger.info(JuDouUtils.getLine(wenyans));
-        return new ArrayList<>(Arrays.asList(wenyans)).toArray(new String[0]);
+    public String removeWenyan(){
+        setIndexCode();
+        return this.wenyans.remove(0);
     }
-
-
-
 
     private boolean hasOne(String s,String thing){
         return s.indexOf(thing) == s.lastIndexOf(thing);
@@ -408,4 +302,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     public Language getLanguageType() {
         return languageType;
     }
+
+
 }

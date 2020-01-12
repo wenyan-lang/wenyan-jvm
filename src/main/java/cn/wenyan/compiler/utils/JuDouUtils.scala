@@ -12,6 +12,12 @@ import scala.util.control.Breaks
 
 object JuDouUtils {
 
+    class Counter{
+        var count = 0
+        def add(): Unit = count += 1
+        def cut(): Unit = count -= 1
+    }
+
     val loop = Breaks
 
     def getWenYan(string: String) : String ={
@@ -22,10 +28,10 @@ object JuDouUtils {
         builder.toString()
     }
 
-    def getLine(string: Array[String]) : String ={
+    def getLine(string: util.List[String]) : String ={
         var index =0
         val builder = new StringBuilder("\n")
-        string.foreach(
+        string.stream().forEach(
             x=> {
                 if(!x.equals("")){
                     builder.append(index).append(": ").append(x).append("\n")
@@ -36,33 +42,83 @@ object JuDouUtils {
         builder.toString()
     }
 
+    def newStringToCommon(string : String): String ={
+
+        val first = string.indexOf("『")
+        val end = string.lastIndexOf("』")
+        val builder = new StringBuilder
+
+        if(first != -1||end != -1){
+            var count = 0
+            for(x <- string){
+                if(first == count)
+                    builder.append("「「")
+                else if
+                    (end == count)builder.append("」」")
+                else
+                    builder.append(x)
+                count+=1
+            }
+            return builder.toString()
+        }
+        string
+    }
+
     def splitWenYan(strings: String) : java.util.List[String] ={
-        val string = strings.replace(" ","")
+        val string = trimWenYanX(newStringToCommon(strings.trim))
         val list = new util.ArrayList[String]()
         var builder = new StringBuilder
         var index = 0
+        var count = 0
         while(index < string.length){
-            var isAppend = false
-            val s = string(index)
             loop.breakable{
 
-                if(s.toString.equals("{")){
-                    builder.append("{")
-                    while (!builder.endsWith("}}")){
+                var isAppend = false
+                val s = string(index)
+
+                if(s == '「'){
+                    count += 1
+                    //拼接字符串
+                    builder.append(s)
+                    while (count != 0){
                         index+=1
-                        builder.append(string(index))
+                        val s = string(index)
+                        if(s == '「') count += 1
+                        if(s == '」') count -= 1
+                        builder.append(s)
                     }
                     isAppend = true
                 }
 
 
-                if(s.toString.equals(WenYanLib.NAME_START)){
-                    builder.append(WenYanLib.NAME_START)
-                    while (!builder.endsWith(WenYanLib.NAME_END)){
-                        index+=1
-                        builder.append(string(index))
+                if(s.toString.matches(WenYanLib.patterns(WenYanLib.NEW_COMMENT).toString)){
+                    var start = 0
+                    var started = false
+                    var builder01 = new StringBuilder
+                    loop.breakable{
+                        while (true){
+                            if(string(index) == '「'){
+                                if(!started)started = true
+                                start += 1
+                            }
+                            if(string(index) == '」'){
+                                start -= 1
+                            }
+                            builder01.append(string(index))
+                            if(string(index) == '曰'){
+                                list.add(builder01.toString())
+                                builder01 = new StringBuilder
+                            }
+                            if(started){
+                                if(start == 0){
+                                    list.add(builder01.toString())
+                                    builder = new StringBuilder
+                                    loop.break()
+                                }
+                            }
+                            index+=1
+                        }
                     }
-                    isAppend = true
                 }
 
                 if(isNumber(s)){
@@ -76,26 +132,28 @@ object JuDouUtils {
                     isAppend = true
                 }
 
-
                 if(s.toString.matches(WenYanLib.SPLIT)){
-                    list.add(builder.toString())
+                    if(builder.nonEmpty)
+                        list.add(builder.toString())
                     builder = new StringBuilder
                     loop.break
                 }
 
                 if(!isAppend)builder.append(s)
-                if(getString(builder.toString())){
 
+                if(getString(builder.toString())){
                     list.add(builder.toString())
                     builder = new StringBuilder
                 }
+
             }
             index+=1
+
         }
         list
     }
 
-    private def isNumber(s:Char):Boolean = WenYanLib.numbers.contains(s)||WenYanLib.prefixs.contains(s);
+    private def isNumber(s:Char):Boolean = WenYanLib.numbers.contains(s)||WenYanLib.prefixs.contains(s)
 
     private def getString(target: String): Boolean ={
         val patterns = WenYanLib.syntaxs
@@ -107,11 +165,7 @@ object JuDouUtils {
         false
     }
 
-    class Counter{
-        var count = 0
-        def add(): Unit = count += 1
-        def cut(): Unit = count -= 1
-    }
+
 
 
     def trimWenYanX(s: String):String = {
@@ -126,8 +180,9 @@ object JuDouUtils {
             if (x == '」' || x == '』'){
                 counter.cut()
             }
-            if(counter.count == 0){
-                if(x == '\t'||x == '\n'){
+
+            if(counter.count != 1||counter.count != 0){
+                if(x == '\t'||x == '\n'||x == ' '){
                     bool = false
                 }
             }
@@ -137,45 +192,6 @@ object JuDouUtils {
         })
     }
 
-
-
-
-    var patterns = WenYanLib.patterns
-    def splitComment(now : String): String ={
-        var string = now
-        var index = 0
-        while(index < string.length){
-            if(string(index).toString.matches(patterns(WenYanLib.NEW_COMMENT).toString)){
-                var start = 0
-                var started = false
-                loop.breakable{
-                    while (true){
-                        if(string(index) == '「'){
-                            if(!started)started = true
-                            start += 1
-                        }
-                        if(string(index) == '」'){
-                            start -= 1
-                        }
-                        if(started){
-                            if(start == 0){
-                                loop.break()
-                            }
-                        }
-                        index+=1
-                    }
-                }
-                //得到index
-                val builder = new StringBuilder(string)
-                if(!string(index+1).toString.matches(WenYanLib.SPLIT)){
-                    builder.insert(index+1,"。")
-                    string = builder.toString()
-                }
-            }
-            index+=1
-        }
-        string
-    }
 
 
 }

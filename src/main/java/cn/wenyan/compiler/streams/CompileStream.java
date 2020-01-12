@@ -5,6 +5,8 @@ import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Library;
 
+import java.util.List;
+
 public abstract class CompileStream {
 
     protected WenYanCompilerImpl compiler;
@@ -19,7 +21,7 @@ public abstract class CompileStream {
         this.compiler.getStreamMap().put(this.getClass(),this);
         this.library = new Library(language);
     }
-    public abstract CompileResult compile(String[] wenyan);
+    public abstract CompileResult compile(List<String> wenyan);
 
     public Language getLanguage() {
         return language;

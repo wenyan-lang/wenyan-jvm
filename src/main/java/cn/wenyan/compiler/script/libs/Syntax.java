@@ -69,7 +69,9 @@ public enum Syntax {
 
     DEFINE_STRING("define_string"),
 
-    IMPORT_WITH("import_with");
+    IMPORT_WITH("import_with"),
+
+    NOT("not");
 
 
 

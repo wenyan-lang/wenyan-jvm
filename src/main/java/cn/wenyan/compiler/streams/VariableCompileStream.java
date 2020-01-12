@@ -85,7 +85,7 @@ public class VariableCompileStream extends CompileStream{
         }
         if(Utils.matches(wenyans[0],WenYanLib.OTHER())){
             Utils.inputWenyan(compiler,0);
-            return new CompileResult(LanguageUtils.defineVar(language,getAnsName(),"!"+Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[0]),this)));
+            return new CompileResult(LanguageUtils.defineVar(language,getAnsName(),language.getSyntax(Syntax.NOT)+Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),wenyans[0]),this)));
         }
         //TODO
         if(Utils.matches(wenyans[0],WenYanLib.SIMPLE_VAR())){

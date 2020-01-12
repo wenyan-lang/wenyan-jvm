@@ -149,7 +149,7 @@ object WenYanLib {
 
   final val LENGTH : String = "「[\\s\\S]+」之(長|其餘)"
 
-
+  val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
 
@@ -218,7 +218,7 @@ object WenYanLib {
   val numbersGet = getNumber()
 
 
-  val syntaxs = Map[String,String](
+  val syntaxs = MMap[String,String](
     DEFINE_VAR -> "(吾有|今有)",
     VAR_NAME -> "曰[\\s\\S]+",
     VAR_VALUE -> s"([以]|)名之(曰$VAL_DEF)+",
@@ -286,7 +286,7 @@ object WenYanLib {
   )
 
 
-  val MMap = scala.collection.mutable.Map
+
 
   val bool = MMap[String,Syntax]()
 

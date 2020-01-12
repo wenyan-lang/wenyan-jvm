@@ -41,7 +41,6 @@ object JuDouUtils {
         val list = new util.ArrayList[String]()
         var builder = new StringBuilder
         var index = 0
-        println(strings)
         while(index < string.length){
             var isAppend = false
             val s = string(index)

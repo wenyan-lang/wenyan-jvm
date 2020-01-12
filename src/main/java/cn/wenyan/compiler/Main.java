@@ -12,6 +12,7 @@ public class Main {
             CommandHandler.compileCommand.entrySet().stream().forEach(x->System.out.println(x.getValue().getOption()+": "+x.getValue().getClass().getSimpleName()));
         }
         WenYanCompiler compiler = new WenYanCompilerImpl(false, Language.GROOVY);
+
         compiler.compile(args);
         compiler.runDirectly(true,"吾有一術。名之曰「埃氏篩」。欲行是術。必先得一數。曰「甲」。乃行是術曰。\n" +
                 "\t吾有一列。名之曰「掩」。為是「甲」遍。充「掩」以陽也。\n" +

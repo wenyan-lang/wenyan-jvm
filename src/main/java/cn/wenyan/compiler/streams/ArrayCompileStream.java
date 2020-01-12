@@ -17,7 +17,6 @@ public class ArrayCompileStream extends CompileStream {
     @Override
     public CompileResult compile(List<String> wenyan) {
         VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
-
         if(Utils.matches(wenyan,WenYanLib.LENGTH())){
             String value = compiler.removeWenyan();
             return new CompileResult(

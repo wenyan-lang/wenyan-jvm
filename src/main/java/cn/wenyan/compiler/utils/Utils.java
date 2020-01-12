@@ -99,5 +99,9 @@ public class Utils {
         }
     }
 
+    public static String getClassName(String name){
+        return name.substring(0, name.lastIndexOf(".")).replace("/", ".");
+    }
+
 
 }

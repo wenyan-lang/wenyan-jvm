@@ -9,6 +9,8 @@ import cn.wenyan.compiler.factory.StreamBuilder;
 import cn.wenyan.compiler.lib.JSArray;
 import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
+import cn.wenyan.compiler.plugins.Listener;
+import cn.wenyan.compiler.plugins.PluginManager;
 import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
@@ -34,6 +36,8 @@ import static cn.wenyan.compiler.log.LogFormat.fg;
  */
 public class WenYanCompilerImpl implements WenYanCompiler {
 
+    private List<Listener> listeners;
+
     private Map<String,String> nameType = new HashMap<>();
 
     private int indexCode;
@@ -56,6 +60,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private Language languageType;
 
+    private PluginManager pluginManager;
+
     private Map<Class<? extends CompileStream>,CompileStream> streamMap;
 
     //***************************************************//
@@ -77,6 +83,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         this.serverLogger.info("@CopyRight wy-lang.org || github: https://github.com/LingDong-/wenyan-lang");
         this.serverLogger.info("WenYan 3rd Party Compiler : github: https://github.com/MagicLu550/wenyan-lang_jvm/blob/master/README.md");
         this.serverLogger.info("文言文语言的语法规则最终由LingDong的wenyan-lang为基本要素");
+        this.listeners = new ArrayList<>();
         this.factory = new StreamBuilder(this)
                 .put(new VariableCompileStream(this))
                 .put(new CommentCompileStream(this))
@@ -85,7 +92,11 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 .put(new FunctionCompileStream(this))
                 .put(new ArrayCompileStream(this))
                 .build();
+        this.pluginManager = new PluginManager(this);
+        this.loadPlugins();
     }
+
+
 
     //***************************************************//
     //*********************编译主方法**********************//
@@ -250,6 +261,41 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         indexCode++;
     }
 
+    public CompileFactory getFactory() {
+        return factory;
+    }
+
+    public String removeWenyan(){
+        setIndexCode();
+        return this.wenyans.remove(0);
+    }
+
+
+
+
+    public Map<String, String> getNameType() {
+        return nameType;
+    }
+
+    public Language getLanguageType() {
+        return languageType;
+    }
+
+    public List<Listener> getListeners() {
+        return listeners;
+    }
+
+    public void callListener(CompileStream stream,List<String> wenyans,boolean start){
+        if(start){
+            for(Listener listener : listeners){
+                listener.onCompileStart(stream,wenyans);
+            }
+        }else{
+            for(Listener listener : listeners){
+                listener.onCompileFinish(stream,wenyans);
+            }
+        }
+    }
     private File compileOut(File file, File outDir) throws IOException{
         File out = new File(outDir+File.separator+file.getName().split("\\.")[0]+".groovy");
         compileToGroovy(out,false,getGroovyCodeByFile(file));
@@ -267,18 +313,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
 
-    private String trimWenYan(String s){
-       return JuDouUtils.trimWenYanX(s);
-    }
 
-    public String removeWenyan(){
-        setIndexCode();
-        return this.wenyans.remove(0);
-    }
 
-    private boolean hasOne(String s,String thing){
-        return s.indexOf(thing) == s.lastIndexOf(thing);
-    }
+
 
     private String getGroovyCode(boolean outInConsole,String... wenyanString){
         StringBuilder groovyCode = new StringBuilder();
@@ -295,13 +332,19 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return groovyCode.toString();
     }
 
-    public Map<String, String> getNameType() {
-        return nameType;
+    private String trimWenYan(String s){
+        return JuDouUtils.trimWenYanX(s);
     }
 
-    public Language getLanguageType() {
-        return languageType;
+    private void loadPlugins(){
+        File pluginFile = new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile()+"/plugins");
+        if(!pluginFile.exists()) pluginFile.mkdirs();
+        File[] plugins = pluginFile.listFiles();
+        if(plugins != null){
+            for(File f : plugins){
+                if (f.toString().endsWith(".jar"))
+                    pluginManager.loadPlugin(f);
+            }
+        }
     }
-
-
 }

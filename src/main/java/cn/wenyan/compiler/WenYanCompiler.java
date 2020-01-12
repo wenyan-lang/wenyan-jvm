@@ -16,4 +16,6 @@ public interface WenYanCompiler extends Compile,RunCode{
     String dispatch(String wenyan);
 
     String getTraditionalChinese(String wenyan);
+
+    Class<?> compileToClass(String... wenyans);
 }

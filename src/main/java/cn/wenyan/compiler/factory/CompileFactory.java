@@ -21,12 +21,23 @@ public class CompileFactory {
         this.streamList = streams;
     }
 
+    public void addStream(List<CompileStream> stream,Class after){
+        for(int i = 0;i<streamList.size();i++){
+            if(streamList.get(i).getClass() == after){
+                streamList.addAll(i+1,stream);
+                break;
+            }
+        }
+    }
+
     public List<String> compile(int index,List<String> wenyan){
         copy = new ArrayList<>();
         copy.addAll(wenyan);
         for(CompileStream stream : streamList){
+            compiler.callListener(stream,wenyan,true);
             CompileResult result = stream.compile(wenyan);
             if(result.isSuccess()){
+                compiler.callListener(stream,result.getResult(),false);
                 return result.getResult();
             }else{
                 if(!wenyan.equals(copy)){

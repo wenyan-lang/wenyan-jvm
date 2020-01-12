@@ -14,7 +14,37 @@ You can run WenYan Programming Language in JVM.
 
 > 项目的自定义系统
 
-您可以通过项目的自定义系统自由的将文言文代码翻译为其他语言，通过添加Language.groovy的配置
+1. 您可以通过项目的自定义系统自由的将文言文代码翻译为其他语言，通过添加Language.groovy的配置
+
+2. 插件
+
+```scala
+
+package cn.wenyan.compiler.plugins
+
+import java.util.regex.Pattern
+
+import cn.wenyan.compiler.streams.CompileStream
+
+import scala.collection.mutable
+
+import java.util
+
+abstract class Plugin {
+
+    def addSyntaxRegex(map : mutable.Map[String,String])
+
+    def addPatterns(map : mutable.Map[String,Pattern])
+
+    def addCompileStream(map : util.List[CompileStream])
+
+    def addListener(map : util.List[Listener])
+
+}
+
+```
+
+继承该插件类，标记Main类，打包为jar包，添加组件即可
 
 
 > 关于作者

@@ -265,7 +265,7 @@ object WenYanLib {
   )
 
 
-  val patterns = Map[String,Pattern](
+  val patterns = MMap[String,Pattern](
     NUMBER -> Pattern.compile(numbersGet),
     ALL -> Pattern.compile("[\\s\\S]+"),
     TYPE -> Pattern.compile("[數言爻列物]"),

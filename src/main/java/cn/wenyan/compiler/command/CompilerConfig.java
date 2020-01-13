@@ -12,10 +12,20 @@ public class CompilerConfig {
 
     private boolean run;//
 
+    private String sourcePath;
+
     private String[] runArgs = new String[0];
 
     public boolean isSupportPinYin() {
         return supportPinYin;
+    }
+
+    public String getSourcePath() {
+        return sourcePath;
+    }
+
+    public void setSourcePath(String sourcePath) {
+        this.sourcePath = sourcePath;
     }
 
     public void setSupportPinYin(boolean supportPinYin) {

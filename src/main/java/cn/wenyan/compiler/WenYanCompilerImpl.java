@@ -119,14 +119,14 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
     public Class<?> compileToClass(String className,String... wenyanString){
-        Class<?> clz = groovyCompiler.compile(getGroovyCode(false,wenyanString),className);
+        Class<?> clz = groovyCompiler.compile(getGroovyCode(true,false,wenyanString),className);
 
         this.serverLogger.info("得类为:"+clz.getName());
         return clz;
     }
 
     public Class<?> compileToClass(String... wenyanString){
-        return groovyCompiler.compile(getGroovyCode(false,wenyanString));
+        return groovyCompiler.compile(getGroovyCode(true,false,wenyanString));
     }
 
 
@@ -144,15 +144,19 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             String[] files = compilerConfig.getCompileFiles();
             String[] args = compilerConfig.getRunArgs();
             String[] libs = compilerConfig.getCompileLib();
+            String classPath = compilerConfig.getSourcePath();
             boolean isRun = compilerConfig.isRun();
             String out = compilerConfig.getOutFile();
             if (out == null || files == null) {
                 serverLogger.info("必要: 输出文件路径和编译文件信息");
                 return 1;
             }
+            if(classPath == null){
+                serverLogger.info("请指定sourcePath");
+            }
             List<File> files1 = new ArrayList<>();
             for (String file : files) {
-                files1.add(compileOut(new File(file), new File(out)));
+                files1.add(compileOut(classPath,new File(file), new File(out)));
             }
 
             if(isRun){
@@ -176,17 +180,16 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
 
-
-    public String compile(String wenyan,boolean outError){
-        try{
-            StringBuilder builder = new StringBuilder();
-            wenyans = JuDouUtils.splitWenYan(wenyan);
-            serverLogger.info(JuDouUtils.getLine(wenyans));
+    public List<String> compileToList(String wenyan,boolean outError){
+        List<String> results = new ArrayList<>();
+        wenyans = JuDouUtils.splitWenYan(wenyan);
+        serverLogger.info(JuDouUtils.getLine(wenyans));
+        try {
             while (wenyans.size() != 0) {
-                String result = factory.compile(0,wenyans).get(0);
-                builder.append("\n").append(result);
+
+                results.add(factory.compile(0, wenyans).get(0));
             }
-            return builder.toString();
+            return results;
         }catch (Exception e){
             String message = LogFormat.textFormat("[Syntax Error] " + e.getMessage(), Ansi.Color.RED) + fg(Ansi.Color.DEFAULT);
             if(outError) {
@@ -194,8 +197,19 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             }else{
                 this.serverLogger.error(message);
             }
-            return ERROR;
+            results.set(0,ERROR);
+            return results;
         }
+    }
+
+    public String compile(String wenyan,boolean outError){
+
+            List<String> results = compileToList(wenyan,outError);
+            if(results.get(0).equals(ERROR)) {
+                return ERROR;
+            }
+
+            return codesTocode(results,null);
     }
 
     public ServerLogger getServerLogger() {
@@ -204,15 +218,65 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
 
 
-    public int compileToGroovy(File file,boolean outInConsole,String... wenyanString){
+    private String codesTocode(List<String> results,String filter){
+        StringBuilder builder = new StringBuilder();
+        for(String r :results) {
+            if(r.startsWith(filter))continue;
+            builder.append("\n").append(r);
+        }
+        return builder.toString();
+    }
+
+    private String getImports(List<String> results){
+        StringBuilder builder = new StringBuilder();
+        for(String r :results) {
+            if(!r.startsWith("import"))continue;
+            builder.append("\n").append(r);
+        }
+        return builder.toString();
+    }
+
+    private File compileToGroovy(File thisFile,String sc,File file,String wenyanString){
         try {
-            String code = getGroovyCode(outInConsole,wenyanString);
-            FileUtils.write(file,code,System.getProperty("file.coding"));
+            List<String> codes = compileToList(wenyanString,false);
+            String code = codesTocode(codes,"import");
+            String imports = getImports(codes);
+            String className = thisFile.toString().replace(sc,"");
+            if(className.startsWith(File.separator)){
+                className = className.substring(1);
+            }
+            className = className.substring(0,className.lastIndexOf("."));
+            className = className.replace(File.separator,".");
+            int index = className.lastIndexOf(".");
+            StringBuilder builder = new StringBuilder();
+            String pack = "";
+            if(index !=-1){
+                pack = className.substring(0,index);
+                builder.append("package ");
+                builder.append(pack);
+            }
+
+            builder.append("\n");
+            builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
+            builder.append("\n");
+            builder.append(imports);
+            builder.append("\n");
+            builder.append("class ");
+            builder.append(className.replace(pack,"").replace(".",""));
+            builder.append("{");
+            builder.append("\n");
+            builder.append(code);
+            builder.append("\n}");
+            code = builder.toString();
+            File parent = new File(file+File.separator+pack.replace(".",File.separator));
+            if(!parent.exists())parent.mkdirs();
+            File out = new File(parent,File.separator+thisFile.getName().split("\\.")[0]+".groovy");
+            FileUtils.write(out,code,System.getProperty("file.coding"));
             serverLogger.info("得文件为: "+file);
-            return 0;
+            return out;
         }catch (Exception e){
             serverLogger.error("Syntax Error",e);
-            return 1;
+            return null;
         }
     }
 
@@ -250,8 +314,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
 
-
-
     public Map<String, String> getNameType() {
         return nameType;
     }
@@ -275,33 +337,11 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             }
         }
     }
-    private File compileOut(File file, File outDir) throws IOException{
-        File out = new File(outDir+File.separator+file.getName().split("\\.")[0]+".groovy");
-        compileToGroovy(out,false,getGroovyCodeByFile(file));
-        return out;
-    }
 
-
-
-    private String trimWenYan(String s){
-        return JuDouUtils.trimWenYanX(s);
-    }
-
-    private void loadPlugins(){
-        File pluginFile = new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile()+"/plugins");
-        if(!pluginFile.exists()) pluginFile.mkdirs();
-        File[] plugins = pluginFile.listFiles();
-        if(plugins != null){
-            for(File f : plugins){
-                if (f.toString().endsWith(".jar"))
-                    pluginManager.loadPlugin(f);
-            }
-        }
-    }
-
-    public String getGroovyCode(boolean outInConsole,String... wenyanString){
+    public String getGroovyCode(boolean addNow,boolean outInConsole,String... wenyanString){
         StringBuilder groovyCode = new StringBuilder();
-        groovyCode.append(languageType.getSyntax(Syntax.IMPORT_WITH));
+        if(addNow)
+            groovyCode.append(languageType.getSyntax(Syntax.IMPORT_WITH));
         for(String code:wenyanString){
             String compile = compile(code,true);
             if(outInConsole){
@@ -324,4 +364,34 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
         return builder.toString();
     }
+
+    public WenYanRuntime getRuntime() {
+        return runtime;
+    }
+
+    private File compileOut(String classPath,File file, File outDir) throws IOException{
+
+        return compileToGroovy(file,classPath,outDir,getGroovyCodeByFile(file));
+
+    }
+
+
+
+    private String trimWenYan(String s){
+        return JuDouUtils.trimWenYanX(s);
+    }
+
+    private void loadPlugins(){
+        File pluginFile = new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile()+"/plugins");
+        if(!pluginFile.exists()) pluginFile.mkdirs();
+        File[] plugins = pluginFile.listFiles();
+        if(plugins != null){
+            for(File f : plugins){
+                if (f.toString().endsWith(".jar"))
+                    pluginManager.loadPlugin(f);
+            }
+        }
+    }
+
+
 }

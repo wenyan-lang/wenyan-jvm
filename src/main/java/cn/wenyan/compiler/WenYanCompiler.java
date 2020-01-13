@@ -10,4 +10,6 @@ public interface WenYanCompiler extends Compile{
     Class<?> compileToClass(String... wenyans);
 
     String dispatch(String wenyan);
+
+    WenYanRuntime getRuntime();
 }

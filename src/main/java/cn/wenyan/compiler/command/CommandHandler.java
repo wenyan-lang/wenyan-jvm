@@ -24,6 +24,7 @@ public class CommandHandler {
         compileCommand.put("-o",new OutFileCommand());
         compileCommand.put("-l",new CompileLibCommand());
         compileCommand.put("-r",new RunCommand());
+        compileCommand.put("-sc",new SourceCommand());
     }
 
     public CommandHandler(WenYanCompilerImpl compiler){

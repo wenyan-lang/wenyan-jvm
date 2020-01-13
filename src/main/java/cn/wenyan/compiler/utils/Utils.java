@@ -108,5 +108,13 @@ public class Utils {
         return ZhConverterUtil.convertToTraditional(wenyan);
     }
 
+    public static boolean classExists(String clz){
+        try{
+            Class.forName(clz);
+            return true;
+        }catch (ClassNotFoundException e){
+            return false;
+        }
+    }
 
 }

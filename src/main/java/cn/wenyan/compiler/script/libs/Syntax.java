@@ -71,7 +71,9 @@ public enum Syntax {
 
     IMPORT_WITH("import_with"),
 
-    NOT("not");
+    NOT("not"),
+
+    REQUIRE_SCRIPT("require script");
 
 
 

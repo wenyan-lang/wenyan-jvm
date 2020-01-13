@@ -50,6 +50,31 @@ abstract class Plugin {
 
 ` java -jar wenyan.jar shell` 可以开启交互式命令页面
 
+> WenYan Java Package Manager
+
+文言项目管理,可以参见TestMain.java和project_example文件夹
+
+```java
+package cn.wenyan.compiler.test;
+
+import cn.wenyan.compiler.WenYanCompiler;
+import cn.wenyan.compiler.WenYanTools;
+import cn.wenyan.compiler.script.libs.Language;
+
+public class TestMain {
+
+    public static void main(String[] args) {
+        String project = "/Users/luchangcun/Projects/michel/wenyan-lang_jvm/project_example";
+        String makeFile = project+"/MakeFile.txt";
+        String out = project+"/target";
+        WenYanCompiler compiler = WenYanTools.makeCompiler(Language.GROOVY);
+        compiler.compile(
+                "-c","@"+makeFile,out,"-sc",project+"/src/"
+        );
+    }
+}
+
+```
 > 关于作者
 
 1. 作者由于为一高中生，技术水平有限，所以不能很快实现全部语法，并且不能非常严谨的实现，不能确保全部
@@ -115,6 +140,7 @@ abstract class Plugin {
 ```
 有數七名之曰「甲」有數五名之曰「乙」有數零名之曰「艾」
 ```
+3. 对于文件名称要求严格，不能使用特殊符号
 
 > 目前状态
 

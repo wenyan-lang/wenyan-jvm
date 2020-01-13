@@ -6,6 +6,7 @@ import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.VariableCompileStream;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -101,6 +102,10 @@ public class Utils {
 
     public static String getClassName(String name){
         return name.substring(0, name.lastIndexOf(".")).replace("/", ".");
+    }
+
+    public static String getTraditionalChinese(String wenyan){
+        return ZhConverterUtil.convertToTraditional(wenyan);
     }
 
 

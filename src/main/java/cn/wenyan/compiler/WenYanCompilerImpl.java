@@ -3,10 +3,8 @@ package cn.wenyan.compiler;
 
 import cn.wenyan.compiler.command.CommandHandler;
 import cn.wenyan.compiler.command.CompilerConfig;
-import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.factory.CompileFactory;
 import cn.wenyan.compiler.factory.StreamBuilder;
-import cn.wenyan.compiler.lib.JSArray;
 import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.plugins.Listener;
@@ -15,8 +13,6 @@ import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
 import cn.wenyan.compiler.utils.JuDouUtils;
-import cn.wenyan.compiler.utils.Utils;
-import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
 import org.fusesource.jansi.Ansi;
@@ -62,6 +58,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private PluginManager pluginManager;
 
+    private WenYanRuntime runtime;
+
     private Map<Class<? extends CompileStream>,CompileStream> streamMap;
 
     //***************************************************//
@@ -69,8 +67,11 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     //**************此为天地之造物者，乃于此乎。**************//
     //**************************************************//
 
+    WenYanCompilerImpl(boolean supportPinyin,Language language){
+        this(supportPinyin,language,new WenYanShell());
+    }
 
-    WenYanCompilerImpl(boolean supportPinyin, Language language){
+    WenYanCompilerImpl(boolean supportPinyin, Language language,WenYanShell shell){
         this.languageType = language;
         this.streamMap = new HashMap<>();
         this.groovyCompiler = language.languageCompiler();
@@ -93,6 +94,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 .put(new ArrayCompileStream(this))
                 .build();
         this.pluginManager = new PluginManager(this);
+        this.runtime = new WenYanRuntime(this,shell);
         this.loadPlugins();
     }
 
@@ -113,7 +115,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     //**************************************************//
 
     public String dispatch(String wenyan){
-        return compile(wenyan);
+        return compile(wenyan,true);
     }
 
     public Class<?> compileToClass(String className,String... wenyanString){
@@ -129,32 +131,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
 
 
-    public Object runDirectly(boolean out,String... wenyanString){
-        serverLogger.info("---------------运行之--------------------");
-
-        return shell.evaluate(getGroovyCode(out, wenyanString));
-
-    }
-
-    public String getTraditionalChinese(String wenyan){
-        return ZhConverterUtil.convertToTraditional(wenyan);
-    }
-
-    public void runFile(String file){
-        try {
-            runFile(new File(file));
-        }catch (IOException e){
-            serverLogger.info("",e);
-        }
-    }
-
-    public void runFile(String file,String[] args){
-
-    }
-
-    public void runFile(File file) throws IOException {
-        runDirectly(false,getGroovyCodeByFile(file));
-    }
 
     //---------------不建议作为API使用-----------------------//
 
@@ -185,7 +161,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                     for(String lib : libs){
                         if(lib.endsWith(".jar")){
                             shell.getClassLoader().addURL(new File(lib).toURI().toURL());
-                        }else runFile(lib);
+                        }else runtime.runFile(lib);
                     }
                 }
 
@@ -201,21 +177,24 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
 
 
-    public String compile(String wenyan){
+    public String compile(String wenyan,boolean outError){
         try{
             StringBuilder builder = new StringBuilder();
             wenyans = JuDouUtils.splitWenYan(wenyan);
             serverLogger.info(JuDouUtils.getLine(wenyans));
-            builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
             while (wenyans.size() != 0) {
                 String result = factory.compile(0,wenyans).get(0);
                 builder.append("\n").append(result);
             }
             return builder.toString();
         }catch (Exception e){
-            String message = LogFormat.textFormat("[Syntax Error] "+e.getMessage(), Ansi.Color.RED)+fg(Ansi.Color.DEFAULT);
-            this.serverLogger.error(message,e);
-            return message;
+            String message = LogFormat.textFormat("[Syntax Error] " + e.getMessage(), Ansi.Color.RED) + fg(Ansi.Color.DEFAULT);
+            if(outError) {
+                this.serverLogger.error(message, e);
+            }else{
+                this.serverLogger.error(message);
+            }
+            return ERROR;
         }
     }
 
@@ -302,35 +281,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return out;
     }
 
-    private String getGroovyCodeByFile(File wenyan) throws IOException{
-        List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
-        StringBuilder builder = new StringBuilder();
-        for(String str:list){
-            String strNoT = trimWenYan(str);
-            builder.append(strNoT);
-        }
-        return builder.toString();
-    }
 
-
-
-
-
-
-    private String getGroovyCode(boolean outInConsole,String... wenyanString){
-        StringBuilder groovyCode = new StringBuilder();
-        for(String code:wenyanString){
-            String compile = compile(code);
-            if(outInConsole){
-                serverLogger.info(code+" => "+ compile);
-            }
-            groovyCode.append(compile).append("\n");
-        }
-        this.serverLogger.info("此事成也，得之");
-        System.out.println("----------------------------WenYanConsole--------------------------------");
-        indexCode = 0;
-        return groovyCode.toString();
-    }
 
     private String trimWenYan(String s){
         return JuDouUtils.trimWenYanX(s);
@@ -346,5 +297,31 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                     pluginManager.loadPlugin(f);
             }
         }
+    }
+
+    public String getGroovyCode(boolean outInConsole,String... wenyanString){
+        StringBuilder groovyCode = new StringBuilder();
+        groovyCode.append(languageType.getSyntax(Syntax.IMPORT_WITH));
+        for(String code:wenyanString){
+            String compile = compile(code,true);
+            if(outInConsole){
+                serverLogger.info(code+" => "+ compile);
+            }
+            groovyCode.append(compile).append("\n");
+        }
+        this.serverLogger.info("此事成也，得之");
+        System.out.println("----------------------------WenYanConsole--------------------------------");
+        indexCode = 0;
+        return groovyCode.toString();
+    }
+
+    public String getGroovyCodeByFile(File wenyan) throws IOException{
+        List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
+        StringBuilder builder = new StringBuilder();
+        for(String str:list){
+            String strNoT = trimWenYan(str);
+            builder.append(strNoT);
+        }
+        return builder.toString();
     }
 }

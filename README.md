@@ -46,6 +46,9 @@ abstract class Plugin {
 
 继承该插件类，标记Main类，打包为jar包，添加组件即可
 
+> WenYan Shell
+
+` java -jar wenyan.jar shell` 可以开启交互式命令页面
 
 > 关于作者
 

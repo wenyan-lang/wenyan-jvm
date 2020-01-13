@@ -52,7 +52,7 @@ abstract class Plugin {
 
 > WenYan Java Package Manager
 
-文言项目管理,可以参见TestMain.java和project_example文件夹
+文言项目管理,可以参见[TestMain.java](src/main/java/cn/wenyan/compiler/test/TestMain.java)和[project_example](project_example)文件夹
 
 ```java
 package cn.wenyan.compiler.test;

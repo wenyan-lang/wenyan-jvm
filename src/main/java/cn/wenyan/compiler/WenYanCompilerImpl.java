@@ -221,7 +221,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     private String codesTocode(List<String> results,String filter){
         StringBuilder builder = new StringBuilder();
         for(String r :results) {
-            if(r.startsWith(filter))continue;
+            if(r!=null&&filter!=null&&r.startsWith(filter))continue;
             builder.append("\n").append(r);
         }
         return builder.toString();
@@ -231,7 +231,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     private String getImports(List<String> results){
         StringBuilder builder = new StringBuilder();
         for(String r :results) {
-            if(!r.startsWith("import"))continue;
+            if(r!=null&&!r.startsWith("import"))continue;
             builder.append("\n").append(r);
         }
         return builder.toString();

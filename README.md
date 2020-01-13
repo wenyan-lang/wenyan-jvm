@@ -271,3 +271,10 @@ def javaClass = compiler.compileToClass("HelloWorld","吾有一言，曰『问�
 javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 
 ```
+
+> 目前需要迫切实现的
+
+1. 异常处理
+2. 对象
+3. 宏
+4. 其他小语法

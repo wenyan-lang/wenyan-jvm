@@ -227,6 +227,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return builder.toString();
     }
 
+
     private String getImports(List<String> results){
         StringBuilder builder = new StringBuilder();
         for(String r :results) {
@@ -236,6 +237,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return builder.toString();
     }
 
+    //TODO 如果未来实现了类，必须要把类剥离出来
     private File compileToGroovy(File thisFile,String sc,File file,String wenyanString){
         try {
             List<String> codes = compileToList(wenyanString,false);

@@ -134,7 +134,10 @@ public class FunctionCompileStream extends CompileStream {
                 return new CompileResult(LanguageUtils.importClass(language,clz));
             }
         }
-
+        if(Utils.matches(wenyan,WenYanLib.RETURN_())){
+            compiler.removeWenyan();
+            return new CompileResult("return");
+        }
         return new CompileResult(false,wenyan);
     }
 

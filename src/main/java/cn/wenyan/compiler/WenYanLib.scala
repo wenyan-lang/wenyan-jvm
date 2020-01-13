@@ -149,6 +149,8 @@ object WenYanLib {
 
   final val LENGTH : String = "「[\\s\\S]+」之(長|其餘)"
 
+  final val RETURN_ : String = "return_"
+
   val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
@@ -261,10 +263,11 @@ object WenYanLib {
     REPLACE_ARRAY -> (s"昔之"+VAL_DEF+"之("+value+")者"),
     NEW_COMMENT -> "[批注疏]曰",
     OTHER -> "變「[\\s\\S]+」",
-    LENGTH -> s"夫$LENGTH"
+    LENGTH -> s"夫$LENGTH",
+    RETURN_ -> "乃歸空無"
   )
 
-
+  //乃歸空無
   val patterns = MMap[String,Pattern](
     NUMBER -> Pattern.compile(numbersGet),
     ALL -> Pattern.compile("[\\s\\S]+"),

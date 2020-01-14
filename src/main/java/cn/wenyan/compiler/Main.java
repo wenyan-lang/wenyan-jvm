@@ -15,9 +15,14 @@ public class Main {
         if (args.length == 0){
             CommandHandler.compileCommand.entrySet().stream().forEach(x->System.out.println(x.getValue().getOption()+": "+x.getValue().getClass().getSimpleName()));
         }
+        long start = System.currentTimeMillis();
         WenYanCompiler compiler = new WenYanCompilerImpl(false, Language.GROOVY);
 
         compiler.compile(args);
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("Use: "+(end-start)+"ms");
 
     }
 }

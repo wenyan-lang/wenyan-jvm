@@ -1,13 +1,6 @@
 package cn.wenyan.compiler.utils;
 
 import cn.wenyan.compiler.WenYanCompilerImpl;
-import cn.wenyan.compiler.WenYanLib;
-import cn.wenyan.compiler.log.LogFormat;
-import org.fusesource.jansi.Ansi;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SyntaxColor {
 

@@ -232,14 +232,17 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return builder.toString();
     }
 
-    private String makeStaticTocode(List<String> results,String filter){
-        int index = 0;
-        for(int i = 0;i<results.size();i++){
-            if(index == 0){
-                if(!results.get(i).startsWith("import"))
-                    results.set(i,"static "+results.get(i));
+    private String makeStaticTocode(List<String> results,String filter,boolean get){
+        if(get) {
+            int index = 0;
+            for (int i = 0; i < results.size(); i++) {
+                if (index == 0) {
+                    String result = results.get(i);
+                    if (result.startsWith("def"))
+                        results.set(i, "static " + results.get(i));
+                }
+                index += Utils.getClose(results.get(i));
             }
-            index += Utils.getClose(results.get(i));
         }
         return codesTocode(results,filter);
     }
@@ -258,16 +261,20 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     //TODO groovy独特
     private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass){
         try {
-
-            List<String> codes = compileToList(wenyanString,false);
-            String code = makeStaticTocode(codes,"import");
-            String imports = getImports(codes);
             String className = thisFile.toString().replace(sc,"");
             if(className.startsWith(File.separator)){
                 className = className.substring(1);
             }
             className = className.substring(0,className.lastIndexOf("."));
             className = className.replace(File.separator,".");
+            List<String> codes = compileToList(wenyanString,false);
+            boolean get = true;
+            if(mainClass.equals(className)){
+                get = false;
+            }
+            String code = makeStaticTocode(codes,"import",get);
+            String imports = getImports(codes);
+
             int index = className.lastIndexOf(".");
             StringBuilder builder = new StringBuilder();
             String pack = "";

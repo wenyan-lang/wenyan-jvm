@@ -13,6 +13,7 @@ import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
 import cn.wenyan.compiler.utils.JuDouUtils;
+import cn.wenyan.compiler.utils.Utils;
 import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
 import org.fusesource.jansi.Ansi;
@@ -68,7 +69,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     //**************************************************//
 
     WenYanCompilerImpl(boolean supportPinyin,Language language){
-        this(supportPinyin,language,new WenYanShell());
+        this(supportPinyin,language,null);
     }
 
     WenYanCompilerImpl(boolean supportPinyin, Language language,WenYanShell shell){
@@ -94,7 +95,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 .put(new ArrayCompileStream(this))
                 .build();
         this.pluginManager = new PluginManager(this);
-        this.runtime = new WenYanRuntime(this,shell);
+        this.runtime = new WenYanRuntime(this,shell==null?new WenYanShell(this):shell);
         this.loadPlugins();
     }
 
@@ -145,6 +146,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             String[] args = compilerConfig.getRunArgs();
             String[] libs = compilerConfig.getCompileLib();
             String classPath = compilerConfig.getSourcePath();
+            String mainClass = compilerConfig.getMainClass();
             boolean isRun = compilerConfig.isRun();
             String out = compilerConfig.getOutFile();
             if (out == null || files == null) {
@@ -156,7 +158,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             }
             List<File> files1 = new ArrayList<>();
             for (String file : files) {
-                files1.add(compileOut(classPath,new File(file), new File(out)));
+                files1.add(compileOut(classPath,new File(file), new File(out),mainClass));
             }
 
             if(isRun){
@@ -227,6 +229,18 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return builder.toString();
     }
 
+    private String makeStaticTocode(List<String> results,String filter){
+        int index = 0;
+        for(int i = 0;i<results.size();i++){
+            if(index == 0){
+                if(!results.get(i).startsWith("import"))
+                    results.set(i,"static "+results.get(i));
+            }
+            index += Utils.getClose(results.get(i));
+        }
+        return codesTocode(results,filter);
+    }
+
 
     private String getImports(List<String> results){
         StringBuilder builder = new StringBuilder();
@@ -238,10 +252,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
     //TODO 如果未来实现了类，必须要把类剥离出来
-    private File compileToGroovy(File thisFile,String sc,File file,String wenyanString){
+    private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass){
         try {
             List<String> codes = compileToList(wenyanString,false);
-            String code = codesTocode(codes,"import");
+            String code = makeStaticTocode(codes,"import");
             String imports = getImports(codes);
             String className = thisFile.toString().replace(sc,"");
             if(className.startsWith(File.separator)){
@@ -257,18 +271,23 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 builder.append("package ");
                 builder.append(pack);
             }
-
-            builder.append("\n");
-            builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
-            builder.append("\n");
-            builder.append(imports);
-            builder.append("\n");
-            builder.append("class ");
-            builder.append(className.replace(pack,"").replace(".",""));
-            builder.append("{");
-            builder.append("\n");
+            if(!mainClass.equals(className)){
+                builder.append("\n");
+                builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
+                builder.append("\n");
+                builder.append(imports);
+                builder.append("\n");
+                builder.append("class ");
+                builder.append(className.replace(pack,"").replace(".",""));
+                builder.append("{");
+                builder.append("\n");
+            }
             builder.append(code);
-            builder.append("\n}");
+            if(!mainClass.equals(className)) {
+
+                builder.append("\n}");
+            }
+
             code = builder.toString();
             File parent = new File(file+File.separator+pack.replace(".",File.separator));
             if(!parent.exists())parent.mkdirs();
@@ -371,9 +390,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return runtime;
     }
 
-    private File compileOut(String classPath,File file, File outDir) throws IOException{
+    private File compileOut(String classPath,File file, File outDir,String mainClass) throws IOException{
 
-        return compileToGroovy(file,classPath,outDir,getGroovyCodeByFile(file));
+        return compileToGroovy(file,classPath,outDir,getGroovyCodeByFile(file),mainClass);
 
     }
 

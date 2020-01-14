@@ -259,6 +259,10 @@ public class TestMain {
 
 `-r` 值: 运行时的参数 注意: 这个选项必须放在最后面,会将文件运行
 
+`-sc` 值: src文件夹的路径
+
+`-m` 值: 主类路径
+
 LIB_USE:
 
 ```groovy

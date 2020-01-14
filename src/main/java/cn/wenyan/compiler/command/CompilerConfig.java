@@ -2,6 +2,8 @@ package cn.wenyan.compiler.command;
 
 public class CompilerConfig {
 
+    private String mainClass;
+
     private boolean supportPinYin;//
 
     private String[] compileFiles;//
@@ -70,5 +72,13 @@ public class CompilerConfig {
 
     public void setOutFile(String outFile) {
         this.outFile = outFile;
+    }
+
+    public String getMainClass() {
+        return mainClass;
+    }
+
+    public void setMainClass(String mainClass) {
+        this.mainClass = mainClass;
     }
 }

@@ -6,6 +6,8 @@ import cn.wenyan.compiler.script.libs.Syntax;
 import org.codehaus.groovy.tools.shell.Groovysh;
 import scala.tools.nsc.interpreter.jline.JlineReader;
 
+import static cn.wenyan.compiler.utils.Utils.getClose;
+
 
 public class WenYanShell implements RunCode {
 
@@ -58,6 +60,10 @@ public class WenYanShell implements RunCode {
         StringBuilder builder = new StringBuilder();
         while (true){
             String code = reader.readLine(prefix);
+            if(code.matches("(:)[a-z?\\.]+")){
+                shell.run(code);
+                continue;
+            }
             String returned = shell.compiler.compile(code,false);
             index += getClose(returned);
             if(index == 0) {
@@ -80,14 +86,6 @@ public class WenYanShell implements RunCode {
     }
 
 
-    public static int getClose(String returned){
-        char[] chars = returned.toCharArray();
-        int index = 0;
-        for(char x :chars){
-            if(x == '{')index++;
-            if(x == '}')index--;
-        }
-        return index;
-    }
+
 
 }

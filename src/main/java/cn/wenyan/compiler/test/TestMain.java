@@ -12,7 +12,7 @@ public class TestMain {
         String out = project+"/target";
         WenYanCompiler compiler = WenYanTools.makeCompiler(Language.GROOVY);
         compiler.compile(
-                "-c","@"+makeFile,out,"-sc",project+"/src/"
+                "-c","@"+makeFile,out,"-sc",project+"/src/","-m","main.主文件"
         );
     }
 }

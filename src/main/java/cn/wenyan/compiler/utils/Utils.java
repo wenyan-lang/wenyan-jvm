@@ -117,4 +117,14 @@ public class Utils {
         }
     }
 
+    public static int getClose(String returned){
+        char[] chars = returned.toCharArray();
+        int index = 0;
+        for(char x :chars){
+            if(x == '{')index++;
+            if(x == '}')index--;
+        }
+        return index;
+    }
+
 }

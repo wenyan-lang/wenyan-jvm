@@ -1,10 +1,7 @@
 package cn.wenyan.compiler;
 
 
-import cn.wenyan.compiler.LanguageCompiler;
-import cn.wenyan.compiler.WenYanCompiler;
-import cn.wenyan.compiler.WenYanRuntime;
-import cn.wenyan.compiler.WenYanShell;
+
 import cn.wenyan.compiler.command.CommandHandler;
 import cn.wenyan.compiler.command.CompilerConfig;
 import cn.wenyan.compiler.factory.CompileFactory;
@@ -209,13 +206,14 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
     public String compile(String wenyan,boolean outError){
-
-            List<String> results = compileToList(wenyan,outError);
-            if(results.get(0).equals(ERROR)) {
+        List<String> results = compileToList(wenyan,outError);
+        if(results.size()!=0) {
+            if (results.get(0).equals(ERROR)) {
                 return ERROR;
             }
+        }
 
-            return codesTocode(results,null);
+        return codesTocode(results,null);
     }
 
     public ServerLogger getServerLogger() {

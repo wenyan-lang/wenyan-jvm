@@ -83,6 +83,14 @@ public class ControlCompileStream extends CompileStream {
 
             return new CompileResult(LanguageUtils.forEach(language,stream.getName(names.get(1),false),stream.getName(names.get(0),false)));
         }
+        if(Utils.matches(wenyan,WenYanLib.CONTINUE())){
+            compiler.removeWenyan();
+            return new CompileResult(language.getSyntax(Syntax.CONTINUE));
+        }
+        if(Utils.matches(wenyan,WenYanLib.ELSE_IF())){
+            compiler.removeWenyan();
+            return new CompileResult(language.getSyntax(Syntax.ELSE_IF));
+        }
         return new CompileResult(false,wenyan);
     }
 

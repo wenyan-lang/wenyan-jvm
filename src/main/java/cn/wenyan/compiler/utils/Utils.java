@@ -8,6 +8,7 @@ import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 
+import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,11 +73,17 @@ public class Utils {
 
     public static String getValue(String number, VariableCompileStream stream){
         Language language = stream.getLanguage();
+        if(number.equals("其然")){
+            return stream.getNowName();
+        }
+        if(number.equals("其不然")){
+            return language.getSyntax(Syntax.NOT)+stream.getNowName();
+        }
         if(number.equals("空無")){
             return language.getSyntax(Syntax.NULL);
         }
         if(number.equals("矣")){
-            return "";
+            return stream.getNowName()==null?"":stream.getNowName();
         }
 
         if(number.matches(WenYanLib.LENGTH())){
@@ -101,7 +108,7 @@ public class Utils {
     }
 
     public static String getClassName(String name){
-        return name.substring(0, name.lastIndexOf(".")).replace("/", ".");
+        return name.substring(0, name.lastIndexOf(".")).replace(File.separator, ".");
     }
 
     public static String getTraditionalChinese(String wenyan){

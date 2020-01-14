@@ -170,6 +170,7 @@ public class TestMain {
 |`夫「甲」之一。`	| `a[0]`|
 |`夫「玫瑰」之「「名」」`|	`rose["name"]`|
 |`夫「甲」之其餘。`|`a.slice(1)`|
+|`夫「寶劍」之長。`|	`sword.size();`|
 ##### 註釋
 | wenyan | groovy |
 |---|---|
@@ -186,6 +187,9 @@ public class TestMain {
 |`恆為是。⋯⋯ 云云。`|`while (true) { ... }`|
 |`乃止。`|`break`|
 |`凡「天地」中之「人」。⋯⋯ 云云。`|`for (human in world){ ... }`|
+|`或若`|`else if`|
+|`若其然者`|	`if (ans) {`|
+|`若其不然者`|	`if (!ans) {`|
 ##### 數學
 
 | wenyan | groovy |
@@ -201,8 +205,8 @@ public class TestMain {
 ##### 导入
 | wenyan | groovy |
 |---|---|
-|`吾嘗觀「「群經之算經」」之書。方悟「正弦」之義。`|`import static 群经.算经.正弦`|
-|`吾嘗觀「「群經之算經」」之書。`| `import 算经.群经`|
+|`吾嘗觀「「算經」」之書。方悟「正弦」之義。`|`import static 算经.正弦`|
+|`吾嘗觀「「某樓」」中「「某閣」」中「「某書」」之書`| `import 某樓.某閣.某書`|
 
 ##### 函数
 | wenyan | groovy |
@@ -227,7 +231,6 @@ public class TestMain {
 |---|---|
 |`有言「「好。好。」」。書之。`|`def ans_1 = '好。好。' println(ans_1)`|
 |`有列空。名之曰「空也」`|`def kongYe = []`|
-|调用函数时 `之: Math之pow`|`.: Math.pow`|
 
 调用静态方法
 
@@ -278,7 +281,5 @@ javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 
 > 目前需要迫切实现的
 
-1. 异常处理
-2. 对象
-3. 宏
-4. 其他小语法
+
+夫「甲」。夫「乙」。夫「丙」。取二以施「丁」。取二以施「戊」。取一以施「己」。夫「庚」。夫「辛」。取三以施「壬」。名之曰「癸」。

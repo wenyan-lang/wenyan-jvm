@@ -113,7 +113,7 @@ public class VariableCompileStream extends CompileStream{
         String end = "";
         if(wenyans.get(0).equals("是也")||wenyans.get(0).equals("也")){
             compiler.removeWenyan();
-            if(!wenyans.get(0).equals("若非")){
+            if(!wenyans.get(0).equals("若非")||!wenyans.get(0).equals("或")){
                 compiler.removeWenyan();
                 end = language.getSyntax(Syntax.IF_END);
             }

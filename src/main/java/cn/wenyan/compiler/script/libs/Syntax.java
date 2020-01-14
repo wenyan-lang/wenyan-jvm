@@ -73,7 +73,11 @@ public enum Syntax {
 
     NOT("not"),
 
-    REQUIRE_SCRIPT("require script");
+    REQUIRE_SCRIPT("require script"),
+
+    CONTINUE("continue"),
+
+    ELSE_IF("else_if");
 
 
 

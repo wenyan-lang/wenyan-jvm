@@ -151,6 +151,10 @@ object WenYanLib {
 
   final val RETURN_ : String = "return_"
 
+  final val CONTINUE : String = "continue"
+
+  final val ELSE_IF : String = "else_if"
+
   val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
@@ -220,7 +224,7 @@ object WenYanLib {
   val numbersGet = getNumber()
 
 
-  private val value = s"$VAL_DEF|$numbersGet|「「[\\s\\S]+」」|空無|其|陽|陰"
+  private val value = s"$VAL_DEF|$numbersGet|「「[\\s\\S]+」」|空無|其|陽|陰|其然|其不然|矣"
   val syntaxs = MMap[String,String](
     DEFINE_VAR -> "(吾有|今有)",//
     VAR_NAME -> "曰[\\s\\S]+",//
@@ -254,7 +258,7 @@ object WenYanLib {
     DEFINE_END -> "乃行是術曰",//
     RUN_FUNCTION -> "施「[\\s\\S]+」",//
     ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",//
-    IMPORT -> "吾嘗觀「「[\\s\\S]+」」之書",//
+    IMPORT -> "吾嘗觀((「「[\\s\\S]+」」中)+|)「「[\\s\\S]+」」之書",//
     IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",//
     YI -> "噫",
     ADD -> s"充($value)",////
@@ -264,7 +268,9 @@ object WenYanLib {
     NEW_COMMENT -> "[批注疏]曰",
     OTHER -> "變「[\\s\\S]+」",
     LENGTH -> s"夫$LENGTH",
-    RETURN_ -> "乃歸空無"
+    RETURN_ -> "乃歸空無",
+    CONTINUE -> "乃止是遍",
+    ELSE_IF -> "或",
   )
 
   //乃歸空無

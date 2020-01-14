@@ -71,7 +71,9 @@ enum Language {
                     (Syntax.DEFINE_STRING)         : "''",
                     (Syntax.IMPORT_WITH)           : ("import "+ JSArray.name+"\nimport static "+ArrayUtils.name+".getArray\nimport static "+ArrayUtils.name+".getIndex"),
                     (Syntax.NOT)                   : "!",
-                    (Syntax.REQUIRE_SCRIPT)        : "e"
+                    (Syntax.REQUIRE_SCRIPT)        : "",
+                    (Syntax.CONTINUE)              : "continue",
+                    (Syntax.ELSE_IF)               : "}else "
             ],new GroovyCompiler()
     );
 

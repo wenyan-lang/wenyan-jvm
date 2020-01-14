@@ -39,8 +39,6 @@ public class FunctionCompileStream extends CompileStream {
                             while (true){
                                 if(Utils.matches(wenyan,WenYanLib.DEFINE_ARG())){
                                     String value01 = compiler.removeWenyan();
-                                    Syntax type = WenYanLib.types().get(Utils.getString(WenYanLib.TYPE(),value01)).get();
-                                    String langType = language.getSyntax(type);//獲得intdeng
                                     String wuYiYan = Utils.getString(WenYanLib.NUMBER(),value01);
                                     int len = Integer.parseInt(stream.getNumber(wuYiYan).toString());
                                     for(int i = 0;i<len;i++){
@@ -81,9 +79,9 @@ public class FunctionCompileStream extends CompileStream {
             String find = Utils.getString(WenYanLib.VAR_NAME_FOR(),value);
             String name;
             if(find != null) {
-                name = find.replace("之", language.getSyntax(Syntax.OBJECT_INNER));
+                name = find;
             }else{
-                name = value.substring(value.indexOf("施")+1).replace("之", language.getSyntax(Syntax.OBJECT_INNER));
+                name = value.substring(value.indexOf("施")+1);
             }
             StringBuilder builder = new StringBuilder();
             for(;;){
@@ -106,8 +104,14 @@ public class FunctionCompileStream extends CompileStream {
 
         if(Utils.matches(wenyan,WenYanLib.IMPORT())){
             String value01= compiler.removeWenyan();
-            String clz = Utils.getString(WenYanLib.STRING(),value01).replace("之",language.getSyntax(Syntax.OBJECT_INNER));
-            clz = clz.substring(clz.indexOf(WenYanLib.STRING_START())+2,clz.lastIndexOf(WenYanLib.STRING_END()));
+            List<String> clzs = Utils.getStrings(WenYanLib.STRING(),value01);
+            StringBuilder builder01 = new StringBuilder();
+            for(String s : clzs){
+                String get = s.substring(s.indexOf(WenYanLib.STRING_START())+2,s.lastIndexOf(WenYanLib.STRING_END()));
+                builder01.append(get).append(".");
+            }
+            String clz = builder01.substring(0,builder01.lastIndexOf("."));
+
             if(Utils.matches(wenyan,WenYanLib.IMPORT_STATIC())){
                 String value02 = compiler.removeWenyan();
                 List<String> strs = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),value02);

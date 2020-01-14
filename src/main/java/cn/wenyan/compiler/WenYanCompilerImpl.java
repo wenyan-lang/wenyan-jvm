@@ -128,8 +128,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return groovyCompiler.compile(getGroovyCode(true,false,wenyanString));
     }
 
-
-
+    public WenYanRuntime getRuntime() {
+        return runtime;
+    }
 
     //---------------不建议作为API使用-----------------------//
 
@@ -386,9 +387,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return builder.toString();
     }
 
-    public WenYanRuntime getRuntime() {
-        return runtime;
-    }
+
 
     private File compileOut(String classPath,File file, File outDir,String mainClass) throws IOException{
 

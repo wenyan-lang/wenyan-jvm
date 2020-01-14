@@ -299,7 +299,17 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             if(!parent.exists())parent.mkdirs();
             String name = File.separator+thisFile.getName().split("\\.")[0];
             File out = new File(parent,name+".groovy");
+            CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
+            File classFile = new File(parent,name+".class");
+            if(!classFile.exists())classFile.createNewFile();
+            PrintWriter writer = new PrintWriter(classFile);
+            compilerConfiguration.setOutput(writer);
+            compilerConfiguration.setTargetBytecode(CompilerConfiguration.JDK8);
+            compilerConfiguration.setTargetDirectory(parent.getParent());
+            Compiler compiler = new Compiler(compilerConfiguration);
             FileUtils.write(out,code,System.getProperty("file.coding"));
+            compiler.compile(out);
+            writer.close();
             serverLogger.info("得文件为: "+file);
             return out;
         }catch (Exception e){

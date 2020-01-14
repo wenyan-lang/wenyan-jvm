@@ -270,9 +270,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 builder.append("package ");
                 builder.append(pack);
             }
+            builder.append("\n");
+            builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
             if(!mainClass.equals(className)){
-                builder.append("\n");
-                builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
+
                 builder.append("\n");
                 builder.append(imports);
                 builder.append("\n");

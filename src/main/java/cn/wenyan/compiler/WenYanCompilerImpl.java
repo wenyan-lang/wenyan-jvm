@@ -160,7 +160,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             }
             List<File> files1 = new ArrayList<>();
             for (String file : files) {
-                files1.add(compileOut(classPath,new File(file), new File(out),mainClass));
+                files1.add(compileOut(classPath,new File(file), new File(out),mainClass,compilerConfig.isGroovy()));
             }
 
             if(isRun){
@@ -174,7 +174,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 }
 
                 for (File file : files1) {
-                    runtime.getShell().getRun().run(file,args);
+                    if(file !=null)
+                        runtime.getShell().getRun().run(file,args);
                 }
             }
         }catch (IOException e){
@@ -259,7 +260,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     //TODO 如果未来实现了类，必须要把类剥离出来
     //TODO groovy独特
-    private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass){
+    private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass,boolean isGroovy){
         try {
             String className = thisFile.toString().replace(sc,"");
             if(className.startsWith(File.separator)){
@@ -314,11 +315,16 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             compilerConfiguration.setTargetBytecode(CompilerConfiguration.JDK8);
             compilerConfiguration.setTargetDirectory(parent.getParent());
             Compiler compiler = new Compiler(compilerConfiguration);
-            FileUtils.write(out,code,System.getProperty("file.coding"));
+            if(isGroovy)
+                FileUtils.write(out,code,System.getProperty("file.coding"));
+            if(!parent.exists())parent.mkdirs();
             compiler.compile(out);
             writer.close();
             serverLogger.info("得文件为: "+file);
-            return out;
+            if(isGroovy)
+                return out;
+            else
+                return null;
         }catch (Exception e){
             serverLogger.error("Syntax Error",e);
             return null;
@@ -412,9 +418,9 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
 
 
-    private File compileOut(String classPath,File file, File outDir,String mainClass) throws IOException{
+    private File compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
 
-        return compileToGroovy(file,classPath,outDir,getGroovyCodeByFile(file),mainClass);
+        return compileToGroovy(file,classPath,outDir,getGroovyCodeByFile(file),mainClass,groovy);
 
     }
 

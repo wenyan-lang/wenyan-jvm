@@ -2,6 +2,8 @@ package cn.wenyan.compiler.command;
 
 public class CompilerConfig {
 
+    private boolean groovy = true;
+
     private String mainClass;
 
     private boolean supportPinYin;//
@@ -80,5 +82,13 @@ public class CompilerConfig {
 
     public void setMainClass(String mainClass) {
         this.mainClass = mainClass;
+    }
+
+    public boolean isGroovy() {
+        return groovy;
+    }
+
+    public void setGroovy(boolean groovy) {
+        this.groovy = groovy;
     }
 }

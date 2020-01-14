@@ -108,6 +108,9 @@ object JuDouUtils {
                             if(string(index) == '曰'){
                                 list.add(builder01.toString())
                                 builder01 = new StringBuilder
+                                if(string(index+1).toString.matches(WenYanLib.SPLIT)){
+                                    index+=1
+                                }
                             }
                             if(started){
                                 if(start == 0){
@@ -119,6 +122,7 @@ object JuDouUtils {
                             index+=1
                         }
                     }
+                    isAppend = true
                 }
 
                 if(isNumber(s)){

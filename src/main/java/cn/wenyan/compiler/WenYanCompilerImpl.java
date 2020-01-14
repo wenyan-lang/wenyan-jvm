@@ -48,8 +48,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private ServerLogger serverLogger;
 
-    private GroovyShell shell;
-
     private CompileFactory factory;
 
     private List<String> wenyans;
@@ -78,7 +76,6 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         this.streamMap = new HashMap<>();
         this.groovyCompiler = language.languageCompiler();
         this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
-        this.shell = new GroovyShell();
         this.handler = new CommandHandler(this);
         this.supportPinyin = supportPinyin;
         if(File.separator.equals("\\")) AnsiConsole.systemInstall();
@@ -167,13 +164,13 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 if(libs!=null){
                     for(String lib : libs){
                         if(lib.endsWith(".jar")){
-                            shell.getClassLoader().addURL(new File(lib).toURI().toURL());
+                            runtime.getShell().getRun().getClassLoader().addURL(new File(lib).toURI().toURL());
                         }else runtime.runFile(lib);
                     }
                 }
 
                 for (File file : files1) {
-                    shell.run(file,args);
+                    runtime.getShell().getRun().run(file,args);
                 }
             }
         }catch (IOException e){

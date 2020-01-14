@@ -3,6 +3,7 @@ package cn.wenyan.compiler;
 import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Syntax;
+import groovy.lang.GroovyShell;
 import org.codehaus.groovy.tools.shell.Groovysh;
 import scala.tools.nsc.interpreter.jline.JlineReader;
 
@@ -15,15 +16,19 @@ public class WenYanShell implements RunCode {
 
     private WenYanCompilerImpl compiler;
 
+    private GroovyShell run;
+
 
     public WenYanShell(){
         this.compiler = new WenYanCompilerImpl(false,Language.GROOVY,this);
         this.shell = new Groovysh();
+        this.run = new GroovyShell();
     }
 
     public WenYanShell(WenYanCompilerImpl compiler){
         this.compiler = compiler;
         this.shell = new Groovysh();
+        this.run = new GroovyShell();
     }
 
     public void run(String wenyan){
@@ -33,8 +38,12 @@ public class WenYanShell implements RunCode {
     public Object run(boolean out,String... wenyanString){
         compiler.getServerLogger().info("---------------运行之--------------------");
 
-        return shell.execute(compiler.getGroovyCode(true,out, wenyanString));
+        return run.evaluate(compiler.getGroovyCode(true,out, wenyanString));
 
+    }
+
+    public GroovyShell getRun() {
+        return run;
     }
 
     // 1. groovyShell

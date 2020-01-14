@@ -16,11 +16,12 @@ class LanguageUtils {
                 .replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(type))
     }
 
-    static String defineArg(Language language,String name,String type){
+    static String defineArg(Language language,String name){
         return language.getSyntax(Syntax.FUNCTION_ARG_DEFINE)
                 .replace(Language.NAME,name)
-                .replace(Language.TYPE,type)
+
     }
+
 
     static String addArray(Language language,String name,String value){
         return language.getSyntax(Syntax.ARRAY_ADD)

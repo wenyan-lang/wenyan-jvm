@@ -64,7 +64,7 @@ enum Language {
                     (Syntax.BOOL_TYPE)             : "boolean",
                     (Syntax.VAR_TYPE)              : "def",
                     (Syntax.DOUBLE_TYPE)           : "double",
-                    (Syntax.FUNCTION_ARG_DEFINE)   : "$TYPE $NAME",
+                    (Syntax.FUNCTION_ARG_DEFINE)   : "$NAME",
                     (Syntax.NULL)                  : "null",
                     (Syntax.DEFINE_ARRAY)          : "new JSArray()",
                     (Syntax.DEFINE_INT)            : "0",

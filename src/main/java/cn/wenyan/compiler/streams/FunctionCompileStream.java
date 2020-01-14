@@ -46,7 +46,7 @@ public class FunctionCompileStream extends CompileStream {
                                     for(int i = 0;i<len;i++){
                                         if(Utils.matches(wenyan,WenYanLib.VAR_GET_NAME())){
                                             String get = compiler.removeWenyan();
-                                            String defined = LanguageUtils.defineArg(language,stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),get),true),langType);
+                                            String defined = LanguageUtils.defineArg(language,stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),get),true));
                                             args.append(defined).append(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT));
                                         }else{
                                             break;

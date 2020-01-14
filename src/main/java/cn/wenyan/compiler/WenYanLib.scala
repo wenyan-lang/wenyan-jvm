@@ -225,13 +225,16 @@ object WenYanLib {
 
 
   private val value = s"$VAL_DEF|$numbersGet|「「[\\s\\S]+」」|空無|其|陽|陰|其然|其不然|矣"
+  private val myType = "[數言爻列物元]"
+  private val comment = "[批注疏]"
+
   val syntaxs = MMap[String,String](
     DEFINE_VAR -> "(吾有|今有)",//
     VAR_NAME -> "曰[\\s\\S]+",//
     VAR_VALUE -> s"([以]|)名之(曰$VAL_DEF)+",//
     VAR_GET_NAME -> s"曰$VAL_DEF",//
     WRITE -> "書之",//
-    SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",//
+    SIMPLE_VAR -> s"有$myType[\\s\\S]+",//
     CHANGE -> (s"昔之$VAL_DEF"+"者"),//
     AFTER_NAME -> s"今($value)(是|)",////
     COMMENT -> "(也|是矣)",//
@@ -254,7 +257,7 @@ object WenYanLib {
     FUNCTION_END -> "是謂「[\\s\\S]+」之術也",//
     ARGS -> "欲行是術",//
     MUST -> "必先得",//
-    DEFINE_ARG -> s"$numbersGet[數言爻列物]",//
+    DEFINE_ARG -> s"$numbersGet$myType",//
     DEFINE_END -> "乃行是術曰",//
     RUN_FUNCTION -> "施「[\\s\\S]+」",//
     ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",//
@@ -265,7 +268,7 @@ object WenYanLib {
     VAL -> s"[以於]($value)",////
     GET -> s"夫「[\\s\\S]+」之($value)",
     REPLACE_ARRAY -> (s"昔之"+VAL_DEF+"之("+value+")者"),
-    NEW_COMMENT -> "[批注疏]曰",
+    NEW_COMMENT -> (comment+"曰"),
     OTHER -> "變「[\\s\\S]+」",
     LENGTH -> s"夫$LENGTH",
     RETURN_ -> "乃歸空無",
@@ -277,7 +280,7 @@ object WenYanLib {
   val patterns = MMap[String,Pattern](
     NUMBER -> Pattern.compile(numbersGet),
     ALL -> Pattern.compile("[\\s\\S]+"),
-    TYPE -> Pattern.compile("[數言爻列物]"),
+    TYPE -> Pattern.compile(myType),
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
     BEFORE_NAME -> Pattern.compile(syntaxs(CHANGE)),
     AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
@@ -292,7 +295,7 @@ object WenYanLib {
     ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)"),
     VAL -> Pattern.compile(s"($value)"),
     GET -> Pattern.compile(s"「[\\s\\S]+」之($value)"),
-    NEW_COMMENT -> Pattern.compile("[批注疏]")
+    NEW_COMMENT -> Pattern.compile(comment)
   )
 
 
@@ -341,7 +344,8 @@ object WenYanLib {
     "數" -> Syntax.INT_TYPE,
     "言" -> Syntax.STRING_TYPE,
     "爻" -> Syntax.BOOL_TYPE,
-    "列" -> Syntax.ARRAY_TYPE
+    "列" -> Syntax.ARRAY_TYPE,
+    "元" -> Syntax.NULL
   )
 
 }

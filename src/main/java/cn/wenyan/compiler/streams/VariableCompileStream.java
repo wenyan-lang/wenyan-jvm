@@ -162,11 +162,29 @@ public class VariableCompileStream extends CompileStream{
                 return getVarString(syntax,type,head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':
                 return getVarString(syntax,type,head,name,values,val->WenYanLib.define().get(type));
-            case '物':
-                return "";
+            case '空':
+                return getVarString(syntax,type,head,name,values,val->"null");
+            case '元':
+                return parseType(getType(values.size() == 0?"nil":values.get(0)),name,values);
             default:
                 throw new SyntaxException("此'"+type+"'为何物邪?");
         }
+    }
+
+    private char getType(String value){
+        if(value.matches(WenYanLib.numbersGet())){
+            return '數';
+        }
+        if(value.startsWith(WenYanLib.STRING_START())&&value.endsWith(WenYanLib.STRING_END())){
+            return '言';
+        }
+        if(value.equals(WenYanLib.TRUE())&&value.equals(WenYanLib.FALSE())){
+            return '爻';
+        }
+        if(value.equals("nil")){
+            return '空';
+        }
+        return '列';
     }
 
     public String getString(String val){

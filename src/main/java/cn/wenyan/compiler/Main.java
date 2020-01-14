@@ -18,5 +18,7 @@ public class Main {
         WenYanCompiler compiler = new WenYanCompilerImpl(false, Language.GROOVY);
 
         compiler.compile(args);
+
+        System.out.println(compiler.dispatch("吾有一元。曰三。名之曰「曼德博」。"));
     }
 }

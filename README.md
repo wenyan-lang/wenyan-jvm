@@ -162,6 +162,7 @@ public class TestMain {
 |`吾有一言。曰「乙」。書之`|`println(yi)`|
 |`有數五十。名之曰「大衍」。`|`def dayan = 50`|
 |`昔之「甲」者。今「大衍」是也。`|`jia = dayan`|
+|`吾有一元`|`(auto type)`|
 
 ##### 数组
 | wenyan | groovy|
@@ -282,4 +283,7 @@ javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 > 目前需要迫切实现的
 
 
-夫「甲」。夫「乙」。夫「丙」。取二以施「丁」。取二以施「戊」。取一以施「己」。夫「庚」。夫「辛」。取三以施「壬」。名之曰「癸」。
+- Try...Catch
+- Nested Function Calls
+- Macros
+- Exception

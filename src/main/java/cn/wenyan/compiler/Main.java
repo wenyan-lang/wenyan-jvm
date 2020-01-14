@@ -19,6 +19,6 @@ public class Main {
 
         compiler.compile(args);
 
-        System.out.println(compiler.dispatch("吾有一元。曰三。名之曰「曼德博」。"));
+        System.out.println(compiler.dispatch("銜「甲」以「乙」。以「丙」"));
     }
 }

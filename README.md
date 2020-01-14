@@ -172,6 +172,7 @@ public class TestMain {
 |`夫「玫瑰」之「「名」」`|	`rose["name"]`|
 |`夫「甲」之其餘。`|`a.slice(1)`|
 |`夫「寶劍」之長。`|	`sword.size();`|
+|`銜「甲」以「乙」。以「丙」`|`jia.putAll(yi) jia.putAll(bing)`|
 ##### 註釋
 | wenyan | groovy |
 |---|---|

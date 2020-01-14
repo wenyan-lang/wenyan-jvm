@@ -77,7 +77,9 @@ public enum Syntax {
 
     CONTINUE("continue"),
 
-    ELSE_IF("else_if");
+    ELSE_IF("else_if"),
+
+    CONCAT("concat");
 
 
 

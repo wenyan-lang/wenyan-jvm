@@ -73,7 +73,8 @@ enum Language {
                     (Syntax.NOT)                   : "!",
                     (Syntax.REQUIRE_SCRIPT)        : "",
                     (Syntax.CONTINUE)              : "continue",
-                    (Syntax.ELSE_IF)               : "}else "
+                    (Syntax.ELSE_IF)               : "}else ",
+                    (Syntax.CONCAT)                : (NAME+".putAll($VALUE)")
             ],new GroovyCompiler()
     );
 

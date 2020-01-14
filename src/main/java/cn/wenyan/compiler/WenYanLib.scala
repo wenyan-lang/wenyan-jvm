@@ -155,6 +155,8 @@ object WenYanLib {
 
   final val ELSE_IF : String = "else_if"
 
+  final val CONCAT : String = "concat"
+
   val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
@@ -274,6 +276,7 @@ object WenYanLib {
     RETURN_ -> "乃歸空無",
     CONTINUE -> "乃止是遍",
     ELSE_IF -> "或",
+    CONCAT -> "銜「[\\s\\S]」"
   )
 
   //乃歸空無

@@ -66,6 +66,12 @@ class LanguageUtils {
 
     }
 
+    static String putAll(Language language,String name,String value){
+        return language.getSyntax(Syntax.CONCAT)
+                .replace(Language.NAME,name)
+                .replace(Language.VALUE,value)
+    }
+
     static String defineInnerFunction(Language language,String name,String args){
         return language.getSyntax(Syntax.INNER_FUNCTION)
                 .replace(Language.NAME,name)

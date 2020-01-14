@@ -48,6 +48,17 @@ public class ArrayCompileStream extends CompileStream {
                     LanguageUtils.defineVar(language,stream.getAnsName(),stream.getArray(get,stream))
             );
         }
+        if(Utils.matches(wenyan,WenYanLib.CONCAT())){
+            String name = compiler.removeWenyan();
+            name = Utils.getValue(name.substring(name.indexOf("銜")+1),stream);
+            StringBuilder builder = new StringBuilder();
+            while (Utils.matches(wenyan,WenYanLib.VAL())){
+                String value = compiler.removeWenyan();
+                String valueGet = Utils.getValue(value.substring(value.indexOf("以")+1),stream);
+                builder.append(LanguageUtils.putAll(language,name,valueGet)).append("\n");
+            }
+            return new CompileResult(builder.toString());
+        }
         return new CompileResult(false,wenyan);
     }
 

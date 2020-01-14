@@ -15,13 +15,15 @@ import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
 import cn.wenyan.compiler.utils.JuDouUtils;
 import cn.wenyan.compiler.utils.Utils;
-import groovy.lang.GroovyShell;
 import org.apache.commons.io.FileUtils;
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.tools.Compiler;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 import static cn.wenyan.compiler.log.LogFormat.fg;
@@ -49,6 +51,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     private ServerLogger serverLogger;
 
     private CompileFactory factory;
+
 
     private List<String> wenyans;
 
@@ -252,8 +255,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     }
 
     //TODO 如果未来实现了类，必须要把类剥离出来
+    //TODO groovy独特
     private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass){
         try {
+
             List<String> codes = compileToList(wenyanString,false);
             String code = makeStaticTocode(codes,"import");
             String imports = getImports(codes);
@@ -292,7 +297,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             code = builder.toString();
             File parent = new File(file+File.separator+pack.replace(".",File.separator));
             if(!parent.exists())parent.mkdirs();
-            File out = new File(parent,File.separator+thisFile.getName().split("\\.")[0]+".groovy");
+            String name = File.separator+thisFile.getName().split("\\.")[0];
+            File out = new File(parent,name+".groovy");
             FileUtils.write(out,code,System.getProperty("file.coding"));
             serverLogger.info("得文件为: "+file);
             return out;

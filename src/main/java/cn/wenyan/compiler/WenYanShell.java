@@ -69,7 +69,7 @@ public class WenYanShell implements RunCode {
         StringBuilder builder = new StringBuilder();
         while (true){
             String code = reader.readLine(prefix);
-            if(code.matches("(:)[a-z?\\.]+")){
+            if(code.matches("(:)[a-zA-Z?\\.]+")){
                 shell.run(code);
                 continue;
             }

@@ -22,6 +22,7 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -65,6 +66,15 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private Map<Class<? extends CompileStream>,CompileStream> streamMap;
 
+    private String sourcePath;
+
+    private String classPath;
+
+    private List<String> compiled;
+
+
+    private String mainClass;
+
     //***************************************************//
     //*********************构造器*************************//
     //**************此为天地之造物者，乃于此乎。**************//
@@ -97,6 +107,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 .build();
         this.pluginManager = new PluginManager(this);
         this.runtime = new WenYanRuntime(this,shell==null?new WenYanShell(this):shell);
+        this.compiled = new ArrayList<>();
         this.loadPlugins();
     }
 
@@ -147,20 +158,20 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             String[] files = compilerConfig.getCompileFiles();
             String[] args = compilerConfig.getRunArgs();
             String[] libs = compilerConfig.getCompileLib();
-            String classPath = compilerConfig.getSourcePath();
-            String mainClass = compilerConfig.getMainClass();
+            sourcePath = compilerConfig.getSourcePath();
+            mainClass = compilerConfig.getMainClass();
             boolean isRun = compilerConfig.isRun();
-            String out = compilerConfig.getOutFile();
-            if (out == null || files == null) {
+            classPath = compilerConfig.getOutFile();
+            if (classPath == null || files == null) {
                 serverLogger.info("必要: 输出文件路径和编译文件信息");
                 return 1;
             }
-            if(classPath == null){
+            if(sourcePath == null){
                 serverLogger.info("请指定sourcePath");
             }
             List<File> files1 = new ArrayList<>();
             for (String file : files) {
-                files1.add(compileOut(classPath,new File(file), new File(out),mainClass,compilerConfig.isGroovy()));
+                files1.add(compileOut(sourcePath,new File(file), new File(classPath),mainClass,compilerConfig.isGroovy()));
             }
 
             if(isRun){
@@ -218,6 +229,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return codesTocode(results,null);
     }
 
+
     public ServerLogger getServerLogger() {
         return serverLogger;
     }
@@ -262,12 +274,32 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     //TODO groovy独特
     private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass,boolean isGroovy){
         try {
+
             String className = thisFile.toString().replace(sc,"");
             if(className.startsWith(File.separator)){
                 className = className.substring(1);
             }
             className = className.substring(0,className.lastIndexOf("."));
             className = className.replace(File.separator,".");
+            StringBuilder builder = new StringBuilder();
+            int index = className.lastIndexOf(".");
+            String pack = "";
+            if(index !=-1){
+                pack = className.substring(0,index);
+                builder.append("package ");
+                builder.append(pack);
+            }
+            File parent = new File(file+File.separator+pack.replace(".",File.separator));
+            if(!parent.exists())parent.mkdirs();
+            String name = File.separator+thisFile.getName().split("\\.")[0];
+            File out = new File(parent,name+".groovy");
+
+            File classFile = new File(parent,name+".class");
+            if(!compiled.contains(classFile.toString())){
+                compiled.add(classFile.toString());
+            }else {
+                return out;
+            }
             List<String> codes = compileToList(wenyanString,false);
             boolean get = true;
             if(mainClass.equals(className)){
@@ -276,20 +308,12 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             String code = makeStaticTocode(codes,"import",get);
             String imports = getImports(codes);
 
-            int index = className.lastIndexOf(".");
-            StringBuilder builder = new StringBuilder();
-            String pack = "";
-            if(index !=-1){
-                pack = className.substring(0,index);
-                builder.append("package ");
-                builder.append(pack);
-            }
             builder.append("\n");
             builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
+            builder.append("\n");
+            builder.append(imports);
             if(!mainClass.equals(className)){
 
-                builder.append("\n");
-                builder.append(imports);
                 builder.append("\n");
                 builder.append("class ");
                 builder.append(className.replace(pack,"").replace(".",""));
@@ -303,23 +327,16 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             }
 
             code = builder.toString();
-            File parent = new File(file+File.separator+pack.replace(".",File.separator));
-            if(!parent.exists())parent.mkdirs();
-            String name = File.separator+thisFile.getName().split("\\.")[0];
-            File out = new File(parent,name+".groovy");
-            CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
-            File classFile = new File(parent,name+".class");
+
             if(!classFile.exists())classFile.createNewFile();
-            PrintWriter writer = new PrintWriter(classFile);
-            compilerConfiguration.setOutput(writer);
-            compilerConfiguration.setTargetBytecode(CompilerConfiguration.JDK8);
-            compilerConfiguration.setTargetDirectory(parent.getParent());
-            Compiler compiler = new Compiler(compilerConfiguration);
+
+
             if(isGroovy)
                 FileUtils.write(out,code,System.getProperty("file.coding"));
             if(!parent.exists())parent.mkdirs();
-            compiler.compile(out);
-            writer.close();
+
+            compileToClass(out,classFile,parent);
+
             serverLogger.info("得文件为: "+file);
             if(isGroovy)
                 return out;
@@ -329,6 +346,19 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             serverLogger.error("Syntax Error",e);
             return null;
         }
+    }
+
+
+    public void compileToClass(File out,File classFile,File parent) throws FileNotFoundException {
+        CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
+        PrintWriter writer = new PrintWriter(classFile);
+        compilerConfiguration.setOutput(writer);
+        compilerConfiguration.setTargetBytecode(CompilerConfiguration.JDK8);
+        compilerConfiguration.setTargetDirectory(parent.getParentFile());
+        compilerConfiguration.setClasspath(classPath);
+        Compiler compiler = new Compiler(compilerConfiguration);
+        compiler.compile(out);
+        writer.close();
     }
 
     public Map<Class<? extends CompileStream>, CompileStream> getStreamMap() {
@@ -418,7 +448,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
 
 
-    private File compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
+    public File compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
 
         return compileToGroovy(file,classPath,outDir,getGroovyCodeByFile(file),mainClass,groovy);
 
@@ -442,5 +472,15 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         }
     }
 
+    public String getSourcePath() {
+        return sourcePath;
+    }
 
+    public String getClassPath() {
+        return classPath;
+    }
+
+    public String getMainClass() {
+        return mainClass;
+    }
 }

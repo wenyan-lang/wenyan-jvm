@@ -6,6 +6,9 @@ import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.utils.Utils;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -112,6 +115,16 @@ public class FunctionCompileStream extends CompileStream {
             }
             String clz = builder01.substring(0,builder01.lastIndexOf("."));
 
+            if(compiler.getSourcePath()!=null){
+                String path = compiler.getSourcePath();
+                String filePath = path +File.separator+clz.replace(".", File.separator)+".wy";
+                try {
+                    compiler.compileOut(compiler.getSourcePath(), new File(filePath), new File(compiler.getClassPath()), compiler.getMainClass(), true);
+                }catch (IOException e){
+                    compiler.getServerLogger().error("",e);
+                }
+            }
+
             if(Utils.matches(wenyan,WenYanLib.IMPORT_STATIC())){
                 String value02 = compiler.removeWenyan();
                 List<String> strs = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),value02);
@@ -132,6 +145,8 @@ public class FunctionCompileStream extends CompileStream {
                     String methods = method.substring(0,method.lastIndexOf(language.getSyntax(Syntax.IMPORT_STATIC_SEPARATE)));
                     builder.append(LanguageUtils.importStatic(language,clz,methods)).append("\n");
                 }
+
+
 
                 return new CompileResult(builder.toString());
             }else{

@@ -289,3 +289,5 @@ javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 - Macros/Import Macros File (宏/导入宏定义文件)
 - Exception (异常)
 - wyg4j (java版的联通文渊阁的包管理系统)
+    - 实现wyg下载的文件可以应用在java项目上(初次想法是将文渊阁的文件编译加入到target文件夹中)
+    - wyg4j是wenyan4j的项目管理框架，是一个maven插件

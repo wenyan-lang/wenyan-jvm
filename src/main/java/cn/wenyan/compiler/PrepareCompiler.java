@@ -3,9 +3,12 @@ package cn.wenyan.compiler;
 
 import cn.wenyan.compiler.lib.Define;
 import cn.wenyan.compiler.lib.Defines;
+import cn.wenyan.compiler.streams.FunctionCompileStream;
 import cn.wenyan.compiler.utils.JuDouUtils;
 import cn.wenyan.compiler.utils.Utils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,22 +32,71 @@ public class PrepareCompiler {
         this.macroPatterns = new HashMap<>();
     }
 
-
-    public String macroPrepare(String wenyanCode){
-
-        Map<String,String> get = getMacroMapping(wenyanCode);
-
+    private void initMacro(Map<String,String> get){
         macroMapping.putAll(get);
-
         Map<String,List<String>> names = getMacroNames(get);
         macroNames.putAll(names);
 
         macroPatterns.putAll(getMacroPatterns(get,names));
 
         macroPatterns.forEach((x,y)->WenYanLib.syntaxs().put(y,x));
+
+    }
+
+    public List<String> macroPrepare(String wenyanCode){
+
+        Map<String,String> get = getMacroMapping(wenyanCode);
+
+        initMacro(get);
         // 宏工作
         List<String> strs = JuDouUtils.splitWenYan(wenyanCode);
 
+        expansion(strs);
+
+        List<String> format = JuDouUtils.splitWenYan(getString(strs));
+
+        List<String> imports = getImportsWenYan(format);
+
+        Map<String,String> macros = new HashMap<>();
+        try {
+            for (String im : imports) {
+                if (Utils.classExists(im)) {
+                    Class<?> clz = Class.forName(im);
+                    Defines definesObj = clz.getAnnotation(Defines.class);
+                    Define[] defines = definesObj.value();
+                    for(Define define : defines){
+                        macros.put(define.before(),define.after());
+                    }
+                }else{
+                    String file = compiler.getSourcePath()+"/"+im.replace(".", File.separator);
+                    initMacro(getMacroMapping(compiler.getWenYanCodeByFile(new File(file))));
+                }
+            }
+        }catch (ClassNotFoundException| IOException e){
+            compiler.getServerLogger().error("",e);
+        }
+
+        expansion(format);
+
+        format = JuDouUtils.splitWenYan(getString(format));
+
+        //第二次检测import
+
+        // 导入
+        // 1. wy文件 则找到宏，之后存起来
+        // 2. class文件 若加载了，那么获取@Define
+        return format;
+    }
+
+    private String getString(List<String> strs){
+        StringBuilder builder = new StringBuilder();
+        for(String str : strs){
+            builder.append(str);
+        }
+        return builder.toString();
+    }
+
+    private void expansion(List<String> strs){
         for(int i = 0;i<strs.size();i++){
             int index = i;
             String str = strs.get(i);
@@ -61,22 +113,17 @@ public class PrepareCompiler {
                 }
             });
         }
+    }
 
-        StringBuilder builder = new StringBuilder();
-
-        for(String str : strs){
-            builder.append(str);
+    private List<String> getImportsWenYan(List<String> lists){
+        List<String> list = new ArrayList<>();
+        FunctionCompileStream stream = compiler.getStream(FunctionCompileStream.class);
+        for(int i = 0;i<lists.size();i++){
+            if(lists.get(i).matches(WenYanLib.IMPORT())){
+                list.add(stream.getClassName(lists.get(i)).replace("import","").trim());
+            }
         }
-
-
-
-        // 导入
-        // 1. wy文件 则找到宏，之后存起来
-        // 2. class文件 若加载了，那么获取@Define
-
-
-        return builder.toString();
-
+        return list;
     }
 
     private Map<String,String> getMacroPatterns(Map<String,String> macros,Map<String,List<String>> names){
@@ -123,8 +170,6 @@ public class PrepareCompiler {
         for(int i = 0;i<macros.size();i+=2){
             String first = macros.get(i);
             String end = macros.get(i+1);
-            System.out.println(first);
-            System.out.println(end);
             first = first.substring(first.indexOf("「「")+2,first.lastIndexOf("」」"));
             end = end.substring(first.indexOf("「「")+5,end.lastIndexOf("」」"));
             map.put(first,end);

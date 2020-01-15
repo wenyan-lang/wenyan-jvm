@@ -212,7 +212,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     public List<String> compileToList(String wenyan,boolean outError){
         List<String> results = new ArrayList<>();
-        wenyans = JuDouUtils.splitWenYan(prepareCompiler.macroPrepare(wenyan));
+        wenyans = prepareCompiler.macroPrepare(wenyan);
         serverLogger.info(JuDouUtils.getLine(wenyans));
         try {
             while (wenyans.size() != 0) {

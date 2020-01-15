@@ -107,14 +107,8 @@ public class FunctionCompileStream extends CompileStream {
 
         if(Utils.matches(wenyan,WenYanLib.IMPORT())){
             String value01= compiler.removeWenyan();
-            List<String> clzs = Utils.getStrings(WenYanLib.STRING(),value01);
-            StringBuilder builder01 = new StringBuilder();
-            for(String s : clzs){
-                String get = s.substring(s.indexOf(WenYanLib.STRING_START())+2,s.lastIndexOf(WenYanLib.STRING_END()));
-                builder01.append(get).append(".");
-            }
-            String clz = builder01.substring(0,builder01.lastIndexOf("."));
 
+            String clz = getClassName(value01);
             if(compiler.getSourcePath()!=null&&!Utils.classExists(clz)){
                 String path = compiler.getSourcePath();
                 String filePath = path +File.separator+clz.replace(".", File.separator)+".wy";
@@ -176,5 +170,15 @@ public class FunctionCompileStream extends CompileStream {
         funcIndex++;
         if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,"");
         return LanguageUtils.defineInnerFunction(language,name);
+    }
+
+    public String getClassName(String value01){
+        List<String> clzs = Utils.getStrings(WenYanLib.STRING(),value01);
+        StringBuilder builder01 = new StringBuilder();
+        for(String s : clzs){
+            String get = s.substring(s.indexOf(WenYanLib.STRING_START())+2,s.lastIndexOf(WenYanLib.STRING_END()));
+            builder01.append(get).append(".");
+        }
+        return builder01.substring(0,builder01.lastIndexOf("."));
     }
 }

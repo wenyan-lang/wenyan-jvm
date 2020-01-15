@@ -161,7 +161,9 @@ object WenYanLib {
 
   final val MACRO_AFTER : String = "macro_after"
 
+  final val STATEMENT : String = "statement"
 
+  final val FUNC_ARG : String = "func_arg"
 
   val MMap = scala.collection.mutable.Map
 
@@ -289,7 +291,11 @@ object WenYanLib {
     CONCAT -> "銜「[\\s\\S]」",
     MACRO_BEFORE -> "云「「[\\s\\S]+」」",
     MACRO_AFTER -> "蓋謂「「[\\s\\S]+」」",
+    STATEMENT -> s"夫$VAL_DEF",
+    FUNC_ARG -> (s"取$numbersGet"+"以")
   )
+
+
 
   //乃歸空無
   val patterns = MMap[String,Pattern](

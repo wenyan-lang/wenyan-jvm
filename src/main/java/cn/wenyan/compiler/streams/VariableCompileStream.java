@@ -31,6 +31,9 @@ public class VariableCompileStream extends CompileStream{
         super(compiler);
     }
     // 具之一句，而翻万里者也。
+
+
+
     public CompileResult compile(List<String> wenyans) {
         if(Utils.matches(wenyans,WenYanLib.VAR_VALUE())){
             List<String> nowWenYans = new ArrayList<>();
@@ -200,8 +203,11 @@ public class VariableCompileStream extends CompileStream{
         }
         return names;
     }
-
     public String getName(String name,boolean define){
+        return getName(name,define,false);
+    }
+
+    public String getName(String name,boolean define,boolean runFunc){
         String chinese = name.substring(name.indexOf(WenYanLib.NAME_START()) + 1, name.lastIndexOf(WenYanLib.NAME_END()));
         //if(!define&&varMap.get(chinese) == null) throw new SyntaxException("此變量非定義也:"+name+" 於 「「 "+compiler.getNow()+" 」」");
         if(varMap.containsValue(chinese)){
@@ -222,8 +228,10 @@ public class VariableCompileStream extends CompileStream{
         }else{
             varMap.put(name,chinese);
         }
-        nowName = name;
-        nowNames.add(name);
+        if(!runFunc) {
+            nowName = name;
+            nowNames.add(name);
+        }
         return name;
     }
 

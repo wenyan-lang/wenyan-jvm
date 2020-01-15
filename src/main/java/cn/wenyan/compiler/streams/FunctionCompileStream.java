@@ -9,6 +9,7 @@ import cn.wenyan.compiler.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,8 +18,13 @@ public class FunctionCompileStream extends CompileStream {
 
     private int funcIndex = 0;
 
+    private int stackNumber = 0;
+
+    private List<String> stackNames;
+
     public FunctionCompileStream(WenYanCompilerImpl compiler) {
         super(compiler);
+        stackNames = new ArrayList<>();
     }
 
     @Override
@@ -77,6 +83,14 @@ public class FunctionCompileStream extends CompileStream {
             compiler.removeWenyan();
             return new CompileResult(language.getSyntax(Syntax.FUNCTION_END));
         }
+
+        if(Utils.matches(wenyan,WenYanLib.STATEMENT())){
+            String value = compiler.removeWenyan();
+            String name = Utils.getValue(value.substring(value.indexOf("夫")+1),stream);
+            String ans = stream.getAnsName();
+            stackNames.add(ans);
+            return new CompileResult(LanguageUtils.defineVar(language,ans,name));
+        }
         if(Utils.matches(wenyan,WenYanLib.RUN_FUNCTION())){
             String value = compiler.removeWenyan();
             String find = Utils.getString(WenYanLib.VAR_NAME_FOR(),value);
@@ -87,22 +101,43 @@ public class FunctionCompileStream extends CompileStream {
                 name = value.substring(value.indexOf("施")+1);
             }
             StringBuilder builder = new StringBuilder();
+            int i = 0;
             for(;;){
                 if(Utils.matches(wenyan,WenYanLib.ARGS_RUN())){
                     String value01 = compiler.removeWenyan();
 
                     builder.append(Utils.getValue(value01.substring(value01.indexOf("於")+1),stream)).append(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT));
+                    i++;
                 }else{
                     break;
                 }
             }
             String result;
-            if(builder.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT))!=-1){
-                result = builder.substring(0,builder.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT)));
+            String funcName = stream.getAnsName();
+            if(i == 0){
+                List<String> nowArgs = getNowNames(stackNumber);
+                stackNumber = 0;
+                StringBuilder build = new StringBuilder();
+                for(int z = 0;z<nowArgs.size();z++){
+                    build.append(nowArgs.get(z)).append(",");
+                }
+                result = build.substring(0,build.lastIndexOf(","));
+                stackNames.add(funcName);
             }else{
-                result = builder.toString();
+                if(builder.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT))!=-1){
+                    result = builder.substring(0,builder.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT)));
+                }else{
+                    result = builder.toString();
+                }
             }
-            return new CompileResult(LanguageUtils.runFunction(language,stream.getAnsName(),Utils.getValue(name,stream),result));
+            return new CompileResult(LanguageUtils.runFunction(language,funcName,stream.getName(name,true,true),result));
+        }
+
+
+        if(Utils.matches(wenyan,WenYanLib.FUNC_ARG())){
+            String number = compiler.removeWenyan();
+            stackNumber = Integer.parseInt(Utils.getValue(Utils.getString(WenYanLib.FOR(),number),stream));
+            return new CompileResult("");
         }
 
         if(Utils.matches(wenyan,WenYanLib.IMPORT())){
@@ -180,5 +215,14 @@ public class FunctionCompileStream extends CompileStream {
             builder01.append(get).append(".");
         }
         return builder01.substring(0,builder01.lastIndexOf("."));
+    }
+
+    //取得最后的两个变量，并且按照先后顺序排列
+    public List<String> getNowNames(int number){
+        int last = stackNames.size();
+        int start = last - number;
+        List<String> stack = new ArrayList<>(stackNames.subList(start,last));
+        stackNames.removeAll(stack);
+        return stack;
     }
 }

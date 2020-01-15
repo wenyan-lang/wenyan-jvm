@@ -224,7 +224,7 @@ public class TestMain {
 |`吾有一術。名之曰「六脈神劍」。欲行是術。必先得六數。曰「甲」。曰「乙」。曰「丙」。曰「丁」。曰「戊」。曰「己」乃行是術曰。⋯⋯是謂「六脈神劍」之術也。`|`def b(a,b,c,d,e,f){...}`|
 |`施「翻倍」於「大衍」`|`b(dayuan)`|
 |`施「翻倍」`|`b()`|
-|||
+|`夫「甲」。夫「乙」。夫「丙」。取二以施「丁」。取二以施「戊」。取一以施「己」。夫「庚」。夫「辛」。取三以施「壬」。名之曰「癸」。`|`def j = i(f(e(a,d(b,c))),g,h)`|
 
 ##### 宏
 | wenyan | groovy |
@@ -297,7 +297,6 @@ javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 
 
 - Try...Catch Exception (异常)
-- Nested Function Calls (嵌套函数)
 - shell 高级操作
     - 导入jar包/wy文件
 - wyg4j (java版的联通文渊阁的包管理系统)

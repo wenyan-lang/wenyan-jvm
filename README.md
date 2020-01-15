@@ -63,24 +63,25 @@ abstract class Plugin {
 ```java
 package cn.wenyan.compiler.test;
 
-import cn.wenyan.compiler.WenYanCompiler;
-import cn.wenyan.compiler.WenYanTools;
-import cn.wenyan.compiler.script.libs.Language;
-
+import cn.wenyan.compiler.Main;
 public class TestMain {
 
     public static void main(String[] args) {
         String project = "/Users/luchangcun/Projects/michel/wenyan-lang_jvm/project_example";
         String makeFile = project+"/MakeFile.txt";
         String out = project+"/target";
-        WenYanCompiler compiler = WenYanTools.makeCompiler(Language.GROOVY);
-        compiler.compile(
-                "-c","@"+makeFile,out,"-sc",project+"/src/"
-        );
+        Main.main(new String[]{"-c","@"+makeFile,out,"-sc",project+"/src/main/java","-m","main.主文件"});
+        Main.main(new String[]{"-o","/Users/luchangcun/Projects/michel/wenyan-lang_jvm/project_example/target/","-n","main.主文件","-r"});
     }
 }
-
 ```
+如何构建wenyan4j项目:
+
+1. 随便建两个文件夹，为src和target(这名字可以自定义，这是我建议的名字)
+2. src下建一个MakeFile.txt,里面写上主类的路径 
+3. java -jar wenyan.jar -c @src/MakeFile.txt target -sc src -m 主运行类名(类名 = 文件名) 编译，会在target输出全部编译文件
+4. java -jar wenyan.jar -o target -n 主类名 -r 运行
+
 > 关于作者
 
 1. 作者由于为一高中生，技术水平有限，所以不能很快实现全部语法，并且不能非常严谨的实现，不能确保全部

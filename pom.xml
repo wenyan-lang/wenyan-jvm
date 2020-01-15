@@ -8,9 +8,7 @@
     <artifactId>wenyan_lang</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>Wenyan4jProjectManager</module>
-    </modules>
+
 
     <dependencies>
         <dependency>

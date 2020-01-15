@@ -254,13 +254,12 @@ public class TestMain {
 调用静态方法
 
 ```
-吾嘗觀「「java之lang之Math」」之書。
-施「Math之pow」於「大衍」於二。名之曰「矣」。書之
+吾嘗觀「「java」」中「「lang」」中「「Math」」之書。
+施「Math.pow」於「大衍」於二。名之曰「矣」。書之
 ```
 
 使用java对象
 ```
-吾嘗觀「「java之lang之String」」之書。
 施「new String」於「大衍」。名之曰「矣」。
 施「矣之getClass」。書之。
 ```

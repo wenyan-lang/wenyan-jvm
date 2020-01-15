@@ -224,6 +224,10 @@ public class TestMain {
 |`施「翻倍」於「大衍」`|`b(dayuan)`|
 |`施「翻倍」`|`b()`|
 
+##### 宏
+| wenyan | groovy |
+|---|---|
+|`或云「「書「甲」焉」」。蓋謂「「吾有一言。曰「甲」。書之」」。`|`Compiled Code`|
 > 效果展示
 
 ![image](images/program.png)

@@ -57,8 +57,9 @@ public class PrepareCompiler {
 
         List<String> imports = getImportsWenYan(format);
 
-        Map<String,String> macros = new HashMap<>();
+
         try {
+            Map<String,String> macros = new HashMap<>();
             for (String im : imports) {
                 if (Utils.classExists(im)) {
                     Class<?> clz = Class.forName(im);
@@ -67,6 +68,7 @@ public class PrepareCompiler {
                     for(Define define : defines){
                         macros.put(define.before(),define.after());
                     }
+                    initMacro(macros);
                 }else{
                     String file = compiler.getSourcePath()+"/"+im.replace(".", File.separator);
                     initMacro(getMacroMapping(compiler.getWenYanCodeByFile(new File(file))));

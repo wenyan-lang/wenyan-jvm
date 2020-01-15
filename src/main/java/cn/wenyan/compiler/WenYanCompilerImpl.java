@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.*;
 
 import static cn.wenyan.compiler.log.LogFormat.fg;
@@ -72,6 +73,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     private List<String> compiled;
 
+    private PrepareCompiler prepareCompiler;
 
     private String mainClass;
 
@@ -108,7 +110,11 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         this.pluginManager = new PluginManager(this);
         this.runtime = new WenYanRuntime(this,shell==null?new WenYanShell(this):shell);
         this.compiled = new ArrayList<>();
+        this.mainClass = "";
+        this.sourcePath = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParent();
+        this.classPath = sourcePath;
         this.loadPlugins();
+        this.prepareCompiler = new PrepareCompiler(this);
     }
 
 
@@ -158,35 +164,43 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             String[] files = compilerConfig.getCompileFiles();
             String[] args = compilerConfig.getRunArgs();
             String[] libs = compilerConfig.getCompileLib();
+            String classFile = compilerConfig.getClassFile();
             sourcePath = compilerConfig.getSourcePath();
             mainClass = compilerConfig.getMainClass();
             boolean isRun = compilerConfig.isRun();
             classPath = compilerConfig.getOutFile();
-            if (classPath == null || files == null) {
+            if ((classPath == null || files == null)&&!isRun) {
                 serverLogger.info("必要: 输出文件路径和编译文件信息");
                 return 1;
             }
-            if(sourcePath == null){
+            if(sourcePath == null&&!isRun){
                 serverLogger.info("请指定sourcePath");
             }
-            List<File> files1 = new ArrayList<>();
-            for (String file : files) {
-                files1.add(compileOut(sourcePath,new File(file), new File(classPath),mainClass,compilerConfig.isGroovy()));
-            }
 
-            if(isRun){
-                //加载libs
-                if(libs!=null){
-                    for(String lib : libs){
-                        if(lib.endsWith(".jar")){
-                            runtime.getShell().getRun().getClassLoader().addURL(new File(lib).toURI().toURL());
-                        }else runtime.runFile(lib);
+            if(libs!=null){
+                for(String lib : libs){
+                    if(lib.endsWith(".jar")){
+                        runtime.getShell().getRun().getClassLoader().addURL(new File(lib).toURI().toURL());
                     }
                 }
+            }
 
-                for (File file : files1) {
-                    if(file !=null)
-                        runtime.getShell().getRun().run(file,args);
+            if(files!=null) {
+                for (String file : files) {
+                    compileOut(sourcePath, new File(file), new File(classPath), mainClass, compilerConfig.isGroovy());
+                }
+            }
+            // -jar a.jar;b.jar -o classPath -n className -r args
+            if(isRun){
+
+                if(classFile!=null){
+                    try {
+                        runtime.getShell().getRun().getClassLoader().addURL(new File(classPath).toURI().toURL());
+                        Class<?> clz = runtime.getShell().getRun().getClassLoader().loadClass(classFile.replace(classPath,"").replace(File.separator,"."));
+                        clz.getDeclaredMethod("main",String[].class).invoke(null,(Object)args);
+                    }catch (Exception e){
+                        serverLogger.error("",e);
+                    }
                 }
             }
         }catch (IOException e){
@@ -198,7 +212,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     public List<String> compileToList(String wenyan,boolean outError){
         List<String> results = new ArrayList<>();
-        wenyans = JuDouUtils.splitWenYan(wenyan);
+        wenyans = JuDouUtils.splitWenYan(prepareCompiler.macroPrepare(wenyan));
         serverLogger.info(JuDouUtils.getLine(wenyans));
         try {
             while (wenyans.size() != 0) {
@@ -274,7 +288,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
     //TODO groovy独特
     private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass,boolean isGroovy){
         try {
-
+            String annotation = prepareCompiler.toAnnotation(wenyanString);
             String className = thisFile.toString().replace(sc,"");
             if(className.startsWith(File.separator)){
                 className = className.substring(1);
@@ -315,6 +329,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             if(!mainClass.equals(className)){
 
                 builder.append("\n");
+                builder.append(annotation);
                 builder.append("class ");
                 builder.append(className.replace(pack,"").replace(".",""));
                 builder.append("{");
@@ -436,7 +451,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
         return groovyCode.toString();
     }
 
-    public String getGroovyCodeByFile(File wenyan) throws IOException{
+    public String getWenYanCodeByFile(File wenyan) throws IOException{
         List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
         StringBuilder builder = new StringBuilder();
         for(String str:list){
@@ -450,7 +465,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     public File compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
 
-        return compileToGroovy(file,classPath,outDir,getGroovyCodeByFile(file),mainClass,groovy);
+        return compileToGroovy(file,classPath,outDir, getWenYanCodeByFile(file),mainClass,groovy);
 
     }
 

@@ -157,6 +157,12 @@ object WenYanLib {
 
   final val CONCAT : String = "concat"
 
+  final val MACRO_BEFORE : String = "macro_before"
+
+  final val MACRO_AFTER : String = "macro_after"
+
+
+
   val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
@@ -230,6 +236,7 @@ object WenYanLib {
   private val myType = "[數言爻列物元]"
   private val comment = "[批注疏]"
 
+  final val VALUE : String = "value"
   val syntaxs = MMap[String,String](
     DEFINE_VAR -> "(吾有|今有)",//
     VAR_NAME -> "曰[\\s\\S]+",//
@@ -276,7 +283,9 @@ object WenYanLib {
     RETURN_ -> "乃歸空無",
     CONTINUE -> "乃止是遍",
     ELSE_IF -> "或",
-    CONCAT -> "銜「[\\s\\S]」"
+    CONCAT -> "銜「[\\s\\S]」",
+    MACRO_BEFORE -> "云「「[\\s\\S]+」」",
+    MACRO_AFTER -> "蓋謂「「[\\s\\S]+」」",
   )
 
   //乃歸空無
@@ -298,7 +307,10 @@ object WenYanLib {
     ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)"),
     VAL -> Pattern.compile(s"($value)"),
     GET -> Pattern.compile(s"「[\\s\\S]+」之($value)"),
-    NEW_COMMENT -> Pattern.compile(comment)
+    NEW_COMMENT -> Pattern.compile(comment),
+    MACRO_BEFORE -> Pattern.compile(syntaxs(MACRO_BEFORE)),
+    MACRO_AFTER -> Pattern.compile(syntaxs(MACRO_AFTER)),
+    VALUE -> Pattern.compile(value)
   )
 
 

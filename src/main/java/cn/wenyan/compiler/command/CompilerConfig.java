@@ -4,6 +4,8 @@ public class CompilerConfig {
 
     private boolean groovy = true;
 
+    private String classFile;
+
     private String mainClass;
 
     private boolean supportPinYin;//
@@ -90,5 +92,13 @@ public class CompilerConfig {
 
     public void setGroovy(boolean groovy) {
         this.groovy = groovy;
+    }
+
+    public void setClassFile(String classFile) {
+        this.classFile = classFile;
+    }
+
+    public String getClassFile() {
+        return classFile;
     }
 }

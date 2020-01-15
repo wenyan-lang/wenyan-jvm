@@ -89,6 +89,10 @@ public class ControlCompileStream extends CompileStream {
         }
         if(Utils.matches(wenyan,WenYanLib.ELSE_IF())){
             compiler.removeWenyan();
+            if(Utils.matches(wenyan,WenYanLib.MACRO_BEFORE())){
+                compiler.removeWenyan();
+                return new CompileResult("");
+            }
             return new CompileResult(language.getSyntax(Syntax.ELSE_IF));
         }
         return new CompileResult(false,wenyan);

@@ -8,5 +8,6 @@ public class TestMain {
         String makeFile = project+"/MakeFile.txt";
         String out = project+"/target";
         Main.main(new String[]{"-c","@"+makeFile,out,"-sc",project+"/src/main/java","-m","main.主文件"});
+        Main.main(new String[]{"-o","/Users/luchangcun/Projects/michel/wenyan-lang_jvm/project_example/target/","-n","main.主文件","-r"});
     }
 }

@@ -27,6 +27,7 @@ public class CommandHandler {
         compileCommand.put("-sc",new SourceCommand());
         compileCommand.put("-m",new MainClassCommand());
         compileCommand.put("-g",new GroovyCommand());
+        compileCommand.put("-n",new ClassFileCommand());
     }
 
     public CommandHandler(WenYanCompilerImpl compiler){

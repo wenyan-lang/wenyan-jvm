@@ -290,10 +290,16 @@ javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 > 目前需要迫切实现的
 
 
-- Try...Catch
+- Try...Catch Exception (异常)
 - Nested Function Calls (跨文件读取)
 - Macros/Import Macros File (宏/导入宏定义文件)
-- Exception (异常)
+- shell 高级操作
+    - 导入jar包/wy文件
 - wyg4j (java版的联通文渊阁的包管理系统)
     - 实现wyg下载的文件可以应用在java项目上(初次想法是将文渊阁的文件编译加入到target文件夹中)
     - wyg4j是wenyan4j的项目管理框架，是一个maven插件
+> 编译器原始的第三方包导入
+
+1. 编译器将wy文件编译为class字节码文件
+2. 将class字节码文件打包为jar包
+3. 通过编译器-l导入进去即可

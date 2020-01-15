@@ -69,7 +69,7 @@ enum Language {
                     (Syntax.DEFINE_ARRAY)          : "new JSArray()",
                     (Syntax.DEFINE_INT)            : "0",
                     (Syntax.DEFINE_STRING)         : "''",
-                    (Syntax.IMPORT_WITH)           : ("import "+ JSArray.name+"\nimport static "+ArrayUtils.name+".getArray\nimport static "+ArrayUtils.name+".getIndex"),
+                    (Syntax.IMPORT_WITH)           : ("import "+ JSArray.name+"\nimport static "+ArrayUtils.name+".getArray\nimport static "+ArrayUtils.name+".getIndex\nimport cn.wenyan.compiler.lib.Define\nimport cn.wenyan.compiler.lib.Defines"),
                     (Syntax.NOT)                   : "!",
                     (Syntax.REQUIRE_SCRIPT)        : "",
                     (Syntax.CONTINUE)              : "continue",

@@ -115,7 +115,7 @@ public class FunctionCompileStream extends CompileStream {
             }
             String clz = builder01.substring(0,builder01.lastIndexOf("."));
 
-            if(compiler.getSourcePath()!=null){
+            if(compiler.getSourcePath()!=null&&!Utils.classExists(clz)){
                 String path = compiler.getSourcePath();
                 String filePath = path +File.separator+clz.replace(".", File.separator)+".wy";
                 try {
@@ -156,6 +156,10 @@ public class FunctionCompileStream extends CompileStream {
         if(Utils.matches(wenyan,WenYanLib.RETURN_())){
             compiler.removeWenyan();
             return new CompileResult("return");
+        }
+        if(Utils.matches(wenyan,WenYanLib.MACRO_AFTER())){
+            compiler.removeWenyan();
+            return new CompileResult("");
         }
         return new CompileResult(false,wenyan);
     }

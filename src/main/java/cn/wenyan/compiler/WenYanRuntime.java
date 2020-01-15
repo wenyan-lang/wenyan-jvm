@@ -32,6 +32,6 @@ public class WenYanRuntime {
     }
 
     public void runFile(File file) throws IOException {
-        shell.run(false,compiler.getGroovyCodeByFile(file));
+        shell.run(false,compiler.getWenYanCodeByFile(file));
     }
 }

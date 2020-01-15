@@ -295,8 +295,7 @@ javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 
 
 - Try...Catch Exception (异常)
-- Nested Function Calls (跨文件读取)
-- Macros/Import Macros File (宏/导入宏定义文件)
+- Nested Function Calls (嵌套函数)
 - shell 高级操作
     - 导入jar包/wy文件
 - wyg4j (java版的联通文渊阁的包管理系统)

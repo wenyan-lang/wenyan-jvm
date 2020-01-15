@@ -167,16 +167,11 @@ object WenYanLib {
 
   private type BigDecimal0 = java.math.BigDecimal
 
-  val prefixs = Map[Char,BigDecimal0](
-    '十' -> new BigDecimal0(10),
+  val prefixAfter = MMap[Char,BigDecimal0](
     '百' -> new BigDecimal0(100),
     '千' -> new BigDecimal0(1000),
     '萬' -> new BigDecimal0(10000),
     '億' -> new BigDecimal0(1E8),
-    '廿' -> new BigDecimal0(20),
-    '卅' -> new BigDecimal0(30),
-    '卌' -> new BigDecimal0(40),
-    '皕' -> new BigDecimal0(200),
     '兆' -> new BigDecimal0("1E12"),
     '京' -> new BigDecimal0("1E16"),
     '垓' -> new BigDecimal0("10E20"),
@@ -196,8 +191,16 @@ object WenYanLib {
     '埃' -> new BigDecimal0("1E-8"),
     '渺' -> new BigDecimal0("1E-9"),
     '漠' -> new BigDecimal0("1E-10")
-
   )
+  val prefixs = MMap[Char,BigDecimal0](
+    '廿' -> new BigDecimal0(20),
+    '卅' -> new BigDecimal0(30),
+    '卌' -> new BigDecimal0(40),
+    '皕' -> new BigDecimal0(200),
+    '十' -> new BigDecimal0(10),
+  ).addAll(prefixAfter)
+
+
   //二分三釐八毫八絲三忽八微
 
   val numbers = Map[Char,BigDecimal0](

@@ -50,6 +50,12 @@ abstract class Plugin {
 
 ` java -jar wenyan.jar shell` 可以开启交互式命令页面
 
+> 文渊阁 for java
+
+基于文渊阁和maven的项目管理插件，可以实现文言文语言和java源代码混合编译
+
+- 状态开发中
+
 > WenYan Java Package Manager
 
 文言项目管理,可以参见[TestMain.java](src/main/java/cn/wenyan/compiler/test/TestMain.java)和[project_example](project_example)文件夹

@@ -185,7 +185,7 @@ object JuDouUtils {
                 counter.cut()
             }
 
-            if(counter.count != 1||counter.count != 0){
+            if(counter.count == 0||counter.count == 1){
                 if(x == '\t'||x == '\n'||x == ' '){
                     bool = false
                 }

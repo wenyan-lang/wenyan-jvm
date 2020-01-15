@@ -72,16 +72,16 @@ enum Language {
                     (Syntax.DEFINE_ARRAY)          : "new JSArray()",
                     (Syntax.DEFINE_INT)            : "0",
                     (Syntax.DEFINE_STRING)         : "''",
-                    (Syntax.IMPORT_WITH)           : ("import "+ JSArray.name+"\nimport static "+ArrayUtils.name+".getArray\nimport static "+ArrayUtils.name+".getIndex\nimport "+ Define.name+"\nimport "+ Defines.name+"\nimport "+ WenYanException.class.name),
+                    (Syntax.IMPORT_WITH)           : ("import "+ JSArray.name+"\nimport static "+ArrayUtils.name+".getArray\nimport static "+ArrayUtils.name+".getIndex\nimport "+ Define.name+"\nimport "+ Defines.name),
                     (Syntax.NOT)                   : "!",
                     (Syntax.REQUIRE_SCRIPT)        : "",
                     (Syntax.CONTINUE)              : "continue",
                     (Syntax.ELSE_IF)               : "}else ",
                     (Syntax.CONCAT)                : (NAME+".putAll($VALUE)"),
                     (Syntax.TRY)                   : "try{",
-                    (Syntax.THROW)                 : ("WenYanException $NAME = new WenYanException()\n$NAME"+".name = $EXCEPTION\nthrow $NAME"),
-                    (Syntax.CATCH)                 : "}catch(WenYanException $NAME){",
-                    (Syntax.EXCEPTION_IF)          : (NAME+".name.equals($EXCEPTION)"),
+                    (Syntax.THROW)                 : ("Exception $NAME = new Exception($EXCEPTION)\nthrow $NAME"),
+                    (Syntax.CATCH)                 : "}catch($NAME){",
+                    (Syntax.EXCEPTION_IF)          : (NAME+".message.equals($EXCEPTION)"),
                     (Syntax.CATCH_END)             : "}\n}"
             ],new GroovyCompiler()
     );

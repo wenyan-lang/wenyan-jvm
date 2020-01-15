@@ -1,19 +1,17 @@
-import cn.wenyan.compiler.lib.WenYanException
 try{
-    WenYanException ans_1 = new WenYanException()
-    ans_1.name = "滅頂"
+    Exception ans_1 = new Exception("滅頂")
     throw ans_1
-}catch(WenYanException ans_2){
-    if(ans_2.name.equals("ReferenceError")){
+}catch(ans_2){
+    if(ans_2.message.equals("ReferenceError")){
         def ans_3 = ''+"本無此物。奈何用之"+''
         println(ans_3)
-    }else if(ans_2.name.equals("SyntaxError")){
+    }else if(ans_2.message.equals("SyntaxError")){
         def ans_4 = ''+"不合文法。不通之甚"+''
         println(ans_4)
-    }else if(ans_2.name.equals("TypeError")){
+    }else if(ans_2.message.equals("TypeError")){
         def ans_5 = ''+"物各其類。豈可混同"+''
         println(ans_5)
-    }else if(ans_2.name.equals("滅頂")){
+    }else if(ans_2.message.equals("滅頂")){
         def ans_6 = ''+"嗚呼哀哉。伏维尚飨"+''
         println(ans_6)
     }else{

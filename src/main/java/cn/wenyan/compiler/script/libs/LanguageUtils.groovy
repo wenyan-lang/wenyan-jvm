@@ -124,4 +124,21 @@ class LanguageUtils {
                 .replace(Language.NAME,name)
                 .replace(Language.INDEX,index)
     }
+
+    static String throwEx(Language language,String name,String exception){
+        return language.getSyntax(Syntax.THROW)
+                .replace(Language.NAME,name)
+                .replace(Language.EXCEPTION,exception)
+    }
+
+    static String catchEx(Language language,String name){
+        return  language.getSyntax(Syntax.CATCH)
+                .replace(Language.NAME,name)
+    }
+
+    static String ifEquals(Language language,String name,String exception){
+        return language.getSyntax(Syntax.EXCEPTION_IF)
+                .replace(Language.NAME,name)
+                .replace(Language.EXCEPTION,exception)
+    }
 }

@@ -79,7 +79,12 @@ public enum Syntax {
 
     ELSE_IF("else_if"),
 
-    CONCAT("concat");
+    CONCAT("concat"),
+    TRY("try"),
+    THROW("throw"),
+    CATCH("catch"),
+    EXCEPTION_IF("exception_if"),
+    CATCH_END("catch_end");
 
 
 

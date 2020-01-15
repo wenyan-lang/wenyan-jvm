@@ -165,6 +165,20 @@ object WenYanLib {
 
   final val FUNC_ARG : String = "func_arg"
 
+  final val TRY : String = "try"
+
+  final val EXCEPTION_DEFINE : String = "exception_define"
+
+  final val EXCEPTION_THROW : String = "exception_throw"
+
+  final val CATCH : String = "catch"
+
+  final val EXCEPTION_IF : String= "exception_if"
+
+  final val EXCEPTION_ELSE : String = "exception_else"
+
+  final val CATCH_END : String = "catch_end"
+
   val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
@@ -292,7 +306,14 @@ object WenYanLib {
     MACRO_BEFORE -> "云「「[\\s\\S]+」」",
     MACRO_AFTER -> "蓋謂「「[\\s\\S]+」」",
     STATEMENT -> s"夫$VAL_DEF",
-    FUNC_ARG -> (s"取$numbersGet"+"以")
+    FUNC_ARG -> (s"取$numbersGet"+"以"),
+    TRY -> "姑妄行此",
+    EXCEPTION_DEFINE -> "嗚呼",
+    EXCEPTION_THROW -> "「「[\\s\\S]+」」之禍",
+    CATCH -> "如事不諧",
+    EXCEPTION_IF -> "豈「「[\\s\\S]+」」之禍歟",
+    EXCEPTION_ELSE -> "不知何禍歟",
+    CATCH_END -> "乃作罷"
   )
 
 

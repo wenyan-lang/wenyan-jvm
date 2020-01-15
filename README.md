@@ -230,6 +230,11 @@ public class TestMain {
 | wenyan | groovy |
 |---|---|
 |`或云「「書「甲」焉」」。蓋謂「「吾有一言。曰「甲」。書之」」。`|`Compiled Code`|
+##### 异常处理
+| wenyan| groovy|
+|---|---|
+|`姑妄行此`|try|
+|`其他异常有关语句均实现`|
 > 效果展示
 
 ![image](images/program.png)

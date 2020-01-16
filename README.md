@@ -21,7 +21,8 @@ You can run WenYan Programming Language in JVM.
 2. [文渊阁](https://github.com/wenyan-lang/wyg)
 3. [更新日志](CHANGE_LOG.md)
 4. [LICENSE](LICENSE)
-
+5. [语法Lib](src/main/java/cn/wenyan/compiler/WenYanLib.scala)
+6. [文言文学习BOOK](book)
 > 关于作者
 
 1. 作者由于为一高中生，技术水平有限，所以不能很快实现全部语法，并且不能非常严谨的实现，不能确保全部

@@ -12,4 +12,11 @@ object ScalaUtils {
     false
   }
 
+  def countTime(func : =>Unit): Long ={
+    val start = System.currentTimeMillis
+
+    val end = System.currentTimeMillis
+    return end -start
+  }
+
 }

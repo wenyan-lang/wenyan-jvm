@@ -3,6 +3,7 @@ package cn.wenyan.compiler;
 
 import cn.wenyan.compiler.command.CommandHandler;
 import cn.wenyan.compiler.script.libs.Language;
+import cn.wenyan.compiler.utils.ScalaUtils;
 
 
 public class Main {
@@ -15,14 +16,13 @@ public class Main {
         if (args.length == 0){
             CommandHandler.compileCommand.entrySet().stream().forEach(x->System.out.println(x.getValue().getOption()+": "+x.getValue().getClass().getSimpleName()));
         }
-        long start = System.currentTimeMillis();
         WenYanCompilerImpl compiler = new WenYanCompilerImpl(false, Language.GROOVY);
+        long time = ScalaUtils.countTime(()->{
+            compiler.compile(args);
+            return null;
+        });
 
-        compiler.compile(args);
-
-        long end = System.currentTimeMillis();
-
-        compiler.getServerLogger().debug("Use: "+(end-start)+"ms");
+        compiler.getServerLogger().debug("Use: "+time+"ms");
 
     }
 }

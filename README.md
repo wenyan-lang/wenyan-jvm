@@ -22,7 +22,7 @@ You can run WenYan Programming Language in JVM.
 3. [更新日志](CHANGE_LOG.md)
 4. [LICENSE](LICENSE)
 5. [语法库](src/main/java/cn/wenyan/compiler/WenYanLib.scala)
-6. [私塾](book)
+6. [文心雕龙](https://wenyan-docs.netlify.com/)
 > 关于作者
 
 1. 作者由于为一高中生，技术水平有限，所以不能很快实现全部语法，并且不能非常严谨的实现，不能确保全部

@@ -19,7 +19,7 @@ public class Main {
         WenYanCompilerImpl compiler = new WenYanCompilerImpl(false, Language.GROOVY);
 
         compiler.compile(args);
-        System.out.println(compiler.dispatch("吾有一物。名之曰「甲」。其物如是。物之「「乙」」者。數曰三。物之「「丙」」者。言曰「「丁」」。是謂「甲」之物也。"));
+
         long end = System.currentTimeMillis();
 
         compiler.getServerLogger().debug("Use: "+(end-start)+"ms");

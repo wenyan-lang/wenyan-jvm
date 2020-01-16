@@ -217,6 +217,9 @@ javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 
 - shell 高级操作
     - 导入jar包/wy文件
+- idea 插件
+- maven插件
+
 > 编译器原始的第三方包导入
 
 1. 编译器将wy文件编译为class字节码文件

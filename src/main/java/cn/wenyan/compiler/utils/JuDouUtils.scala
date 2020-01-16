@@ -145,7 +145,7 @@ object JuDouUtils {
 
                 if(!isAppend)builder.append(s)
 
-                if(getString(builder.toString())){
+                if(getString(builder.toString(),strings,index)){
                     list.add(builder.toString())
                     builder = new StringBuilder
                 }
@@ -159,10 +159,14 @@ object JuDouUtils {
 
     private def isNumber(s:Char):Boolean = WenYanLib.numbers.contains(s)||WenYanLib.prefixs.contains(s)
 
-    private def getString(target: String): Boolean ={
+    private def getString(target: String,strings : String,index : Int): Boolean ={
         val patterns = WenYanLib.syntaxs
         for(p <- patterns){
             if(target.matches(p._2)){
+                //对于夫的特殊处理
+                if(p._2.equals(patterns(WenYanLib.STATEMENT))){
+                    if(strings(index+1) == '之')return false
+                }
                 return true
             }
         }

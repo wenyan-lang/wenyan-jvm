@@ -83,15 +83,22 @@ class LanguageUtils {
     }
 
     static String defineInnerFunction(Language language,String name,String args){
-        return language.getSyntax(Syntax.INNER_FUNCTION)
+        String result = language.getSyntax(Syntax.INNER_FUNCTION)
                 .replace(Language.NAME,name)
-                .replace(Language.ARGS,args)
+                .replace(Language.ARGS,args);
+        if(isShell){
+            result = result.substring(result.indexOf("def")+3)
+        }
+        return result
     }
 
     static String defineInnerFunction(Language language,String name){
-        return language.getSyntax(Syntax.INNER_FUNCTION_NO_ARGS)
+        String result = language.getSyntax(Syntax.INNER_FUNCTION_NO_ARGS)
                 .replace(Language.NAME,name)
-
+        if(isShell){
+            result = result.substring(result.indexOf("def")+3)
+        }
+        return result
     }
 
     static String returnSomething(Language language,String value){

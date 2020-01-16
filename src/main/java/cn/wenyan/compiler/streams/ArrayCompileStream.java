@@ -40,7 +40,7 @@ public class ArrayCompileStream extends CompileStream {
             return new CompileResult(result.toString());
         }
         if(Utils.matches(wenyan,WenYanLib.GET())){
-
+            System.out.println(wenyan);
             String value = compiler.removeWenyan();
             String get = value.substring(value.indexOf("夫")+1);
 

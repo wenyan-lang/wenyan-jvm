@@ -84,7 +84,7 @@ enum Language {
                     (Syntax.EXCEPTION_IF)          : (NAME+".message.equals($EXCEPTION)"),
                     (Syntax.CATCH_END)             : "}\n}",
                     (Syntax.SHELL_VAR)             : "$NAME = $VALUE",
-                    (Syntax.DEFINE_OBJECT)         : "[:]"
+                    (Syntax.DEFINE_OBJECT)         : "[:]",
             ],new GroovyCompiler()
     );
 

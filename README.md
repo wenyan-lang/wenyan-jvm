@@ -16,6 +16,7 @@ You can run WenYan Programming Language in JVM.
 6. 本项目使用方法可以参见[文档](document/Java-Compiler.md)
 7. 关于项目开启的原因可以参见 [#411](https://github.com/LingDong-/wenyan-lang/issues/411)
 8. 本项目的目标语言是groovy,以实现动态语言，主要是为了实现`wenyan`可以调用java相关类库(并尽量确保js版本的wy文件)，以实现在虚拟机运行。
+9. 对于文渊阁的支持，只需要在项目的src执行wyg i 名称即可。确保在source_path之内
 
 > 相关链接
 
@@ -25,6 +26,7 @@ You can run WenYan Programming Language in JVM.
 4. [LICENSE](LICENSE)
 5. [语法库](src/main/java/cn/wenyan/compiler/WenYanLib.scala)
 6. [文心雕龙](https://wenyan-docs.netlify.com/)
+
 > 关于作者
 
 1. 作者由于为一高中生，技术水平有限，所以不能很快实现全部语法，并且不能非常严谨的实现，不能确保全部
@@ -215,9 +217,6 @@ javaClass.getDeclaredMethod("run").invoke(javaClass.newInstance())
 
 - shell 高级操作
     - 导入jar包/wy文件
-- wyg4j (java版的联通文渊阁的包管理系统)
-    - 实现wyg下载的文件可以应用在java项目上(初次想法是将文渊阁的文件编译加入到target文件夹中)
-    - wyg4j是wenyan4j的项目管理框架，是一个maven插件
 > 编译器原始的第三方包导入
 
 1. 编译器将wy文件编译为class字节码文件

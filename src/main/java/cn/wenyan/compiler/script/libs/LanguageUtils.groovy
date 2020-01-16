@@ -3,14 +3,24 @@ package cn.wenyan.compiler.script.libs
 
 class LanguageUtils {
 
+    private static boolean isShell = false
+
     static String defineVar(Language language,String name,String value){
-        return language.getSyntax(Syntax.VAR_DEFINE)
+        Syntax syntax = Syntax.VAR_DEFINE
+        if(isShell){
+            syntax = Syntax.SHELL_VAR
+        }
+        return language.getSyntax(syntax)
                 .replace(Language.NAME,name)
                 .replace(Language.VALUE, value)
     }
 
     static String defineVar(Language language,String name,String value,Syntax type){
-        return language.getSyntax(Syntax.VAR_DEFINE)
+        Syntax syntax = Syntax.VAR_DEFINE
+        if(isShell){
+            syntax = Syntax.SHELL_VAR
+        }
+        return language.getSyntax(syntax)
                 .replace(Language.NAME,name)
                 .replace(Language.VALUE, value)
                 .replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(type))
@@ -140,5 +150,9 @@ class LanguageUtils {
         return language.getSyntax(Syntax.EXCEPTION_IF)
                 .replace(Language.NAME,name)
                 .replace(Language.EXCEPTION,exception)
+    }
+
+    static void setShell(boolean shell){
+        isShell = shell
     }
 }

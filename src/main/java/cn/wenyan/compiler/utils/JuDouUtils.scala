@@ -127,8 +127,8 @@ object JuDouUtils {
 
                 if(isNumber(s)){
                     builder.append(s)
-                    if(index+1<strings.length){
-                        while (isNumber(string(index+1))){
+                    if(index+1<string.length){
+                        while (index+1<string.length&&isNumber(string(index+1))){
                             index+=1
                             builder.append(string(index))
                         }

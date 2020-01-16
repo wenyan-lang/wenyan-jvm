@@ -84,7 +84,8 @@ public enum Syntax {
     THROW("throw"),
     CATCH("catch"),
     EXCEPTION_IF("exception_if"),
-    CATCH_END("catch_end");
+    CATCH_END("catch_end"),
+    SHELL_VAR("shell_var");
 
 
 

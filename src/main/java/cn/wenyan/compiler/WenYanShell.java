@@ -2,7 +2,9 @@ package cn.wenyan.compiler;
 
 import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.script.libs.Language;
+import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
+import cn.wenyan.compiler.streams.FunctionCompileStream;
 import groovy.lang.GroovyShell;
 import org.codehaus.groovy.tools.shell.Groovysh;
 import scala.tools.nsc.interpreter.jline.JlineReader;
@@ -23,6 +25,8 @@ public class WenYanShell implements RunCode {
         this.compiler = new WenYanCompilerImpl(false,Language.GROOVY,this);
         this.shell = new Groovysh();
         this.run = new GroovyShell();
+        compiler.getStream(FunctionCompileStream.class).setShell(true);
+        LanguageUtils.setShell(true);
     }
 
     public WenYanShell(WenYanCompilerImpl compiler){
@@ -68,7 +72,7 @@ public class WenYanShell implements RunCode {
         StringBuilder builder = new StringBuilder();
         while (true){
             String code = reader.readLine(prefix);
-            if(code.matches("(:)[a-zA-Z?\\.]+")){
+            if(code.matches("(:)[a-zA-Z?\\\\.]+")){
                 shell.run(code);
                 continue;
             }

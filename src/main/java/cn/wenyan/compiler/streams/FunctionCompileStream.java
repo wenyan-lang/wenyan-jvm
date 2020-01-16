@@ -15,6 +15,7 @@ import java.util.List;
 
 public class FunctionCompileStream extends CompileStream {
 
+    private boolean isShell = false;
 
     private int funcIndex = 0;
 
@@ -196,12 +197,18 @@ public class FunctionCompileStream extends CompileStream {
     //def a(a,b){
     //def a = {a,b ->
     private String defineFunc(String name,String args_str){
+        if(isShell){
+            return LanguageUtils.defineInnerFunction(language,name,args_str);
+        }
         funcIndex++;
         if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,args_str);
         return LanguageUtils.defineInnerFunction(language,name,args_str);
     }
 
     private String defineFunc(String name){
+        if(isShell){
+            return LanguageUtils.defineInnerFunction(language,name);
+        }
         funcIndex++;
         if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,"");
         return LanguageUtils.defineInnerFunction(language,name);
@@ -224,5 +231,9 @@ public class FunctionCompileStream extends CompileStream {
         List<String> stack = new ArrayList<>(stackNames.subList(start,last));
         stackNames.removeAll(stack);
         return stack;
+    }
+
+    public void setShell(boolean shell) {
+        isShell = shell;
     }
 }

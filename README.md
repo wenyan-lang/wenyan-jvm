@@ -44,10 +44,10 @@ You can run WenYan Programming Language in JVM.
 > 项目的特别功能
 
 * 项目的自定义系统
-    1. 您可以通过项目的自定义系统自由的将文言文代码翻译为其他语言，通过添加Language.groovy的配置
+    1. 您可以通过项目的自定义系统自由的将文言文代码翻译为其他语言，通过添加[Language.groovy](src/main/java/cn/wenyan/compiler/script/libs/Language.groovy)的配置
     
     2. 插件系统(实验)
-        * 继承cn.wenyan.compiler.plugins.Plugin，标记Main类，打包为jar包，添加组件即可
+        * 继承[Plugin.java](src/main/java/cn/wenyan/compiler/plugins/Plugin)，标记Main类，打包为jar包，添加组件即可
 * wenyan_shell
     * ` java -jar wenyan.jar shell` 可以开启交互式命令页面
 * 文渊阁 for java

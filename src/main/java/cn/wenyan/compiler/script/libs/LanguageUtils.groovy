@@ -152,6 +152,13 @@ class LanguageUtils {
                 .replace(Language.EXCEPTION,exception)
     }
 
+    static String arraySet(Language language,String name,String index,String value){
+        return language.getSyntax(Syntax.REPLACE_ARRAY)
+                .replace(Language.NAME,name)
+                .replace(Language.INDEX,index)
+                .replace(Language.VALUE,value)
+    }
+
     static void setShell(boolean shell){
         isShell = shell
     }

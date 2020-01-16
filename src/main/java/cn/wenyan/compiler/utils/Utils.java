@@ -75,7 +75,11 @@ public class Utils {
         return builder.toString();
     }
 
-    public static String getValue(String number, VariableCompileStream stream) {
+    public static String  getValue(String number, VariableCompileStream stream){
+        return getValue(number,stream,false);
+    }
+
+    public static String getValue(String number, VariableCompileStream stream,boolean setNow) {
         Language language = stream.getLanguage();
         if (number.equals("其然")) {
             return stream.getNowName();
@@ -106,7 +110,7 @@ public class Utils {
         if (number.startsWith(WenYanLib.STRING_START()) && number.endsWith(WenYanLib.STRING_END())) {
             return stream.getString(number);
         } else if (number.startsWith(WenYanLib.NAME_START()) && number.endsWith(WenYanLib.NAME_END())) {
-            return stream.getName(number, false);
+            return stream.getName(number, false,setNow);
         } else {
             return stream.getNumberString(number) + "";
         }

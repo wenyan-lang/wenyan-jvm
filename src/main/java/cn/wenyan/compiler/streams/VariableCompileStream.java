@@ -151,7 +151,7 @@ public class VariableCompileStream extends CompileStream{
         return getName(WenYanLib.NAME_START()+"ans_"+varIndex+WenYanLib.NAME_END(),true);
     }
 
-    private String parseType(char type,List<String> name,List<String> values){
+    public String parseType(char type,List<String> name,List<String> values){
         StringBuilder head = new StringBuilder();
         Syntax syntax = WenYanLib.types().get(type+"").get();
         switch (type){
@@ -164,8 +164,10 @@ public class VariableCompileStream extends CompileStream{
                 return getVarString(syntax,type,head,name,values,val->WenYanLib.bool().get(val).get());
             case '列':
                 return getVarString(syntax,type,head,name,values,val->WenYanLib.define().get(type));
+            case '物':
+                return getVarString(syntax,type,head,name,values,val->language.getSyntax(Syntax.DEFINE_OBJECT));
             case '空':
-                return getVarString(syntax,type,head,name,values,val->"null");
+                return getVarString(syntax,type,head,name,values,val->language.getSyntax(Syntax.NULL));
             case '元':
                 return parseType(getType(values.size() == 0?"nil":values.get(0)),name,values);
             default:

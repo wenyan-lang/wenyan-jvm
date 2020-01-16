@@ -177,8 +177,15 @@ object WenYanLib {
 
   final val EXCEPTION_ELSE : String = "exception_else"
 
+  final val OBJECT_IT : String = "object_it"
+
   final val CATCH_END : String = "catch_end"
 
+  final val GIVE_OBJECT : String = "give_object"
+
+  final val GIVE_OBJECT_VALUE : String = "give_object_value"
+
+  final val OBJECT_END : String = "是謂「[\\s\\S]+」之物也"
   val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
@@ -313,8 +320,12 @@ object WenYanLib {
     CATCH -> "如事不諧",
     EXCEPTION_IF -> "豈「「[\\s\\S]+」」之禍歟",
     EXCEPTION_ELSE -> "不知何禍歟",
-    CATCH_END -> "乃作罷"
+    CATCH_END -> "乃作罷",
+    OBJECT_IT -> "其物如是",
+    GIVE_OBJECT -> "物之「「[\\s\\S]+」」者",
+    GIVE_OBJECT_VALUE -> (myType+"曰("+value+")")
   )
+
 
 
 
@@ -382,7 +393,8 @@ object WenYanLib {
     define('言') = Syntax.DEFINE_STRING
     define('爻') = Syntax.FALSE
     define('列') = Syntax.DEFINE_ARRAY
-    define('物') = Syntax.NULL
+    define('物') = Syntax.DEFINE_OBJECT
+    define('元') = Syntax.NULL
   }
 
   val types = Map[String,Syntax](
@@ -390,7 +402,8 @@ object WenYanLib {
     "言" -> Syntax.STRING_TYPE,
     "爻" -> Syntax.BOOL_TYPE,
     "列" -> Syntax.ARRAY_TYPE,
-    "元" -> Syntax.NULL
+    "元" -> Syntax.NULL,
+    "物" -> Syntax.NULL
   )
 
 }

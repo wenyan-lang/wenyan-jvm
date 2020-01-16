@@ -106,6 +106,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
                 .put(new FunctionCompileStream(this))
                 .put(new ArrayCompileStream(this))
                 .put(new TryCompileStream(this))
+                .put(new ObjectCompileStream(this))
                 .build();
         this.pluginManager = new PluginManager(this);
         this.runtime = new WenYanRuntime(this,shell==null?new WenYanShell(this):shell);

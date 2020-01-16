@@ -85,7 +85,8 @@ public enum Syntax {
     CATCH("catch"),
     EXCEPTION_IF("exception_if"),
     CATCH_END("catch_end"),
-    SHELL_VAR("shell_var");
+    SHELL_VAR("shell_var"),
+    DEFINE_OBJECT("define_object");
 
 
 

@@ -4,7 +4,6 @@ import cn.wenyan.compiler.*;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.utils.GroovyUtils;
-import cn.wenyan.compiler.utils.PinYinUtils;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 import cn.wenyan.compiler.utils.Utils;
 
@@ -215,12 +214,7 @@ public class VariableCompileStream extends CompileStream{
                 compiler.getServerLogger().warning(" 物之名且唯一也: "+name);
             return varMap.get(chinese);
         }
-        try {
-            Class.forName("net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination");
-            name = PinYinUtils.getPingYin(chinese, compiler.isSupportPinyin());
-        }catch (ClassNotFoundException e){
-            name = chinese;
-        }
+        name = chinese;
         if(varMap.containsKey(name)){
             varIndex++;
             name = name+varIndex;

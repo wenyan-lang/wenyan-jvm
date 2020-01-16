@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="wenyan_lang" />
         <module name="wenyan_lang_jvm" />
+        <module name="jvm" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

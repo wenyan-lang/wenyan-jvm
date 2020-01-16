@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="Maven 1" modules="Wenyan4jProjectManager,wenyan-lang_jvm,wenyan_lang,wenyan_lang_jvm,wyg4j" />
+    <profile name="Maven 1" modules="Wenyan4jProjectManager,jvm,wenyan-lang_jvm,wenyan_lang,wenyan_lang_jvm,wyg4j" />
   </component>
 </project>

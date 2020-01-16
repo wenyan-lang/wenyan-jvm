@@ -1,86 +1,26 @@
 <img src="images/logo.png" align="right" width="100" height="100"/>
 
 # wenyan-lang_jvm
+
 You can run WenYan Programming Language in JVM.
+
 > 声明
 
-1. 关注本项目不要忘记关注一下[LingDong的项目](https://github.com/LingDong-/wenyan-lang),因为本项目基于LingDong项目标准开发
+1. 关注本项目不要忘记关注一下语法源:[LingDong的项目](https://github.com/LingDong-/wenyan-lang),因为本项目基于LingDong项目标准开发
 2. 语法非作者(MagicLu)原创。
 3. 本项目预计未来成形后，将会考虑贡献给WenYan本库。
 4. 本项目与LingDong项目一样，遵循MIT许可证
 5. 本项目非商业用途，任何人均可贡献，任何人也可以在合适范围内修改README
 6. 本项目使用方法可以参见[文档](document/Java-Compiler.md)
 7. 关于项目开启的原因可以参见 [#411](https://github.com/LingDong-/wenyan-lang/issues/411)
+8. 本项目的目标语言是groovy,以实现动态语言，主要是为了实现`wenyan`可以调用java相关类库(并尽量确保js版本的wy文件)，以实现在虚拟机运行。
 
-> 项目的自定义系统
+> 相关链接
 
-1. 您可以通过项目的自定义系统自由的将文言文代码翻译为其他语言，通过添加Language.groovy的配置
-
-2. 插件
-
-```scala
-
-package cn.wenyan.compiler.plugins
-
-import java.util.regex.Pattern
-
-import cn.wenyan.compiler.streams.CompileStream
-
-import scala.collection.mutable
-
-import java.util
-
-abstract class Plugin {
-
-    def addSyntaxRegex(map : mutable.Map[String,String])
-
-    def addPatterns(map : mutable.Map[String,Pattern])
-
-    def addCompileStream(map : util.List[CompileStream])
-
-    def addListener(map : util.List[Listener])
-
-}
-
-```
-
-继承该插件类，标记Main类，打包为jar包，添加组件即可
-
-> WenYan Shell
-
-` java -jar wenyan.jar shell` 可以开启交互式命令页面
-
-> 文渊阁 for java
-
-基于文渊阁和maven的项目管理插件，可以实现文言文语言和java源代码混合编译
-
-- 状态开发中
-
-> WenYan Java Package Manager
-
-文言项目管理,可以参见[TestMain.java](src/main/java/cn/wenyan/compiler/test/TestMain.java)和[project_example](project_example)文件夹
-
-```java
-package cn.wenyan.compiler.test;
-
-import cn.wenyan.compiler.Main;
-public class TestMain {
-
-    public static void main(String[] args) {
-        String project = "/Users/luchangcun/Projects/michel/wenyan-lang_jvm/project_example";
-        String makeFile = project+"/MakeFile.txt";
-        String out = project+"/target";
-        Main.main(new String[]{"-c","@"+makeFile,out,"-sc",project+"/src/main/java","-m","main.主文件"});
-        Main.main(new String[]{"-o","/Users/luchangcun/Projects/michel/wenyan-lang_jvm/project_example/target/","-n","main.主文件","-r"});
-    }
-}
-```
-如何构建wenyan4j项目:
-
-1. 随便建两个文件夹，为src和target(这名字可以自定义，这是我建议的名字)
-2. src下建一个MakeFile.txt,里面写上主类的路径 
-3. java -jar wenyan.jar -c @src/MakeFile.txt target -sc src -m 主运行类名(类名 = 文件名) 编译，会在target输出全部编译文件
-4. java -jar wenyan.jar -o target -n 主类名 -r 运行
+1. [wenyan_lang](https://github.com/LingDong-/wenyan-lang)
+2. [文渊阁](https://github.com/wenyan-lang/wyg)
+3. [更新日志](CHANGE_LOG.md)
+4. [LICENSE](LICENSE)
 
 > 关于作者
 
@@ -96,65 +36,37 @@ public class TestMain {
 
 5. 作者是也是一名文言文爱好者(或者是文学爱好者)
 
-> 关于项目
+> 项目的特别功能
 
-语法源: https://github.com/LingDong-/wenyan-lang 
+* 项目的自定义系统
+    1. 您可以通过项目的自定义系统自由的将文言文代码翻译为其他语言，通过添加Language.groovy的配置
+    
+    2. 插件系统(实验)
+        * 继承cn.wenyan.compiler.plugins.Plugin，标记Main类，打包为jar包，添加组件即可
+* wenyan_shell
+    * ` java -jar wenyan.jar shell` 可以开启交互式命令页面
+* 文渊阁 for java
+    * 尚在策划
+    * 基于文渊阁和maven的项目管理插件，可以实现文言文语言和java源代码混合编译
+* wenyan_java项目管理
+    * 文言项目管理,可以参见[TestMain.java](src/main/java/cn/wenyan/compiler/test/TestMain.java)和[project_example](project_example)文件夹
+    * 构建方案
+         1. 随便建两个文件夹，为src和target(这名字可以自定义，这是我建议的名字)
+         2. src下建一个MakeFile.txt,里面写上主类的路径 
+         3. java -jar wenyan.jar -c @src/MakeFile.txt target -sc src -m 主运行类名(类名 = 文件名) 编译，会在target输出全部编译文件
+         4. java -jar wenyan.jar -o target -n 主类名 -r 运行
 
-本项目的目标语言是groovy,以实现动态语言，主要是为了实现
-文言lang可以调用java库或groovy库，以实现在虚拟机运行。
-
-项目采用正则和流程进行编译，具体工作的过程是
-
-文言语句 -> 字符串规范化 -> 断句 -> 编译流编译 -> 目标语言
-
-编译流每编译一条语句，就会记录这个语句的指针，并且清除语句，之后把未编译语句向前推移，继续编译
-
-直到所有语句清空为止。编译流的一次编译是一个编译的工作单元，完成了一种语句的编译。 
-
-字符画解释:
-
-0. 语言
-
-`吾有一數曰四十二名之曰「運數1」吾有一數曰四十二名之曰「運數2」`
-
-1. 断句
-
-`吾有一數。曰四十二。名之曰「運數1」。吾有一數。曰四十二。名之曰「運數2」。`
-
-2. 分解
-
-`[吾有一數][曰四十二][名之曰「運數1」][吾有一數][曰四十二][名之曰「運數2」]`
-
-3. 第一次流程编译
-
-第一次编译完成:
-` 这一块编译完成,采用了语法匹配         `
-`||[吾有一數][曰四十二][名之曰「運數1」]||[吾有一數][曰四十二][名之曰「運數2」]`
-`                              ^`
-
-4. 第二次流程编译
-
-第二次编译完成:
-` 这一块编译完成,采用了语法匹配         `
-`||[吾有一數][曰四十二][名之曰「運數2」]||`
-`                               ^`
-5. 编译完成
-
-> 与javascript/python版本的区别
+> 与javascript/python/ruby版本的区别
 
 1. 这里支持了编译为groovy
-2. 对于标点要求已经解决，您可以写成
-```
-有數七名之曰「甲」有數五名之曰「乙」有數零名之曰「艾」
-```
-3. 对于文件名称要求严格，不能使用特殊符号
+2. 对于文件名称要求严格，不能使用特殊符号标记
 
-> 目前状态
+> 实现效果
 
-1. 目前还在开发过程
-2. 已经可以运行wenyan-lang的[图灵机](https://github.com/LingDong-/wenyan-lang/blob/master/examples/turing.wy)，图灵完备
+已经可以运行wenyan-lang的[图灵机](https://github.com/LingDong-/wenyan-lang/blob/master/examples/turing.wy)，图灵完备
 
 ![turing](images/turing.png)
+
 > 目前实现的语法
 
 ##### 變量
@@ -242,10 +154,6 @@ public class TestMain {
 |`吾有一物。名之曰「甲」。`|`def a = [:]`
 |` 吾有一物。名之曰「甲」。其物如是。物之「「乙」」者。數曰三。物之「「丙」」者。言曰「「丁」」。是謂「甲」之物也`|`def a = [b:3,c:"d"]`|
 
-> 效果展示
-
-![image](images/program.png)
-![image2](images/color.png)
 
 > 特殊语法
 
@@ -270,10 +178,6 @@ public class TestMain {
 施「new String」於「大衍」。名之曰「矣」。
 施「矣之getClass」。書之。
 ```
-> 表示法说明
-
-1. 数字表示和原文言文项目相同
-2. 字符串表示和原文言文项目相同(包括新加入的字符串)
 
 > 如何使用
 
@@ -291,7 +195,7 @@ public class TestMain {
 
 `-m` 值: 主类路径
 
-LIB_USE:
+> 直接加载文言文脚本
 
 ```groovy
 import cn.wenyan.compiler.WenYanTools

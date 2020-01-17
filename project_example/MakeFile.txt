@@ -1,2 +1,1 @@
-/Users/luchangcun/Projects/michel/wenyan-lang_jvm/project_example/src/main/java/main/其他文件.wy
-/Users/luchangcun/Projects/michel/wenyan-lang_jvm/project_example/src/main/java/main/主文件.wy
+/Users/luchangcun/Projects/new/jvm/project_example/src/main/java/main/主文件.wy

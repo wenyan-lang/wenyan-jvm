@@ -35,7 +35,9 @@ import static cn.wenyan.compiler.log.LogFormat.fg;
  * 此器以爪哇之法，行虚拟机之道，亦可广传文言于天下者。
  * 君用[run]之洋文可走之。吾欲将其译为java者也。
  */
-public class WenYanCompilerImpl implements WenYanCompiler {
+public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
+
+    private CompilerConfig compilerConfig;
 
     private List<Listener> listeners;
 
@@ -161,6 +163,7 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     public int init(CompilerConfig compilerConfig){
         try {
+            this.compilerConfig = compilerConfig;
             supportPinyin = compilerConfig.isSupportPinYin();
             String[] files = compilerConfig.getCompileFiles();
             String[] args = compilerConfig.getRunArgs();
@@ -228,7 +231,8 @@ public class WenYanCompilerImpl implements WenYanCompiler {
             }else{
                 this.serverLogger.error(message);
             }
-            results.set(0,ERROR);
+            e.printStackTrace();
+            results.add(0,ERROR);
             return results;
         }
     }
@@ -498,5 +502,10 @@ public class WenYanCompilerImpl implements WenYanCompiler {
 
     public String getMainClass() {
         return mainClass;
+    }
+
+    @Override
+    public WenYanCompilerImpl clone() throws CloneNotSupportedException {
+        return (WenYanCompilerImpl) super.clone();
     }
 }

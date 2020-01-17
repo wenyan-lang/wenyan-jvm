@@ -145,15 +145,7 @@ public class FunctionCompileStream extends CompileStream {
             String value01= compiler.removeWenyan();
 
             String clz = getClassName(value01);
-            if(compiler.getSourcePath()!=null&&!Utils.classExists(clz)){
-                String path = compiler.getSourcePath();
-                String filePath = path +File.separator+clz.replace(".", File.separator)+".wy";
-                try {
-                    compiler.compileOut(compiler.getSourcePath(), new File(filePath), new File(compiler.getClassPath()), compiler.getMainClass(), true);
-                }catch (IOException e){
-                    compiler.getServerLogger().error("",e);
-                }
-            }
+
 
             if(Utils.matches(wenyan,WenYanLib.IMPORT_STATIC())){
                 String value02 = compiler.removeWenyan();

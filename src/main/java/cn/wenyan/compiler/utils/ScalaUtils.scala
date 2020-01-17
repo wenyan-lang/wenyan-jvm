@@ -14,7 +14,7 @@ object ScalaUtils {
 
   def countTime(func : =>Unit): Long ={
     val start = System.currentTimeMillis
-
+    func
     val end = System.currentTimeMillis
     return end -start
   }

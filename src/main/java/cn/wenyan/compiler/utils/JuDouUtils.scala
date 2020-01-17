@@ -44,24 +44,33 @@ object JuDouUtils {
 
     def newStringToCommon(string : String): String ={
 
-        val first = string.indexOf("『")
-        val end = string.lastIndexOf("』")
-        val builder = new StringBuilder
-
-        if(first != -1||end != -1){
-            var count = 0
-            for(x <- string){
-                if(first == count)
+        var i = 0
+        var count = 0
+        var builder = new StringBuilder
+        while (i<string.length){
+            var s = string(i)
+            //
+            if(s == '「'||s == '『')count+=1
+            if(s == '」'||s == '』')count-=1
+            if(count == 1){
+                if(s == '『'){
                     builder.append("「「")
-                else if
-                    (end == count)builder.append("」」")
-                else
-                    builder.append(x)
-                count+=1
+                }else{
+                    builder.append(s)
+                }
+            }else if(count == 0){
+                if(s == '』'){
+                    builder.append("」」")
+                }else{
+                    builder.append(s)
+                }
+            }else{
+                builder.append(s)
             }
-            return builder.toString()
+            i+=1
         }
-        string
+
+        builder.toString()
     }
 
     def splitWenYan(strings: String) : java.util.List[String] ={

@@ -70,7 +70,7 @@ public class PrepareCompiler {
                     }
                     initMacro(macros);
                 }else{
-                    String file = compiler.getSourcePath()+"/"+im.replace(".", File.separator);
+                    String file = compiler.getSourcePath()+"/"+im.replace(".", File.separator)+".wy";
                     initMacro(getMacroMapping(compiler.getWenYanCodeByFile(new File(file))));
                 }
             }
@@ -81,6 +81,19 @@ public class PrepareCompiler {
         expansion(format);
 
         format = JuDouUtils.splitWenYan(getString(format));
+
+        for(String imp : imports) {
+            if (compiler.getSourcePath() != null && !Utils.classExists(imp)) {
+
+                String path = compiler.getSourcePath();
+                String filePath = path + File.separator + imp.replace(".", File.separator) + ".wy";
+                try {
+                    compiler.compileOut(compiler.getSourcePath(), new File(filePath), new File(compiler.getClassPath()), compiler.getMainClass(), true);
+                } catch (IOException e) {
+                    compiler.getServerLogger().error("", e);
+                }
+            }
+        }
 
         //第二次检测import
 
@@ -126,7 +139,7 @@ public class PrepareCompiler {
         List<String> list = new ArrayList<>();
         FunctionCompileStream stream = compiler.getStream(FunctionCompileStream.class);
         for(int i = 0;i<lists.size();i++){
-            if(lists.get(i).matches(WenYanLib.IMPORT())){
+            if(Utils.matches(lists.get(i),WenYanLib.IMPORT())){
                 list.add(stream.getClassName(lists.get(i)).replace("import","").trim());
             }
         }

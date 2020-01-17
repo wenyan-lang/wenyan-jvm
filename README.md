@@ -2,7 +2,6 @@
 
 # wenyan-lang_jvm
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/78742c3f-fce6-4108-bd59-e1c375984c7b/deploy-status)](https://app.netlify.com/sites/wy4j/deploys)
 
 You can run WenYan Programming Language in JVM.
 

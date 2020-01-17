@@ -43,63 +43,42 @@ public class PrepareCompiler {
 
     }
 
+
+
     public List<String> macroPrepare(String wenyanCode){
 
         Map<String,String> get = getMacroMapping(wenyanCode);
 
+        //初始化本文件的macro
         initMacro(get);
-        // 宏工作
+
+        //导入其他文件macro，前提是import不是宏的
         List<String> strs = JuDouUtils.splitWenYan(wenyanCode);
 
+
+        List<String> imports = getImportsWenYan(strs);
+
+        importMacro(imports);
+
+        //展开
         expansion(strs);
 
+
+        //重新解析
         List<String> format = JuDouUtils.splitWenYan(getString(strs));
 
-        List<String> imports = getImportsWenYan(format);
+        imports = getImportsWenYan(format);
 
-
-        try {
-            Map<String,String> macros = new HashMap<>();
-            for (String im : imports) {
-                if (Utils.classExists(im)) {
-                    Class<?> clz = Class.forName(im);
-                    Defines definesObj = clz.getAnnotation(Defines.class);
-                    Define[] defines = definesObj.value();
-                    for(Define define : defines){
-                        macros.put(define.before(),define.after());
-                    }
-                    initMacro(macros);
-                }else{
-                    String file = compiler.getSourcePath()+"/"+im.replace(".", File.separator)+".wy";
-                    initMacro(getMacroMapping(compiler.getWenYanCodeByFile(new File(file))));
-                }
-            }
-        }catch (ClassNotFoundException| IOException e){
-            compiler.getServerLogger().error("",e);
-        }
+        //导入之前宏定义的导入语句的宏
+        importMacro(imports);
 
         expansion(format);
 
         format = JuDouUtils.splitWenYan(getString(format));
 
-        for(String imp : imports) {
-            if (compiler.getSourcePath() != null && !Utils.classExists(imp)) {
+        //编译import的文件
+        compileImports(imports);
 
-                String path = compiler.getSourcePath();
-                String filePath = path + File.separator + imp.replace(".", File.separator) + ".wy";
-                try {
-                    compiler.compileOut(compiler.getSourcePath(), new File(filePath), new File(compiler.getClassPath()), compiler.getMainClass(), true);
-                } catch (IOException e) {
-                    compiler.getServerLogger().error("", e);
-                }
-            }
-        }
-
-        //第二次检测import
-
-        // 导入
-        // 1. wy文件 则找到宏，之后存起来
-        // 2. class文件 若加载了，那么获取@Define
         return format;
     }
 
@@ -152,8 +131,9 @@ public class PrepareCompiler {
             List<String> macroNames = names.get(macro);
             String mac = macro;
             for(String name : macroNames){
-                mac = macro.replace(name,"[\\s\\S]+");
+                mac = mac.replace(name,"[\\s\\S]+");
             }
+
             macrosPatterns.put(mac,macro);
         });
         return macrosPatterns;
@@ -238,6 +218,43 @@ public class PrepareCompiler {
         if(c == '「')return 1;
         if(c == '」')return  -1;
         return 0;
+    }
+
+    private void importMacro(List<String> imports){
+        try {
+            Map<String,String> macros = new HashMap<>();
+            for (String im : imports) {
+                if (Utils.classExists(im)) {
+                    Class<?> clz = Class.forName(im);
+                    Defines definesObj = clz.getAnnotation(Defines.class);
+                    Define[] defines = definesObj.value();
+                    for(Define define : defines){
+                        macros.put(define.before(),define.after());
+                    }
+                    initMacro(macros);
+                }else{
+                    String file = compiler.getSourcePath()+"/"+im.replace(".", File.separator)+".wy";
+                    initMacro(getMacroMapping(compiler.getWenYanCodeByFile(new File(file))));
+                }
+            }
+        }catch (ClassNotFoundException| IOException e){
+            compiler.getServerLogger().error("",e);
+        }
+    }
+
+    private void compileImports(List<String> imports){
+        for(String imp : imports) {
+            if (compiler.getSourcePath() != null && !Utils.classExists(imp)) {
+
+                String path = compiler.getSourcePath();
+                String filePath = path + File.separator + imp.replace(".", File.separator) + ".wy";
+                try {
+                    compiler.compileOut(compiler.getSourcePath(), new File(filePath), new File(compiler.getClassPath()), compiler.getMainClass(), true);
+                } catch (IOException e) {
+                    compiler.getServerLogger().error("", e);
+                }
+            }
+        }
     }
 
 }

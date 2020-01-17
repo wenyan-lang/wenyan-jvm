@@ -212,8 +212,6 @@ public class VariableCompileStream extends CompileStream{
         String chinese = name.substring(name.indexOf(WenYanLib.NAME_START()) + 1, name.lastIndexOf(WenYanLib.NAME_END()));
         //if(!define&&varMap.get(chinese) == null) throw new SyntaxException("此變量非定義也:"+name+" 於 「「 "+compiler.getNow()+" 」」");
         if(varMap.containsValue(chinese)){
-            if(define)
-                compiler.getServerLogger().warning(" 物之名且唯一也: "+name);
             return varMap.get(chinese);
         }
         name = chinese;

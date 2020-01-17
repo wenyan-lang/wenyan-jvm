@@ -98,11 +98,7 @@ public class PrepareCompiler {
                 if(str.matches(k)){
                     List<String> ns = macroNames.get(v);
                     List<String> values = Utils.getStrings(WenYanLib.VALUE(),str);
-                    for(int z = 0;z<values.size();z++){
-                        if(values.get(z).length() == 1&&WenYanLib.prefixAfter().contains(values.get(z).charAt(0))){
-                            values.remove(z);
-                        }
-                    }
+                   
                     String result = macroMapping.get(v);
                     for(int j = 0;j<values.size();j++){
                         result = result.replace(ns.get(j), values.get(j));

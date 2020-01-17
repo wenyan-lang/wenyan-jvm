@@ -186,7 +186,7 @@ You can run WenYan Programming Language in JVM.
 使用java对象
 ```
 施「new String」於「大衍」。名之曰「矣」。
-施「矣之getClass」。書之。
+施「矣.getClass」。書之。
 ```
 
 > 如何使用

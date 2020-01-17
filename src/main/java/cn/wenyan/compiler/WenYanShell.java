@@ -25,7 +25,7 @@ public class WenYanShell implements RunCode {
         this.compiler = new WenYanCompilerImpl(false,Language.GROOVY,this);
         this.shell = new Groovysh();
         this.run = new GroovyShell();
-        compiler.getStream(FunctionCompileStream.class).setShell(true);
+        //compiler.getStream(FunctionCompileStream.class).setShell(true);
         LanguageUtils.setShell(true);
     }
 

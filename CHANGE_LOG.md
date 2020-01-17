@@ -1,5 +1,15 @@
 Wenyan4j's progress will be explained here
 
+> 1.17 10:14
+
+support functional programming
+
+> 1.17 9:54
+
+fixed bug about the macro
+
+fixed bug about the string
+
 > 1.16 11:28
 
 implemented the object

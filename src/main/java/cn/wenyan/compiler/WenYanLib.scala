@@ -186,6 +186,7 @@ object WenYanLib {
   final val GIVE_OBJECT_VALUE : String = "give_object_value"
 
   final val OBJECT_END : String = "是謂「[\\s\\S]+」之物也"
+
   val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
@@ -323,7 +324,7 @@ object WenYanLib {
     CATCH_END -> "乃作罷",
     OBJECT_IT -> "其物如是",
     GIVE_OBJECT -> "物之「「[\\s\\S]+」」者",
-    GIVE_OBJECT_VALUE -> (myType+"曰("+value+")")
+    GIVE_OBJECT_VALUE -> (myType+"曰("+value+")"),
   )
 
 

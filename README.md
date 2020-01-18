@@ -191,6 +191,7 @@ You can run WenYan Programming Language in JVM.
 
 > 如何使用
 
+
 -m: 参数: 主类,编译时，设置编译主类,比如cn.main.HelloWorld,对应着@sourceFile/cn/main/HelloWorld.wy
 
 -n: 参数: 主类,运行时，设置运行主类,比如cn.main.HelloWorld,对应着@sourceFile/cn/main/HelloWorld.wy
@@ -209,7 +210,7 @@ You can run WenYan Programming Language in JVM.
 
 -sc: 参数: sourcePath,指定源文件的根目录，根目录下面的文件夹则作为package名称
 
--wyg: 参数: 序.wy's Path,将文渊阁编译进去，后面跟着藏書樓的上一级目录即可，需要有-sc和-o的内容
+-wyg: 参数: 藏書樓的上一级目录,将文渊阁编译进去，后面跟着藏書樓的上一级目录即可，需要有-sc和-o的内容
 
 -l: 参数: jarFiles,加入依赖的jar包，如hello.jar;eat.jar
 

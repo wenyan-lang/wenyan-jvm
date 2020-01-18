@@ -119,7 +119,7 @@ public class PrepareCompiler {
         FunctionCompileStream stream = compiler.getStream(FunctionCompileStream.class);
         for(int i = 0;i<lists.size();i++){
             if(Utils.matches(lists.get(i),WenYanLib.IMPORT())){
-                list.add(stream.getClassName(lists.get(i)).replace("import","").trim());
+                list.add(compiler.library.get(stream.getClassName(lists.get(i)).replace("import","").trim()));
             }
         }
         return list;

@@ -15,7 +15,7 @@ You can run WenYan Programming Language in JVM.
 6. 本项目使用方法可以参见[文档](document/Java-Compiler.md)
 7. 关于项目开启的原因可以参见 [#411](https://github.com/LingDong-/wenyan-lang/issues/411)
 8. 本项目的目标语言是groovy,以实现动态语言，主要是为了实现`wenyan`可以调用java相关类库(并尽量确保js版本的wy文件)，以实现在虚拟机运行。
-9. 对于文渊阁的支持，只需要在项目的src执行wyg i 名称即可。确保在source_path之内
+9. 对于文渊阁的支持，只需要在项目的src执行wyg i 名称即可。编译器提供了相关参数实现文渊阁的编译
 
 > 相关链接
 
@@ -185,19 +185,27 @@ You can run WenYan Programming Language in JVM.
 
 > 如何使用
 
-`-p` 值:true/false 是否支持拼音
+-m: 参数: 主类,编译时，设置编译主类,比如cn.main.HelloWorld,对应着@sourceFile/cn/main/HelloWorld.wy
 
-`-c` 值: @MakeFile-> 批量编译文件，将文件路径一行一行的写入即可 / 一个文件名，只编译一个文件
+-n: 参数: 主类,运行时，设置运行主类,比如cn.main.HelloWorld,对应着@sourceFile/cn/main/HelloWorld.wy
 
-`-o` 值: 输出文件夹的路径
+-o: 参数: OutFile,单独设置编译文件输出的文件夹
 
-`-l`  值: 编译所用lib,多个lib路径用`;`分割
+-p: 该指令已经废弃，使用无效
 
-`-r` 值: 运行时的参数 注意: 这个选项必须放在最后面,会将文件运行
+-r: 参数: 程序参数,运行主文件，-r后面跟着args，即程序参数，这个选项必须放在最后面，比如 -o xxx -c xxx -r 1 2 3
 
-`-sc` 值: src文件夹的路径
+-c: 参数: makeFile和outFile,设置编译文件路径,如@MakeFile.txt或者HelloWorld.wy,后面是输出的文件夹根目录
 
-`-m` 值: 主类路径
+-g: 该指令废弃，不要使用
+
+-wd: 参数: name,相当于wyg i name,确保有node.js
+
+-sc: 参数: sourcePath,指定源文件的根目录，根目录下面的文件夹则作为package名称
+
+-wyg: 参数: 序.wy's Path,将文渊阁编译进去，后面跟着藏書樓的上一级目录即可，需要有-sc和-o的内容
+
+-l: 参数: jarFiles,加入依赖的jar包，如hello.jar;eat.jar
 
 > 直接加载文言文脚本
 

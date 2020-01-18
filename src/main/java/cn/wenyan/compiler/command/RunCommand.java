@@ -12,4 +12,9 @@ public class RunCommand extends Command {
         compilerConfig.setRunArgs(args);
         return null;
     }
+
+    @Override
+    public String help() {
+        return "参数: 程序参数,运行主文件，-r后面跟着args，即程序参数，这个选项必须放在最后面，比如 -o xxx -c xxx -r 1 2 3";
+    }
 }

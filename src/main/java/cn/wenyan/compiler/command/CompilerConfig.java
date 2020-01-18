@@ -2,6 +2,10 @@ package cn.wenyan.compiler.command;
 
 public class CompilerConfig {
 
+    private String wygDownload;
+
+    private String wenyuangeFile;
+
     private boolean groovy = true;
 
     private String classFile;
@@ -100,5 +104,21 @@ public class CompilerConfig {
 
     public String getClassFile() {
         return classFile;
+    }
+
+    public void setWenyuangeFile(String wenyuangeFile) {
+        this.wenyuangeFile = wenyuangeFile;
+    }
+
+    public String getWenyuangeFile() {
+        return wenyuangeFile;
+    }
+
+    public void setWygDownload(String wygDownload) {
+        this.wygDownload = wygDownload;
+    }
+
+    public String getWygDownload() {
+        return wygDownload;
     }
 }

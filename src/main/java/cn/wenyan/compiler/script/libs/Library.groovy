@@ -18,7 +18,12 @@ class Library {
         return libs.get(language)
     }
 
+    void addLib(String name,String packageName){
+        libs.get(language).put(name,packageName)
+    }
+
     String get(String name){
-        return getLibs().get(name)
+        String n = getLibs().get(name)
+        return n == null?name:n
     }
 }

@@ -12,4 +12,9 @@ public class CompileLibCommand extends Command {
         compilerConfig.setCompileLib(libs);
         return null;
     }
+
+    @Override
+    public String help() {
+        return "参数: jarFiles,加入依赖的jar包，如hello.jar;eat.jar";
+    }
 }

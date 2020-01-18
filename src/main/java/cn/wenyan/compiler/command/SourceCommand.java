@@ -12,4 +12,9 @@ public class SourceCommand extends Command{
         compilerConfig.setSourcePath(args[0]);
         return null;
     }
+
+    @Override
+    public String help() {
+        return "参数: sourcePath,指定源文件的根目录，根目录下面的文件夹则作为package名称";
+    }
 }

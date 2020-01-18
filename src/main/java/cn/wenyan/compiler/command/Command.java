@@ -21,4 +21,6 @@ public abstract class Command {
     public String getOption() {
         return option;
     }
+
+    public abstract String help();
 }

@@ -19,7 +19,7 @@ public abstract class CompileStream {
         this.compiler = compiler;
         this.language = compiler.getLanguageType();
         this.compiler.getStreamMap().put(this.getClass(),this);
-        this.library = new Library(language);
+        this.library = compiler.getLibrary();
     }
     public abstract CompileResult compile(List<String> wenyan);
 

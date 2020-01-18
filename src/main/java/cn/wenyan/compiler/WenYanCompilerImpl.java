@@ -11,6 +11,7 @@ import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.plugins.Listener;
 import cn.wenyan.compiler.plugins.PluginManager;
 import cn.wenyan.compiler.script.libs.Language;
+import cn.wenyan.compiler.script.libs.Library;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
 import cn.wenyan.compiler.utils.JuDouUtils;
@@ -36,6 +37,8 @@ import static cn.wenyan.compiler.log.LogFormat.fg;
  * 君用[run]之洋文可走之。吾欲将其译为java者也。
  */
 public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
+
+    protected Library library;
 
     private CompilerConfig compilerConfig;
 
@@ -89,6 +92,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
     WenYanCompilerImpl(boolean supportPinyin, Language language, WenYanShell shell){
         this.languageType = language;
+        this.library = new Library(language);
         this.streamMap = new HashMap<>();
         this.groovyCompiler = language.languageCompiler();
         this.serverLogger = new ServerLogger(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile());
@@ -163,16 +167,39 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
     public int init(CompilerConfig compilerConfig){
         try {
+            this.sourcePath = compilerConfig.getSourcePath();
+            this.mainClass = compilerConfig.getMainClass();
             this.compilerConfig = compilerConfig;
-            supportPinyin = compilerConfig.isSupportPinYin();
+            this.supportPinyin = compilerConfig.isSupportPinYin();
             String[] files = compilerConfig.getCompileFiles();
             String[] args = compilerConfig.getRunArgs();
             String[] libs = compilerConfig.getCompileLib();
             String classFile = compilerConfig.getClassFile();
-            sourcePath = compilerConfig.getSourcePath();
-            mainClass = compilerConfig.getMainClass();
+            String wenyuangeFile = compilerConfig.getWenyuangeFile();
+            String wygDownload = compilerConfig.getWygDownload();
             boolean isRun = compilerConfig.isRun();
             classPath = compilerConfig.getOutFile();
+            File cp = new File(classPath);
+            if(wygDownload!=null){
+                Runtime.getRuntime().exec("npm i -g @wenyanlang/wyg");
+                Runtime.getRuntime().exec("wyg i "+wygDownload);
+            }
+            if(wenyuangeFile!=null){
+                ///藏书楼的位置
+                String wygf = wenyuangeFile+"/";
+                File file = new File(wygf.equals("null/")?WYG:wygf+WYG);
+                File[] fileLibs = file.listFiles();
+                if(fileLibs!=null){
+                    for(File f : fileLibs){
+                        File xu = new File(f,WYG_LIB);
+                        File xuAfter = new File(f,f.getName()+".wy");
+                        xu.renameTo(xuAfter);
+                        compileOut(sourcePath,xuAfter,cp,mainClass,compilerConfig.isGroovy());
+                        library.addLib(f.getName(),getClassName(xuAfter,sourcePath));
+                    }
+                }
+            }
+
             if ((classPath == null || files == null)&&!isRun) {
                 serverLogger.info("必要: 输出文件路径和编译文件信息");
                 return 1;
@@ -191,7 +218,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
             if(files!=null) {
                 for (String file : files) {
-                    compileOut(sourcePath, new File(file), new File(classPath), mainClass, compilerConfig.isGroovy());
+                    compileOut(sourcePath, new File(file), cp, mainClass, compilerConfig.isGroovy());
                 }
             }
             // -jar a.jar;b.jar -o classPath -n className -r args
@@ -289,17 +316,20 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         return builder.toString();
     }
 
+    private String getClassName(File thisFile,String sc){
+        String className = thisFile.toString().replace(sc,"");
+        if(className.startsWith(File.separator)){
+            className = className.substring(1);
+        }
+        className = className.replace(File.separator,".");
+        return className.substring(0,className.lastIndexOf("."));
+    }
     //TODO 如果未来实现了类，必须要把类剥离出来
     //TODO groovy独特
     private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass,boolean isGroovy){
         try {
             String annotation = prepareCompiler.toAnnotation(wenyanString);
-            String className = thisFile.toString().replace(sc,"");
-            if(className.startsWith(File.separator)){
-                className = className.substring(1);
-            }
-            className = className.substring(0,className.lastIndexOf("."));
-            className = className.replace(File.separator,".");
+            String className = getClassName(thisFile,sc);
             StringBuilder builder = new StringBuilder();
             int index = className.lastIndexOf(".");
             String pack = "";
@@ -355,9 +385,9 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                 FileUtils.write(out,code,System.getProperty("file.coding"));
             if(!parent.exists())parent.mkdirs();
 
-            compileToClass(out,classFile,parent);
+            compileToClass(out,classFile);
 
-            serverLogger.info("得文件为: "+file);
+            serverLogger.info("得文件为: "+out);
             if(isGroovy)
                 return out;
             else
@@ -369,12 +399,12 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
     }
 
 
-    public void compileToClass(File out,File classFile,File parent) throws FileNotFoundException {
+    public void compileToClass(File out,File classFile) throws FileNotFoundException {
         CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
         PrintWriter writer = new PrintWriter(classFile);
         compilerConfiguration.setOutput(writer);
         compilerConfiguration.setTargetBytecode(CompilerConfiguration.JDK8);
-        compilerConfiguration.setTargetDirectory(parent.getParentFile());
+        compilerConfiguration.setTargetDirectory(classPath);
         compilerConfiguration.setClasspath(classPath);
         Compiler compiler = new Compiler(compilerConfiguration);
         compiler.compile(out);
@@ -468,10 +498,8 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
 
 
-    public File compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
-
-        return compileToGroovy(file,classPath,outDir, getWenYanCodeByFile(file),mainClass,groovy);
-
+    public void compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
+        compileToGroovy(file,classPath,outDir, getWenYanCodeByFile(file),mainClass,groovy);
     }
 
 
@@ -502,6 +530,10 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
     public String getMainClass() {
         return mainClass;
+    }
+
+    public Library getLibrary() {
+        return library;
     }
 
     @Override

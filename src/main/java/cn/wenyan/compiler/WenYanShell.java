@@ -5,6 +5,7 @@ import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.FunctionCompileStream;
+import cn.wenyan.compiler.utils.JuDouUtils;
 import groovy.lang.GroovyShell;
 import org.codehaus.groovy.tools.shell.Groovysh;
 import scala.tools.nsc.interpreter.jline.JlineReader;
@@ -77,9 +78,16 @@ public class WenYanShell implements RunCode {
                 continue;
             }
             String returned = shell.compiler.compile(code,false);
+            if(JuDouUtils.trimWenYanX(returned).startsWith("import")){
+                String[] imps = returned.split("\n");
+                for(String imp : imps){
+                    shell.run(imp);
+                }
+                continue;
+            }
             index += getClose(returned);
             if(index == 0) {
-                builder.append(returned);
+                builder.append(returned).append("\n");
                 try {
                     shell.run(builder.toString());
                 }catch (Exception e){

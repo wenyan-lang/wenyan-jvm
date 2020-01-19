@@ -223,11 +223,13 @@ public class PrepareCompiler {
                 if (Utils.classExists(im)) {
                     Class<?> clz = Class.forName(im);
                     Defines definesObj = clz.getAnnotation(Defines.class);
-                    Define[] defines = definesObj.value();
-                    for(Define define : defines){
-                        macros.put(define.before(),define.after());
+                    if(definesObj!=null) {
+                        Define[] defines = definesObj.value();
+                        for (Define define : defines) {
+                            macros.put(define.before(), define.after());
+                        }
+                        initMacro(macros);
                     }
-                    initMacro(macros);
                 }else{
                     String file = compiler.getSourcePath()+"/"+im.replace(".", File.separator)+".wy";
                     initMacro(getMacroMapping(compiler.getWenYanCodeByFile(new File(file))));

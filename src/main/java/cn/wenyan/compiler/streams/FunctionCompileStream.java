@@ -141,14 +141,14 @@ public class FunctionCompileStream extends CompileStream {
             String value01= compiler.removeWenyan();
 
             String clz = getClassName(value01);
-
-
+            String pack = library.get(clz);
+            if(pack != null) clz = pack;
+            StringBuilder builder = new StringBuilder(LanguageUtils.importClass(language,clz));
+            builder.append("\n");
             if(Utils.matches(wenyan,WenYanLib.IMPORT_STATIC())){
                 String value02 = compiler.removeWenyan();
                 List<String> strs = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),value02);
-                StringBuilder builder = new StringBuilder();
-                String pack = library.get(clz);
-                if(pack != null) clz = pack;
+
                 if(Boolean.parseBoolean(language.getSyntax(Syntax.IMPORT_STATIC_SEPARATE))){
                     for(String s:strs){
                         String name = Utils.getValue(s,stream);
@@ -168,7 +168,7 @@ public class FunctionCompileStream extends CompileStream {
 
                 return new CompileResult(builder.toString());
             }else{
-                return new CompileResult(LanguageUtils.importClass(language,clz));
+                return new CompileResult(builder.toString());
             }
         }
         if(Utils.matches(wenyan,WenYanLib.RETURN_())){

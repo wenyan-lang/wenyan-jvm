@@ -3,9 +3,11 @@ package cn.wenyan.compiler.streams;
 import cn.wenyan.compiler.CompileResult;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.WenYanLib;
+import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.utils.Utils;
+
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class MathCompileStream extends CompileStream {
 
     @Override
     public CompileResult compile(List<String> wenyan) {
+
         VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
         if(Utils.matches(wenyan, WenYanLib.MATH_START())){
             String value01 = compiler.removeWenyan();//0
@@ -41,9 +44,9 @@ public class MathCompileStream extends CompileStream {
                     if(symbol.equals(language.getSyntax(Syntax.MATH_REMAIN))){
                         number1 = LanguageUtils.numberSugar(language,number1);
                     }
-                    result = LanguageUtils.defineVar(language,name,number1 + symbol + number2);
+                    result = LanguageUtils.defineVar(language,name,symbol.replace(Language.getNAME(),number1).replace(Language.getVALUE(),number2));
                 } else {
-                    result = LanguageUtils.defineVar(language,name,number2 + symbol + number1);
+                    result = LanguageUtils.defineVar(language,name,symbol.replace(Language.getNAME(),number1).replace(Language.getVALUE(),number2));
                 }
 
 

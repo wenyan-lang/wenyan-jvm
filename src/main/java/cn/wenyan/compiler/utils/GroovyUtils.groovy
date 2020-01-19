@@ -38,16 +38,18 @@ class GroovyUtils {
             return isNot * result
         }
 
-        if(startWith(wenyanNumber)){
+        if(wenyanNumber.startsWith("負")&&startWith(wenyanNumber.substring(1))){
+            wenyanNumber = "負一"+wenyanNumber.substring(1)
+        }else if(startWith(wenyanNumber)){
             wenyanNumber = "一"+wenyanNumber
         }
         char[] chars = wenyanNumber.toCharArray()
         //bug
         for(int i = 0;i<chars.length;i++){
-            if(chars[i] == '又'){
+            if(chars[i].toString() == "又"){
                 continue
             }
-            if(chars[i] == '負'){
+            if(chars[i].toString() == "負"){
                 isNot = -1
                 continue
             }

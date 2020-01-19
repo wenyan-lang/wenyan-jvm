@@ -287,9 +287,11 @@ public class VariableCompileStream extends CompileStream{
     }
 
     public String getArray(String get,VariableCompileStream stream){
-        String[] gets = get.split("之");
-        String name = Utils.getValue(gets[0],stream);
-        String index = Utils.getValue(gets[1],stream);
+        int ind = Utils.indexOf(get,'之');
+        String nameString = get.substring(0,ind);
+        String valueString = get.substring(ind+1);
+        String name = Utils.getValue(nameString,stream);
+        String index = Utils.getValue(valueString,stream);
         return LanguageUtils.getArray(language,name,index);
     }
 

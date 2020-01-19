@@ -79,6 +79,26 @@ public class Utils {
         return getValue(number,stream,false);
     }
 
+    public static int indexOf(String str,char s){
+        char[] arr = str.toCharArray();
+        int stringCount = 0;
+        int ind = 0;
+        for(char x : arr){
+            if(x == '「'){
+                stringCount++;
+            }
+            if(x == '」'){
+                stringCount--;
+            }
+            if(stringCount==0){
+                if(x == '之'){
+                    break;
+                }
+            }
+            ind++;
+        }
+        return ind;
+    }
     public static String getValue(String number, VariableCompileStream stream,boolean setNow) {
         Language language = stream.getLanguage();
         if (number.equals("其然")) {

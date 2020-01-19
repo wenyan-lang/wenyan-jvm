@@ -5,6 +5,7 @@ import cn.wenyan.compiler.WenYanLib
 class GroovyUtils {
 
     static BigDecimal getNumber(String wenyanNumber){
+        int isNot = 1
         BigDecimal maxNumber = 0
         BigDecimal result = 0
         def numbers = WenYanLib.numbers()
@@ -22,23 +23,32 @@ class GroovyUtils {
                     len = 1
                     continue
                 }
+                if(str == '負'){
+                    isNot = -1
+                    continue
+                }
                 if(!doubleNumber){
                     result += numbers.get(str).get() * new BigDecimal(10).pow(len)
                     len --
                 }else{
                     result += numbers.get(str).get() * 0.1.pow(len)
-                    len++;
+                    len++
                 }
             }
-            return result
+            return isNot * result
         }
 
         if(startWith(wenyanNumber)){
             wenyanNumber = "一"+wenyanNumber
         }
         char[] chars = wenyanNumber.toCharArray()
+        //bug
         for(int i = 0;i<chars.length;i++){
             if(chars[i] == '又'){
+                continue
+            }
+            if(chars[i] == '負'){
+                isNot = -1
                 continue
             }
             if(i+1<=chars.length-1){
@@ -61,7 +71,7 @@ class GroovyUtils {
                 result += numbers.get(chars[i]).get()
             }
         }
-        return result
+        return result * isNot
     }
 
     private static boolean startWith(String number){

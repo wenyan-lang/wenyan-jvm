@@ -192,6 +192,7 @@ object WenYanLib {
   private type BigDecimal0 = java.math.BigDecimal
 
   val prefixAfter = MMap[Char,BigDecimal0](
+    '負' -> new BigDecimal0(-1),
     '百' -> new BigDecimal0(100),
     '千' -> new BigDecimal0(1000),
     '萬' -> new BigDecimal0(10000),
@@ -259,7 +260,7 @@ object WenYanLib {
   val numbersGet = getNumber()
 
 
-  private val value = s"$VAL_DEF|$numbersGet|「「[\\s\\S]+」」|空無|其|陽|陰|其然|其不然|矣"
+  private val value = s"$VAL_DEF|$numbersGet|「「([\\s\\S]+|)」」|空無|其|陽|陰|其然|其不然|矣"
   private val myType = "[數言爻列物元]"
   private val comment = "[批注疏]"
 

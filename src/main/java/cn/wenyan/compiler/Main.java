@@ -15,14 +15,12 @@ public class Main {
         }
         if (args.length == 0||args[0].equals("help")){
             CommandHandler.compileCommand.entrySet().stream().forEach(x->System.out.println(x.getValue().getOption()+": "+x.getValue().help()));
-            return;
         }
         WenYanCompilerImpl compiler = new WenYanCompilerImpl(false, Language.GROOVY);
         long time = ScalaUtils.countTime(()->{
             compiler.compile(args);
             return null;
         });
-
         compiler.getServerLogger().debug("Use: "+time+"ms");
 
     }

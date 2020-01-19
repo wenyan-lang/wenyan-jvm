@@ -103,9 +103,7 @@ public class Utils {
         }
         if (Utils.getString(WenYanLib.GET(), number) != null) return stream.getArray(number, stream);
         if (number.equals("其")) {
-            String name = stream.getNowName() == null ? language.getSyntax(Syntax.NULL) : stream.getNowName();
-            stream.clearStack();
-            return name;
+            return stream.getNowName() == null ? language.getSyntax(Syntax.NULL) : stream.getNowName();
         }
         if (number.equals(WenYanLib.FALSE()) || number.equals(WenYanLib.TRUE())) {
             return language.getSyntax(WenYanLib.bool().get(number).get());

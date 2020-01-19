@@ -115,7 +115,6 @@ public class VariableCompileStream extends CompileStream{
     public void clearStack(){
         nowNames.clear();
         nowName = null;
-        compiler.getStream(FunctionCompileStream.class).getStackNames().clear();
     }
 
 
@@ -317,4 +316,7 @@ public class VariableCompileStream extends CompileStream{
         return nowName;
     }
 
+    public List<String> getNowNames() {
+        return nowNames;
+    }
 }

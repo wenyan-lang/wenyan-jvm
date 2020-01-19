@@ -2,6 +2,7 @@ package cn.wenyan.compiler.utils
 
 import cn.wenyan.compiler.WenYanLib
 
+//TODO Numbers有bug
 object ScalaUtils {
 
   def containsCommonNumber(wenyan:String) : Boolean ={

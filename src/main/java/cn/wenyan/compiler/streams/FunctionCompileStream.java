@@ -20,11 +20,9 @@ public class FunctionCompileStream extends CompileStream {
 
     private int stackNumber = 0;
 
-    private List<String> stackNames;
 
     public FunctionCompileStream(WenYanCompilerImpl compiler) {
         super(compiler);
-        stackNames = new ArrayList<>();
     }
 
     @Override
@@ -88,7 +86,6 @@ public class FunctionCompileStream extends CompileStream {
             String value = compiler.removeWenyan();
             String name = Utils.getValue(value.substring(value.indexOf("夫")+1),stream);
             String ans = stream.getAnsName();
-            stackNames.add(ans);
             return new CompileResult(LanguageUtils.defineVar(language,ans,name));
         }
         if(Utils.matches(wenyan,WenYanLib.RUN_FUNCTION())){
@@ -115,14 +112,14 @@ public class FunctionCompileStream extends CompileStream {
             String result;
             String funcName = stream.getAnsName();
             if(i == 0){
-                List<String> nowArgs = getNowNames(stackNumber);
+                List<String> nowArgs = getNowNames(stackNumber,stream);
                 stackNumber = 0;
                 StringBuilder build = new StringBuilder();
                 for(int z = 0;z<nowArgs.size();z++){
                     build.append(nowArgs.get(z)).append(",");
                 }
                 result = build.substring(0,build.lastIndexOf(","));
-                stackNames.add(funcName);
+
             }else{
                 if(builder.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT))!=-1){
                     result = builder.substring(0,builder.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT)));
@@ -211,15 +208,12 @@ public class FunctionCompileStream extends CompileStream {
     }
 
     //取得最后的两个变量，并且按照先后顺序排列
-    public List<String> getNowNames(int number){
-        int last = stackNames.size();
+    public List<String> getNowNames(int number,VariableCompileStream stream){
+        int last = stream.getNowNames().size();
         int start = last - number;
-        List<String> stack = new ArrayList<>(stackNames.subList(start,last));
-        stackNames.removeAll(stack);
+        List<String> stack = new ArrayList<>(stream.getNowNames().subList(start,last));
+        stream.getNowNames().removeAll(stack);
         return stack;
     }
 
-    public List<String> getStackNames() {
-        return stackNames;
-    }
 }

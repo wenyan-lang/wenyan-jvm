@@ -129,7 +129,7 @@ object WenYanLib {
 
   final val HASH_NAME : String = "hash_name"
 
-  final val YI : String = "yi"
+  final val CLEAR_STACK : String = "clear_stack"
 
   final val ADD : String = "add"
 
@@ -299,7 +299,7 @@ object WenYanLib {
     ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",//
     IMPORT -> "吾嘗觀((「「[\\s\\S]+」」中)+|)「「[\\s\\S]+」」之書",//
     IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",//
-    YI -> "噫",
+    CLEAR_STACK -> "噫",
     ADD -> s"充($value)",////
     VAL -> s"[以於]($value)",////
     GET -> s"夫「[\\s\\S]+」之($value)",

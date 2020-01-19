@@ -218,4 +218,8 @@ public class FunctionCompileStream extends CompileStream {
         stackNames.removeAll(stack);
         return stack;
     }
+
+    public List<String> getStackNames() {
+        return stackNames;
+    }
 }

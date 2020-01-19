@@ -58,8 +58,10 @@ public class VariableCompileStream extends CompileStream{
             compiler.removeWenyan();
             return new CompileResult(LanguageUtils.println(language,nowName));
         }
-        if(Utils.matches(wenyans,WenYanLib.YI())){
+        //清除堆栈
+        if(Utils.matches(wenyans,WenYanLib.CLEAR_STACK())){
             compiler.removeWenyan();
+            clearStack();
             return new CompileResult("");
         }
         //TODO
@@ -108,6 +110,12 @@ public class VariableCompileStream extends CompileStream{
             return change(get,compiler.removeWenyan(),wenyans);
         }
         return new CompileResult(false,wenyans);
+    }
+
+    public void clearStack(){
+        nowNames.clear();
+        nowName = null;
+        compiler.getStream(FunctionCompileStream.class).getStackNames().clear();
     }
 
 

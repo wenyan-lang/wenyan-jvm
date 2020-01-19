@@ -15,7 +15,7 @@ public class 算經 {
     }
 
     public static double 平方根(double i){
-        return Math.pow(i,1/2);
+        return Math.sqrt(i);
     }
 
 }

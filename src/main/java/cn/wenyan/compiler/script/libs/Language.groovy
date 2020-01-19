@@ -6,6 +6,7 @@ import cn.wenyan.compiler.lib.ArrayUtils
 import cn.wenyan.compiler.lib.Define
 import cn.wenyan.compiler.lib.Defines
 import cn.wenyan.compiler.lib.JSArray
+import cn.wenyan.compiler.lib.MathUtil
 import cn.wenyan.compiler.lib.WenYanException
 
 enum Language {
@@ -35,7 +36,7 @@ enum Language {
                     (Syntax.MATH_LESS)             : "$NAME-$VALUE",
                     (Syntax.MATH_MULTI)            : "$NAME*$VALUE",
                     (Syntax.MATH_EXCEPT)           : "$NAME/$VALUE",
-                    (Syntax.MATH_REMAIN)           : "org.codehaus.groovy.runtime.typehandling.BigDecimalMath.mod($NAME,$VALUE)",
+                    (Syntax.MATH_REMAIN)           : "mod($NAME,$VALUE)",
                     (Syntax.BIGGER)                : ">",
                     (Syntax.SMALLER)               : "<",
                     (Syntax.EQUAL)                 : "==",
@@ -72,7 +73,7 @@ enum Language {
                     (Syntax.DEFINE_ARRAY)          : "new JSArray()",
                     (Syntax.DEFINE_INT)            : "0",
                     (Syntax.DEFINE_STRING)         : "''",
-                    (Syntax.IMPORT_WITH)           : ("import "+ JSArray.name+"\nimport static "+ArrayUtils.name+".getArray\nimport static "+ArrayUtils.name+".getIndex\nimport "+ Define.name+"\nimport "+ Defines.name),
+                    (Syntax.IMPORT_WITH)           : ("import cn.wenyan.compiler.lib.*\nimport static "+ArrayUtils.name+".getArray\nimport static "+ArrayUtils.name+".getIndex\nimport static "+ MathUtil.name+".mod"),
                     (Syntax.NOT)                   : "!",
                     (Syntax.REQUIRE_SCRIPT)        : "",
                     (Syntax.CONTINUE)              : "continue",

@@ -14,7 +14,7 @@ import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Library;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
-import cn.wenyan.compiler.utils.JuDouUtils;
+import cn.wenyan.compiler.utils.LexerUtils;
 import cn.wenyan.compiler.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.control.CompilerConfiguration;
@@ -240,7 +240,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
     public List<String> compileToList(String wenyan,boolean outError){
         List<String> results = new ArrayList<>();
         wenyans = prepareCompiler.macroPrepare(wenyan);
-        serverLogger.info(JuDouUtils.getLine(wenyans));
+        serverLogger.info(LexerUtils.getLine(wenyans));
         try {
             while (wenyans.size() != 0) {
 
@@ -539,7 +539,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
     }
 
     private String trimWenYan(String s){
-        return JuDouUtils.trimWenYanX(s);
+        return LexerUtils.trimWenYanX(s);
     }
 
     private void loadPlugins(){

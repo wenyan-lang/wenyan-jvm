@@ -3,6 +3,7 @@ package cn.wenyan.compiler.utils
 import java.util
 
 import cn.wenyan.compiler.WenYanLib
+import cn.wenyan.compiler.exceptions.SyntaxException
 
 import scala.util.control.Breaks
 
@@ -10,7 +11,7 @@ import scala.util.control.Breaks
  * 实现断句
  */
 
-object JuDouUtils {
+object LexerUtils {
 
     class Counter{
         var count = 0
@@ -160,7 +161,9 @@ object JuDouUtils {
 
             }
             index+=1
-
+        }
+        if(builder.nonEmpty){
+            throw new SyntaxException("INDEX: "+builder.size+" Error: "+builder.toString())
         }
         list
     }

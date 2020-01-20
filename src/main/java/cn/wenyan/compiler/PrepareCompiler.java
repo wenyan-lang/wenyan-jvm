@@ -4,7 +4,7 @@ package cn.wenyan.compiler;
 import cn.wenyan.compiler.lib.Define;
 import cn.wenyan.compiler.lib.Defines;
 import cn.wenyan.compiler.streams.FunctionCompileStream;
-import cn.wenyan.compiler.utils.JuDouUtils;
+import cn.wenyan.compiler.utils.LexerUtils;
 import cn.wenyan.compiler.utils.Utils;
 
 import java.io.File;
@@ -53,7 +53,7 @@ public class PrepareCompiler {
         initMacro(get);
 
         //导入其他文件macro，前提是import不是宏的
-        List<String> strs = JuDouUtils.splitWenYan(wenyanCode);
+        List<String> strs = LexerUtils.splitWenYan(wenyanCode);
 
 
         List<String> imports = getImportsWenYan(strs);
@@ -65,7 +65,7 @@ public class PrepareCompiler {
 
 
         //重新解析
-        List<String> format = JuDouUtils.splitWenYan(getString(strs));
+        List<String> format = LexerUtils.splitWenYan(getString(strs));
 
         imports = getImportsWenYan(format);
 
@@ -74,7 +74,7 @@ public class PrepareCompiler {
 
         expansion(format);
 
-        format = JuDouUtils.splitWenYan(getString(format));
+        format = LexerUtils.splitWenYan(getString(format));
 
         //编译import的文件
         compileImports(imports);
@@ -177,7 +177,7 @@ public class PrepareCompiler {
         //从import中得到其他文件的宏
         List<String> macros = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
-        char[] chars = JuDouUtils.trimWenYanX(wenyanCode).toCharArray();
+        char[] chars = LexerUtils.trimWenYanX(wenyanCode).toCharArray();
         int close = 0;
         for(int i = 0;i<chars.length;i++){
             char c = chars[i];

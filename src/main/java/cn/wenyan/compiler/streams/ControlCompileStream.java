@@ -53,13 +53,13 @@ public class ControlCompileStream extends CompileStream {
         if(Utils.matches(wenyan,WenYanLib.IF_START())){
             close++;
             String value = compiler.removeWenyan();
-            String bool = getBooleanSyntax(value.substring(value.indexOf("若")+1,value.indexOf("者")),stream);
+            String bool = getBooleanSyntax(value.substring(value.indexOf("若")+1,value.lastIndexOf("者")),stream);
             return new CompileResult(LanguageUtils.defineIf(language,bool));
         }
         if(Utils.matches(wenyan,WenYanLib.IF_BREAK())){
             close++;
             String value = compiler.removeWenyan();
-            String bool = getBooleanSyntax(value.substring(value.indexOf("若")+1,value.indexOf("者")),stream);
+            String bool = getBooleanSyntax(value.substring(value.indexOf("若")+1,value.lastIndexOf("者")),stream);
             return new CompileResult(LanguageUtils.ifBreak(language,bool));
         }
         if(Utils.matches(wenyan,WenYanLib.WHILE())){

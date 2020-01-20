@@ -5,6 +5,7 @@ import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.utils.GroovyUtils;
 import cn.wenyan.compiler.exceptions.SyntaxException;
+import cn.wenyan.compiler.utils.NumberTree;
 import cn.wenyan.compiler.utils.Utils;
 
 import java.math.BigDecimal;
@@ -307,7 +308,8 @@ public class VariableCompileStream extends CompileStream{
     }
 
     public BigDecimal getNumber(String wenyanNumber){
-        return GroovyUtils.getNumber(wenyanNumber);
+        NumberTree tree = new NumberTree();
+        return tree.inputNumber(wenyanNumber).convertToNumber();
     }
 
     public Map<String, Integer> getArrIndex() {

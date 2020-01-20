@@ -86,4 +86,21 @@ class GroovyUtils {
         return false
     }
 
+    static int getMax(String wenyan){
+        BigDecimal max = 0
+        int maxIndex = -1
+        char[] chars = wenyan.toCharArray()
+        for(int index =0;index<wenyan.length();index++){
+            if(WenYanLib.prefixs().contains(chars[index])){
+                def number = WenYanLib.prefixs().get(chars[index]).get()
+                if(number>max){
+                    max = number
+                    maxIndex = index
+                }
+            }
+        }
+        if(max == 1000||max == 100||max == 10)return -1
+        return maxIndex
+    }
+
 }

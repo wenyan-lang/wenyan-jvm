@@ -3,6 +3,8 @@ package cn.wenyan.compiler.utils;
 
 class NumberTree {
 
+    private int prefix = 1
+
     private Node root = new Node()
 
     private BigDecimal floatValue = 0
@@ -34,6 +36,10 @@ class NumberTree {
     }
 
     NumberTree inputNumber(String wenyan){
+        if(wenyan.startsWith("負")){
+            prefix = -prefix
+            wenyan = wenyan.substring(1)
+        }
         if(wenyan.contains("又")){
             def numbers = wenyan.split("又")
             inputNumber(numbers[0],root)
@@ -49,7 +55,7 @@ class NumberTree {
         for(int i = 0;i<nodes.size();i+=2){
             result += GroovyUtils.getNumber(nodes[i].value) * GroovyUtils.getNumber(i+1<nodes.size()?nodes[i+1].value:"一")
         }
-        result + floatValue
+        (result + floatValue)*prefix
     }
 
 

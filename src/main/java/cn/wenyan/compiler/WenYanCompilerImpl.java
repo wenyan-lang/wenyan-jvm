@@ -38,6 +38,8 @@ import static cn.wenyan.compiler.log.LogFormat.fg;
  */
 public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
+    private Map<File,File> wygFiles = new HashMap<>();
+
     protected Library library;
 
     private CompilerConfig compilerConfig;
@@ -165,6 +167,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
     //***********************内部调用*********************//
     //**************************************************//
 
+
     public int init(CompilerConfig compilerConfig){
         try {
             this.sourcePath = compilerConfig.getSourcePath();
@@ -189,15 +192,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                 String wygf = wenyuangeFile+"/";
                 File file = new File(wygf.equals("null/")?WYG:wygf+WYG);
                 File[] fileLibs = file.listFiles();
-                if(fileLibs!=null){
-                    for(File f : fileLibs){
-                        File xu = new File(f,WYG_LIB);
-                        File xuAfter = new File(f,f.getName()+".wy");
-                        xu.renameTo(xuAfter);
-                        compileOut(sourcePath,xuAfter,cp,mainClass,compilerConfig.isGroovy());
-                        library.addLib(f.getName(),getClassName(xuAfter,sourcePath));
-                    }
-                }
+                compileWygs(fileLibs,cp);
             }
 
             if ((classPath == null || files == null)&&!isRun) {
@@ -234,6 +229,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                     }
                 }
             }
+            wygFiles.forEach((x,y)->x.renameTo(y));
         }catch (IOException e){
             serverLogger.error("",e);
         }
@@ -280,7 +276,128 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         return serverLogger;
     }
 
+    public void compileToClass(File out,File classFile) throws FileNotFoundException {
+        CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
+        PrintWriter writer = new PrintWriter(classFile);
+        compilerConfiguration.setOutput(writer);
+        compilerConfiguration.setTargetBytecode(CompilerConfiguration.JDK8);
+        compilerConfiguration.setTargetDirectory(classPath);
+        compilerConfiguration.setClasspath(classPath);
+        Compiler compiler = new Compiler(compilerConfiguration);
+        compiler.compile(out);
+        writer.close();
+    }
 
+    public Map<Class<? extends CompileStream>, CompileStream> getStreamMap() {
+        return streamMap;
+    }
+
+    public List<Integer> getNowCompiling() {
+        return nowCompiling;
+    }
+
+    public boolean isSupportPinyin() {
+        return supportPinyin;
+    }
+
+    public <T extends CompileStream> T getStream(Class<T> stream){
+        return stream.cast(streamMap.get(stream));
+    }
+
+    public int getIndexCode() {
+        return indexCode;
+    }
+
+    public void setIndexCode() {
+        indexCode++;
+    }
+
+    public CompileFactory getFactory() {
+        return factory;
+    }
+
+    public String removeWenyan(){
+        setIndexCode();
+        return this.wenyans.remove(0);
+    }
+
+
+    public Map<String, String> getNameType() {
+        return nameType;
+    }
+
+    public Language getLanguageType() {
+        return languageType;
+    }
+
+    public List<Listener> getListeners() {
+        return listeners;
+    }
+
+    public void callListener(CompileStream stream,List<String> wenyans,boolean start){
+        if(start){
+            for(Listener listener : listeners){
+                listener.onCompileStart(stream,wenyans);
+            }
+        }else{
+            for(Listener listener : listeners){
+                listener.onCompileFinish(stream,wenyans);
+            }
+        }
+    }
+
+    public String getGroovyCode(boolean addNow,boolean outInConsole,String... wenyanString){
+        StringBuilder groovyCode = new StringBuilder();
+        if(addNow)
+            groovyCode.append(languageType.getSyntax(Syntax.IMPORT_WITH));
+        for(String code:wenyanString){
+            String compile = compile(code,true);
+            if(outInConsole){
+                serverLogger.info(code+" => "+ compile);
+            }
+            groovyCode.append(compile).append("\n");
+        }
+        this.serverLogger.info("此事成也，得之");
+        System.out.println("----------------------------WenYanConsole--------------------------------");
+        indexCode = 0;
+        return groovyCode.toString();
+    }
+
+    public String getWenYanCodeByFile(File wenyan) throws IOException{
+        List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
+        StringBuilder builder = new StringBuilder();
+        for(String str:list){
+            String strNoT = trimWenYan(str);
+            builder.append(strNoT);
+        }
+        return builder.toString();
+    }
+
+
+
+    public void compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
+        compileToGroovy(file,classPath,outDir, getWenYanCodeByFile(file),mainClass,groovy);
+    }
+    public String getSourcePath() {
+        return sourcePath;
+    }
+
+    public String getClassPath() {
+        return classPath;
+    }
+
+    public String getMainClass() {
+        return mainClass;
+    }
+
+    public Library getLibrary() {
+        return library;
+    }
+
+    @Override
+    public WenYanCompilerImpl clone() throws CloneNotSupportedException {
+        return (WenYanCompilerImpl) super.clone();
+    }
 
     private String codesTocode(List<String> results,String filter){
         StringBuilder builder = new StringBuilder();
@@ -398,111 +515,28 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
     }
 
-
-    public void compileToClass(File out,File classFile) throws FileNotFoundException {
-        CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
-        PrintWriter writer = new PrintWriter(classFile);
-        compilerConfiguration.setOutput(writer);
-        compilerConfiguration.setTargetBytecode(CompilerConfiguration.JDK8);
-        compilerConfiguration.setTargetDirectory(classPath);
-        compilerConfiguration.setClasspath(classPath);
-        Compiler compiler = new Compiler(compilerConfiguration);
-        compiler.compile(out);
-        writer.close();
+    private void compileWyg(File f,File cp) throws IOException{
+        File xu = new File(f,WYG_LIB);
+        File xuAfter = new File(f,f.getName()+".wy");
+        xu.renameTo(xuAfter);
+        compileOut(sourcePath,xuAfter,cp,mainClass,compilerConfig.isGroovy());
+        library.addLib(f.getName(),getClassName(xuAfter,sourcePath));
+        wygFiles.put(xuAfter,xu);
     }
 
-    public Map<Class<? extends CompileStream>, CompileStream> getStreamMap() {
-        return streamMap;
-    }
-
-    public List<Integer> getNowCompiling() {
-        return nowCompiling;
-    }
-
-    public boolean isSupportPinyin() {
-        return supportPinyin;
-    }
-
-    public <T extends CompileStream> T getStream(Class<T> stream){
-        return stream.cast(streamMap.get(stream));
-    }
-
-    public int getIndexCode() {
-        return indexCode;
-    }
-
-    public void setIndexCode() {
-        indexCode++;
-    }
-
-    public CompileFactory getFactory() {
-        return factory;
-    }
-
-    public String removeWenyan(){
-        setIndexCode();
-        return this.wenyans.remove(0);
-    }
-
-
-    public Map<String, String> getNameType() {
-        return nameType;
-    }
-
-    public Language getLanguageType() {
-        return languageType;
-    }
-
-    public List<Listener> getListeners() {
-        return listeners;
-    }
-
-    public void callListener(CompileStream stream,List<String> wenyans,boolean start){
-        if(start){
-            for(Listener listener : listeners){
-                listener.onCompileStart(stream,wenyans);
-            }
-        }else{
-            for(Listener listener : listeners){
-                listener.onCompileFinish(stream,wenyans);
+    private void compileWygs(File[] fileLibs,File cp) throws IOException{
+        if(fileLibs!=null){
+            for(File f : fileLibs){
+                File[] fs = f.listFiles();
+                if(fs!=null&&fs.length != 1){
+                    compileWygs(fs, cp);
+                }
+                if(f.isDirectory()){
+                    compileWyg(f,cp);
+                }
             }
         }
     }
-
-    public String getGroovyCode(boolean addNow,boolean outInConsole,String... wenyanString){
-        StringBuilder groovyCode = new StringBuilder();
-        if(addNow)
-            groovyCode.append(languageType.getSyntax(Syntax.IMPORT_WITH));
-        for(String code:wenyanString){
-            String compile = compile(code,true);
-            if(outInConsole){
-                serverLogger.info(code+" => "+ compile);
-            }
-            groovyCode.append(compile).append("\n");
-        }
-        this.serverLogger.info("此事成也，得之");
-        System.out.println("----------------------------WenYanConsole--------------------------------");
-        indexCode = 0;
-        return groovyCode.toString();
-    }
-
-    public String getWenYanCodeByFile(File wenyan) throws IOException{
-        List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
-        StringBuilder builder = new StringBuilder();
-        for(String str:list){
-            String strNoT = trimWenYan(str);
-            builder.append(strNoT);
-        }
-        return builder.toString();
-    }
-
-
-
-    public void compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
-        compileToGroovy(file,classPath,outDir, getWenYanCodeByFile(file),mainClass,groovy);
-    }
-
-
 
     private String trimWenYan(String s){
         return JuDouUtils.trimWenYanX(s);
@@ -520,24 +554,5 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
     }
 
-    public String getSourcePath() {
-        return sourcePath;
-    }
 
-    public String getClassPath() {
-        return classPath;
-    }
-
-    public String getMainClass() {
-        return mainClass;
-    }
-
-    public Library getLibrary() {
-        return library;
-    }
-
-    @Override
-    public WenYanCompilerImpl clone() throws CloneNotSupportedException {
-        return (WenYanCompilerImpl) super.clone();
-    }
 }

@@ -11,6 +11,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>ch.obermuhlner</groupId>
+            <artifactId>big-math</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.houbb</groupId>
             <artifactId>opencc4j</artifactId>
             <version>1.0.2</version>

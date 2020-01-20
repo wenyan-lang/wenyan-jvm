@@ -263,68 +263,71 @@ object WenYanLib {
   private val value = s"$VAL_DEF|$numbersGet|「「([\\s\\S]+|)」」|空無|其|陽|陰|其然|其不然|矣"
   private val myType = "[數言爻列物元]"
   private val comment = "[批注疏]"
+  private val ONE_CHAR = "[\\s\\S]"
+  private val ALL_CHARACTERS = s"$ONE_CHAR+"
+
 
   final val VALUE : String = "value"
   val syntaxs = MMap[String,String](
     DEFINE_VAR -> "(吾有|今有)",//
-    VAR_NAME -> "曰[\\s\\S]+",//
+    VAR_NAME -> s"曰$ALL_CHARACTERS",//
     VAR_VALUE -> s"([以]|)名之(曰$VAL_DEF)+",//
     VAR_GET_NAME -> s"曰$VAL_DEF",//
     WRITE -> "書之",//
-    SIMPLE_VAR -> s"有$myType[\\s\\S]+",//
+    SIMPLE_VAR -> s"有$myType$ALL_CHARACTERS",//
     CHANGE -> (s"昔之$VAL_DEF"+"者"),//
     AFTER_NAME -> s"今($value)(是|)",////
     COMMENT -> "(也|是矣)",//
-    FOR -> s"為是($numbersGet|「[\\s\\S]+」)遍",//
+    FOR -> s"為是($numbersGet|「$ALL_CHARACTERS」)遍",//
     FOR_END -> "云云",//
-    IF_START -> "若[\\s\\S]+者",//
+    IF_START -> (s"若$ALL_CHARACTERS"+"者"),//
     IF_END -> "(也|终也)",//
     BREAK -> "乃止",//
-    IF_BREAK -> "若[\\s\\S]+者乃止也",//
+    IF_BREAK -> (s"若$ALL_CHARACTERS"+"者乃止也"),//
     WHILE -> "恆為是",//
     ELSE -> "若非",//
     MATH_START -> s"[加減乘除]($value)",////
     MOD -> "所餘幾何",//
     IT_CHANGE -> IT_CHANGE,//
-    AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎",//
-    FOR_EACH -> "凡「[\\s\\S]+」中之「[\\s\\S]+」",//
+    AND_OR -> s"夫「$ALL_CHARACTERS」「$ALL_CHARACTERS」中(有陽|無陰)乎",//
+    FOR_EACH -> s"凡「$ALL_CHARACTERS」中之「$ALL_CHARACTERS」",//
     FUNCTION -> "一術",//
     NO_ARGS -> "是術曰",//
     RETURN -> s"乃得($value)",//
-    FUNCTION_END -> "是謂「[\\s\\S]+」之術也",//
+    FUNCTION_END -> s"是謂「$ALL_CHARACTERS」之術也",//
     ARGS -> "欲行是術",//
     MUST -> "必先得",//
     DEFINE_ARG -> s"$numbersGet$myType",//
     DEFINE_END -> "乃行是術曰",//
-    RUN_FUNCTION -> "施「[\\s\\S]+」",//
-    ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",//
-    IMPORT -> "吾嘗觀((「「[\\s\\S]+」」中)+|)「「[\\s\\S]+」」之書",//
-    IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",//
+    RUN_FUNCTION -> s"施「$ALL_CHARACTERS」",//
+    ARGS_RUN -> s"於(「$ALL_CHARACTERS」|$ALL_CHARACTERS)",//
+    IMPORT -> s"吾嘗觀((「「$ALL_CHARACTERS」」中)+|)「「$ALL_CHARACTERS」」之書",//
+    IMPORT_STATIC -> s"方悟(「$ALL_CHARACTERS」)+之義",//
     CLEAR_STACK -> "噫",
     ADD -> s"充($value)",////
     VAL -> s"[以於]($value)",////
-    GET -> s"夫「[\\s\\S]+」之($value)",
+    GET -> s"夫「$ALL_CHARACTERS」之($value)",
     REPLACE_ARRAY -> (s"昔之"+VAL_DEF+"之("+value+")者"),
     NEW_COMMENT -> (comment+"曰"),
-    OTHER -> "變「[\\s\\S]+」",
+    OTHER -> s"變(「$ALL_CHARACTERS」|$TRUE|$FALSE)",
     LENGTH -> s"夫$LENGTH",
     RETURN_ -> "乃歸空無",
     CONTINUE -> "乃止是遍",
     ELSE_IF -> "或",
-    CONCAT -> "銜「[\\s\\S]」",
-    MACRO_BEFORE -> "云「「[\\s\\S]+」」",
-    MACRO_AFTER -> "蓋謂「「[\\s\\S]+」」",
+    CONCAT -> s"銜「$ALL_CHARACTERS」",
+    MACRO_BEFORE -> s"云「「$ALL_CHARACTERS」」",
+    MACRO_AFTER -> s"蓋謂「「$ALL_CHARACTERS」」",
     STATEMENT -> s"夫$VAL_DEF",
     FUNC_ARG -> (s"取$numbersGet"+"以"),
     TRY -> "姑妄行此",
     EXCEPTION_DEFINE -> "嗚呼",
-    EXCEPTION_THROW -> "「「[\\s\\S]+」」之禍",
+    EXCEPTION_THROW -> s"「「$ALL_CHARACTERS」」之禍",
     CATCH -> "如事不諧",
-    EXCEPTION_IF -> "豈「「[\\s\\S]+」」之禍歟",
+    EXCEPTION_IF -> s"豈「「$ALL_CHARACTERS」」之禍歟",
     EXCEPTION_ELSE -> "不知何禍歟",
     CATCH_END -> "乃作罷",
     OBJECT_IT -> "其物如是",
-    GIVE_OBJECT -> "物之「「[\\s\\S]+」」者",
+    GIVE_OBJECT -> s"物之「「$ALL_CHARACTERS」」者",
     GIVE_OBJECT_VALUE -> (myType+"曰("+value+")"),
   )
 

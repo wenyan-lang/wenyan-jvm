@@ -194,6 +194,7 @@ object WenYanLib {
 
   private type BigDecimal0 = java.math.BigDecimal
 
+
   val prefixAfter = MMap[Char,BigDecimal0](
     '負' -> new BigDecimal0(-1),
     '百' -> new BigDecimal0(100),

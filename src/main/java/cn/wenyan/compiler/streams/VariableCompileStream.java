@@ -179,7 +179,7 @@ public class VariableCompileStream extends CompileStream{
                 return getVarString(syntax,type,head,name,values,
                        this::getString);
             case '爻':
-                return getVarString(syntax,type,head,name,values,val->WenYanLib.bool().get(val).get());
+                return getVarString(syntax,type,head,name,values,val->language.getSyntax(WenYanLib.bool().get(val).get()));
             case '列':
                 return getVarString(syntax,type,head,name,values,val->WenYanLib.define().get(type));
             case '物':
@@ -223,14 +223,20 @@ public class VariableCompileStream extends CompileStream{
         return names;
     }
     public String getName(String name,boolean define){
-        return getName(name,define,false);
+        return getName(name,define,false,false);
     }
 
-    public String getName(String name,boolean define,boolean runFunc){
+    public String defineArgName(String name,boolean define){
+        return getName(name,define,false,true);
+    }
+
+
+
+    public String getName(String name,boolean define,boolean runFunc,boolean defineArg){
         String chinese = name.substring(name.indexOf(WenYanLib.NAME_START()) + 1, name.lastIndexOf(WenYanLib.NAME_END()));
-        //if(!define&&varMap.get(chinese) == null) throw new SyntaxException("此變量非定義也:"+name+" 於 「「 "+compiler.getNow()+" 」」");
+        FunctionCompileStream stream = compiler.getStream(FunctionCompileStream.class);
         if(varMap.containsValue(chinese)){
-            return varMap.get(chinese);
+            return stream.getName(varMap.get(chinese),defineArg);
         }
         name = chinese;
         if(varMap.containsKey(name)){
@@ -244,7 +250,7 @@ public class VariableCompileStream extends CompileStream{
             nowName = name;
             nowNames.add(name);
         }
-        return name;
+        return stream.getName(name,defineArg);
     }
 
     private List<String> getValues(List<String> wenyans){

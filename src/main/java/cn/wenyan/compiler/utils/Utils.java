@@ -131,7 +131,7 @@ public class Utils {
         if (number.startsWith(WenYanLib.STRING_START()) && number.endsWith(WenYanLib.STRING_END())) {
             return stream.getString(number);
         } else if (number.startsWith(WenYanLib.NAME_START()) && number.endsWith(WenYanLib.NAME_END())) {
-            return stream.getName(number, false,setNow);
+            return stream.getName(number, false,setNow,false);
         } else {
             return stream.getNumberString(number) + "";
         }

@@ -185,7 +185,10 @@ object WenYanLib {
 
   final val GIVE_OBJECT_VALUE : String = "give_object_value"
 
-  final val OBJECT_END : String = "是謂「[\\s\\S]+」之物也"
+  final val OBJECT_END : String = "object_end"
+
+  final val DELETE : String ="delete"
+
 
   val MMap = scala.collection.mutable.Map
 
@@ -294,7 +297,7 @@ object WenYanLib {
     FUNCTION -> "一術",//
     NO_ARGS -> "是術曰",//
     RETURN -> s"乃得($value)",//
-    FUNCTION_END -> s"是謂「$ALL_CHARACTERS」之術也",//
+    FUNCTION_END -> s"是謂「$ALL_CHARACTERS」之術[也矣]",//
     ARGS -> "欲行是術",//
     MUST -> "必先得",//
     DEFINE_ARG -> s"$numbersGet$myType",//
@@ -329,6 +332,8 @@ object WenYanLib {
     OBJECT_IT -> "其物如是",
     GIVE_OBJECT -> s"物之「「$ALL_CHARACTERS」」者",
     GIVE_OBJECT_VALUE -> (myType+"曰("+value+")"),
+    OBJECT_END -> s"是謂「$ALL_CHARACTERS」之物也",
+    DELETE -> "今不復存矣"
   )
 
 

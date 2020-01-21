@@ -107,8 +107,18 @@ public class VariableCompileStream extends CompileStream{
         }
         if(Utils.matches(wenyans,WenYanLib.REPLACE_ARRAY())){
             String value = compiler.removeWenyan();
-            String get = getArray(value.substring(value.indexOf("昔之")+2,value.lastIndexOf("者")),this);
-            return change(get,compiler.removeWenyan(),wenyans);
+            String val = value.substring(value.indexOf("昔之")+2,value.lastIndexOf("者"));
+            if (Utils.matches(wenyans, WenYanLib.DELETE())) {
+                compiler.removeWenyan();
+                int middle = Utils.indexOf(val,'之');
+                String name = getLeft(val,middle,this);
+                String index = getRight(val,middle,this);
+                return new CompileResult(LanguageUtils.removeArray(language,name,index));
+            }else{
+                String get = getArray(val,this);
+                return change(get,compiler.removeWenyan(),wenyans);
+            }
+
         }
         return new CompileResult(false,wenyans);
     }
@@ -289,11 +299,7 @@ public class VariableCompileStream extends CompileStream{
 
     public String getArray(String get,VariableCompileStream stream){
         int ind = Utils.indexOf(get,'之');
-        String nameString = get.substring(0,ind);
-        String valueString = get.substring(ind+1);
-        String name = Utils.getValue(nameString,stream);
-        String index = Utils.getValue(valueString,stream);
-        return LanguageUtils.getArray(language,name,index);
+        return LanguageUtils.getArray(language,getLeft(get,ind,stream),getRight(get,ind,stream));
     }
 
     public String getNumberString(String wenyanNumber){
@@ -322,5 +328,15 @@ public class VariableCompileStream extends CompileStream{
 
     public List<String> getNowNames() {
         return nowNames;
+    }
+
+    private String getLeft(String get,int ind,VariableCompileStream stream){
+        String nameString = get.substring(0,ind);
+        return Utils.getValue(nameString,stream);
+    }
+    private String getRight(String get,int ind,VariableCompileStream stream){
+        String valueString = get.substring(ind+1);
+
+        return Utils.getValue(valueString,stream);
     }
 }

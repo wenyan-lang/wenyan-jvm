@@ -166,6 +166,12 @@ class LanguageUtils {
                 .replace(Language.VALUE,value)
     }
 
+    static String removeArray(Language language,String name,String index){
+        return language.getSyntax(Syntax.DELETE)
+                .replace(Language.NAME,name)
+                .replace(Language.INDEX,index)
+    }
+
     static void setShell(boolean shell){
         isShell = shell
     }

@@ -86,6 +86,7 @@ enum Language {
                     (Syntax.CATCH_END)             : "}\n}",
                     (Syntax.SHELL_VAR)             : "$NAME = $VALUE",
                     (Syntax.DEFINE_OBJECT)         : "[:]",
+                    (Syntax.DELETE)                : (NAME+".remove($INDEX)")
             ],new GroovyCompiler()
     );
 

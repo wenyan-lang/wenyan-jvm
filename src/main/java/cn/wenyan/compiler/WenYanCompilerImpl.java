@@ -182,6 +182,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             String wygDownload = compilerConfig.getWygDownload();
             boolean isRun = compilerConfig.isRun();
             classPath = compilerConfig.getOutFile();
+            if(classPath == null)return 1;
             File cp = new File(classPath);
             if(wygDownload!=null){
                 Runtime.getRuntime().exec("npm i -g @wenyanlang/wyg");

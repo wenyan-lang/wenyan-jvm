@@ -240,9 +240,9 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
     public List<String> compileToList(String wenyan,boolean outError){
         List<String> results = new ArrayList<>();
-        wenyans = prepareCompiler.macroPrepare(wenyan);
-        serverLogger.info(LexerUtils.getLine(wenyans));
         try {
+            wenyans = prepareCompiler.macroPrepare(wenyan);
+            serverLogger.info(LexerUtils.getLine(wenyans));
             while (wenyans.size() != 0) {
 
                 results.add(factory.compile(0, wenyans).get(0));

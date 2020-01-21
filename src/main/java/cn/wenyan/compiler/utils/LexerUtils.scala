@@ -23,7 +23,7 @@ object LexerUtils {
 
     def getWenYan(string: String) : String ={
         val builder = new StringBuilder
-        splitWenYan(string).stream().forEach(
+        wenYanLexer(string).stream().forEach(
             x=>if(!x.equals(""))builder.append(x).append("。")
         )
         builder.toString()
@@ -74,7 +74,7 @@ object LexerUtils {
         builder.toString()
     }
 
-    def splitWenYan(strings: String) : java.util.List[String] ={
+    def wenYanLexer(strings: String) : java.util.List[String] ={
         val string = trimWenYanX(newStringToCommon(strings.trim))
         val list = new util.ArrayList[String]()
         var builder = new StringBuilder

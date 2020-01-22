@@ -24,7 +24,7 @@ You can run WenYan Programming Language in JVM.
 3. [更新日志](CHANGE_LOG.md)
 4. [LICENSE](LICENSE)
 5. [语法库](src/main/java/cn/wenyan/compiler/WenYanLib.scala)
-6. [文心雕龙](https://wenyan-docs.netlify.com/)
+6. [文心雕龙](https://github.com/wenyan-lang/wiki)
 
 > 关于作者
 

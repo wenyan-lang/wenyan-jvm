@@ -1,6 +1,6 @@
 package cn.wenyan.compiler.command;
 
-@Deprecated
+
 public class GroovyCommand extends Command {
 
     public GroovyCommand() {
@@ -15,6 +15,6 @@ public class GroovyCommand extends Command {
 
     @Override
     public String help() {
-        return "该指令废弃，不要使用";
+        return "選擇生成groovy文件";
     }
 }

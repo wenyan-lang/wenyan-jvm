@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #######
-#1. wenyan.sh compile @MakeFile.txt targetPath sourcePath mainClass
+#1. wenyan.sh compile @MakeFile.wy targetPath sourcePath mainClass
 #2. wenyan.sh wyg targetPath sourcePath
 #3. wenyan,sh run targetPath mainClass args
 #4. wenyan.sh help

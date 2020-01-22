@@ -223,6 +223,7 @@ public class FunctionCompileStream extends CompileStream {
     }
 
     public String getName(String name,boolean defineArg){
+        if (funcIndex == 0)nowFunc = "global";
         if(!labelMap.containsKey(name)){
             VarLabel label = new VarLabel();
             label.setName(name);

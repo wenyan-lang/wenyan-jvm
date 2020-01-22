@@ -194,7 +194,6 @@ object WenYanLib {
 
   private type BigDecimal0 = java.math.BigDecimal
 
-
   val prefixAfter = MMap[Char,BigDecimal0](
     '負' -> new BigDecimal0(-1),
     '百' -> new BigDecimal0(100),
@@ -281,7 +280,7 @@ object WenYanLib {
     SIMPLE_VAR -> s"有$myType$ALL_CHARACTERS",//
     CHANGE -> (s"昔之$VAL_DEF"+"者"),//
     AFTER_NAME -> s"今($value)(是|)",////
-    COMMENT -> "(也|是矣)",//
+    COMMENT -> "(是也|是矣)",//
     FOR -> s"為是($numbersGet|「$ALL_CHARACTERS」)遍",//
     FOR_END -> "云云",//
     IF_START -> (s"若$ALL_CHARACTERS"+"者"),//

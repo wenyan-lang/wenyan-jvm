@@ -10,7 +10,11 @@ class Library {
 
     private final Map<Language,Map<String,String>> libs = [
             (Language.GROOVY) : [
-                    "算經" : "cn.wenyan.lang.算經"
+                    "算經" : "cn.wenyan.lang.算經",
+                    "位經" : "cn.wenyan.lang.位經",
+                    "列經" : "cn.wenyan.lang.列經",
+                    "物經" : "cn.wenyan.lang.物經",
+                    "易經" : "cn.wenyan.lang.易經"
             ]
     ]
 

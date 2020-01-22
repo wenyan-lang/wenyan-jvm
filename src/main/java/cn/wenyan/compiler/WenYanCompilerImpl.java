@@ -446,6 +446,9 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
     //TODO groovy独特
     private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass,boolean isGroovy){
         try {
+            if(mainClass == null){
+                mainClass = "";
+            }
             String annotation = prepareCompiler.toAnnotation(wenyanString);
             String className = getClassName(thisFile,sc);
             StringBuilder builder = new StringBuilder();
@@ -469,7 +472,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             }
             List<String> codes = compileToList(wenyanString,false);
             boolean get = true;
-            if(mainClass.equals(className)){
+            if(className.equals(mainClass)){
                 get = false;
             }
             String code = makeStaticTocode(codes,"import",get);
@@ -498,18 +501,15 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
             if(!classFile.exists())classFile.createNewFile();
 
-
-            if(isGroovy)
-                FileUtils.write(out,code,System.getProperty("file.coding"));
+            FileUtils.write(out,code,System.getProperty("file.coding"));
             if(!parent.exists())parent.mkdirs();
 
             compileToClass(out,classFile);
 
+            if(isGroovy)out.delete();
+
             serverLogger.info("得文件为: "+out);
-            if(isGroovy)
-                return out;
-            else
-                return null;
+            return out;
         }catch (Exception e){
             serverLogger.error("Syntax Error",e);
             return null;

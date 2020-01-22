@@ -115,11 +115,13 @@ object LexerUtils {
                                 start -= 1
                             }
                             builder01.append(string(index))
-                            if(string(index) == '曰'){
-                                list.add(builder01.toString())
-                                builder01 = new StringBuilder
-                                if(string(index+1).toString.matches(WenYanLib.SPLIT)){
-                                    index+=1
+                            if(!started){
+                                if(string(index) == '曰'){
+                                    list.add(builder01.toString())
+                                    builder01 = new StringBuilder
+                                    if(string(index+1).toString.matches(WenYanLib.SPLIT)){
+                                        index+=1
+                                    }
                                 }
                             }
                             if(started){
@@ -203,7 +205,7 @@ object LexerUtils {
                 counter.cut()
             }
 
-            if(counter.count == 0||counter.count == 1){
+            if(counter.count == 0||counter.count != 1){
                 if(x == '\t'||x == '\n'||x == ' '){
                     bool = false
                 }

@@ -17,7 +17,6 @@ You can run WenYan Programming Language in JVM.
 8. 本项目的目标语言是groovy,以实现动态语言，主要是为了实现`wenyan`可以调用java相关类库(并尽量确保js版本的wy文件)，以实现在虚拟机运行。
 9. 对于文渊阁的支持，只需要在项目的src执行wyg i 名称即可。编译器提供了相关参数实现文渊阁的编译
 
-```
 > 相关链接
 
 1. [wenyan_lang](https://github.com/LingDong-/wenyan-lang)

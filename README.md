@@ -4,6 +4,22 @@
 
 
 You can run WenYan Programming Language in JVM.
+> 贡献您的标准库
+1. 找到[标准库文件夹](src/main/java/cn/wenyan/lang)在这里贡献标准库
+2. 在[库映射文件下](src/main/java/cn/wenyan/compiler/script/libs/Library.groovy)添加
+```groovy
+final Map<Language,Map<String,String>> libs = [
+            (Language.GROOVY) : [
+                    "算經" : "cn.wenyan.lang.算經",
+                    "位經" : "cn.wenyan.lang.位經",
+                    "列經" : "cn.wenyan.lang.列經",
+                    "物經" : "cn.wenyan.lang.物經",
+                    "易經" : "cn.wenyan.lang.易經"
+            ]
+    ]
+```
+按照这个样式添加即可
+3. 编译调试后再pr,感谢
 
 > 声明
 

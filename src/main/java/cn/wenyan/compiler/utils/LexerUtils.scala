@@ -178,10 +178,10 @@ object LexerUtils {
             if(target.matches(p._2)){
                 //对于夫的特殊处理
                 if(p._2.equals(patterns(WenYanLib.STATEMENT))){
-                    if(strings(index+1) == '之')return false
+                    if(index+1<=strings.length-1&&strings(index+1) == '之')return false
                 }
                 if(p._2.equals(patterns(WenYanLib.GET))){
-                    if(strings(index+1) == '餘')return false
+                    if(index+1<=strings.length-1&&strings(index+1) == '餘')return false
                 }
                 return true
             }

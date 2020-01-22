@@ -12,13 +12,13 @@ class GroovyUtils {
         def prefixs = WenYanLib.prefixs()
         if(!ScalaUtils.containsCommonNumber(wenyanNumber)){
             int len = wenyanNumber.length()-1
-            if(wenyanNumber.contains("又")){
-                len = wenyanNumber.split("又")[0].length() -1
+            if(wenyanNumber.contains("·")){
+                len = wenyanNumber.split("·")[0].length() -1
             }
             boolean doubleNumber = false
             char[] numberChar = wenyanNumber.toCharArray()
             for(char str : numberChar){
-                if(str == '又'){
+                if(str == '·'){
                     doubleNumber = true
                     len = 1
                     continue

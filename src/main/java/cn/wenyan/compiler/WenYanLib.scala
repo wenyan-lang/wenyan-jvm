@@ -256,6 +256,7 @@ object WenYanLib {
       stringBuilder.append(k)
     }
     stringBuilder.append("又")
+    stringBuilder.append("·")
     stringBuilder.append("]+")
     stringBuilder.toString()
   }

@@ -14,7 +14,9 @@ class Library {
                     "位經" : "cn.wenyan.lang.位經",
                     "列經" : "cn.wenyan.lang.列經",
                     "物經" : "cn.wenyan.lang.物經",
-                    "易經" : "cn.wenyan.lang.易經"
+                    "易經" : "cn.wenyan.lang.易經",
+                    "格物" : "cn.wenyan.lang.格物",
+                    "混沌經":"cn.wenyan.lang.混沌經"
             ]
     ]
 

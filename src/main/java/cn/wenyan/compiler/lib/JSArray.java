@@ -3,6 +3,7 @@ package cn.wenyan.compiler.lib;
 
 import java.util.*;
 
+
 public class JSArray<T> extends HashMap<Object,T> {
 
     private int index = 0;
@@ -78,5 +79,9 @@ public class JSArray<T> extends HashMap<Object,T> {
         }else{
             return builder.toString();
         }
+    }
+
+    public List<Object> keys(){
+        return new ArrayList<>(this.keySet());
     }
 }

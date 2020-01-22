@@ -15,6 +15,7 @@ import cn.wenyan.compiler.script.libs.Library;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
 import cn.wenyan.compiler.utils.LexerUtils;
+import cn.wenyan.compiler.utils.ResultEntry;
 import cn.wenyan.compiler.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.control.CompilerConfiguration;
@@ -409,19 +410,19 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         return builder.toString();
     }
 
-    private String makeStaticTocode(List<String> results,String filter,boolean get){
+    private List<String> makeStaticTocode(List<String> results,String filter,boolean get){
         if(get) {
             int index = 0;
             for (int i = 0; i < results.size(); i++) {
                 if (index == 0) {
                     String result = results.get(i);
-                    if (result.startsWith("def"))
+                    if (result.startsWith("def")||result.startsWith("class"))
                         results.set(i, "static " + results.get(i));
                 }
                 index += Utils.getClose(results.get(i));
             }
         }
-        return codesTocode(results,filter);
+        return results;
     }
 
 
@@ -441,6 +442,32 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
         className = className.replace(File.separator,".");
         return className.substring(0,className.lastIndexOf("."));
+    }
+
+    private ResultEntry getStaticCode(List<String> results,boolean isMain){
+        if(isMain){
+            return new ResultEntry(results,"");
+        }
+        StringBuilder builder = new StringBuilder();
+        List<String> rs = new ArrayList<>(results);
+        int index = 0;
+        for(int i = 0;i<results.size();i++){
+            int close = Utils.getClose(results.get(i));
+            index += close;
+            if(index == 0){
+                if(close == 0){
+                    if(!results.get(i).startsWith("static")&&!results.get(i).startsWith("import")){
+                        builder.append(results.get(i)).append("\n");
+                        rs.set(i,null);
+                    }
+                }
+            }
+        }
+        Iterator<String> iterator = rs.iterator();
+        while (iterator.hasNext()){
+            if(iterator.next() == null)iterator.remove();
+        }
+        return new ResultEntry(rs,builder.toString());
     }
     //TODO 如果未来实现了类，必须要把类剥离出来
     //TODO groovy独特
@@ -475,7 +502,9 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             if(className.equals(mainClass)){
                 get = false;
             }
-            String code = makeStaticTocode(codes,"import",get);
+            String filter = "import";
+            ResultEntry codeEntry = getStaticCode(makeStaticTocode(codes,filter,get),mainClass.equals(className));
+            String code = codesTocode(codeEntry.getCode(),filter);
             String imports = getImports(codes);
 
             builder.append("\n");
@@ -493,7 +522,9 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             }
             builder.append(code);
             if(!mainClass.equals(className)) {
-
+                builder.append("\nstatic{\n");
+                builder.append(codeEntry.getOutCode());
+                builder.append("}");
                 builder.append("\n}");
             }
 

@@ -1,5 +1,5 @@
 或云「「觀物「甲」為非數」」。
-蓋謂「「施「{x -> x.class == Integer.class}」於「甲」。」」
+蓋謂「「施「{x -> x.class == Integer.class||x.class == BigInteger.class||x.class == java.math.BigDecimal}」於「甲」。」」
 
 或云「「觀物「甲」為非列」」。
 蓋謂「「施「{x -> x.class == JSArray.class}」於「甲」。」」

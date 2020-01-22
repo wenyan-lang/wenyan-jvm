@@ -62,7 +62,7 @@ public class JSArray<T> extends HashMap<Object,T> {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("[");
+        StringBuilder builder = new StringBuilder();
         List<Entry<Object,T>> list = new ArrayList<>(entrySet());
         for(int i = 0;i<list.size();i++){
             Entry<Object,T> entry = list.get(i);
@@ -74,9 +74,9 @@ public class JSArray<T> extends HashMap<Object,T> {
         }
         int index = builder.lastIndexOf(",");
         if(index!=-1) {
-            return builder.substring(0, index) + "]";
+            return builder.substring(0, index);
         }else{
-            return builder.append("]").toString();
+            return builder.toString();
         }
     }
 }

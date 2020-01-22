@@ -42,7 +42,7 @@ enum Language {
                     (Syntax.EQUAL)                 : "==",
                     (Syntax.AND)                  : "&&",
                     (Syntax.OR)                    : "||",
-                    (Syntax.PRINT)                 : "println($VALUE)",
+                    (Syntax.PRINT)                 : "println($VALUE .toString())",
                     (Syntax.NEGATE)                : "!",
                     (Syntax.CHANGE)                : "$NAME = $VALUE",
                     (Syntax.REPLACE_ARRAY)         : "$NAME[getIndex($INDEX)] = $VALUE",

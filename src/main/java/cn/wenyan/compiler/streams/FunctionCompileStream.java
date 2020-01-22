@@ -126,8 +126,11 @@ public class FunctionCompileStream extends CompileStream {
                 for(int z = 0;z<nowArgs.size();z++){
                     build.append(nowArgs.get(z)).append(",");
                 }
-                result = build.substring(0,build.lastIndexOf(","));
-
+                if(build.indexOf(",")!=-1) {
+                    result = build.substring(0, build.lastIndexOf(","));
+                }else{
+                    result = build.toString();
+                }
             }else{
                 if(builder.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT))!=-1){
                     result = builder.substring(0,builder.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT)));

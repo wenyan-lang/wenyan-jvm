@@ -36,6 +36,8 @@ import static cn.wenyan.compiler.log.LogFormat.fg;
  * 若施文言之术，必先用其器。古人云: 君子生非异，善假于物。
  * 此器以爪哇之法，行虚拟机之道，亦可广传文言于天下者。
  * 君用[run]之洋文可走之。吾欲将其译为java者也。
+ *
+ * @author 卢昶存 @ noyark.net
  */
 public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
@@ -401,6 +403,12 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         return (WenYanCompilerImpl) super.clone();
     }
 
+
+    //***************************************************//
+    //***********************類内部调用*********************//
+    //**************************************************//
+
+
     private String codesTocode(List<String> results,String filter){
         StringBuilder builder = new StringBuilder();
         for(String r :results) {
@@ -469,75 +477,31 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
         return new ResultEntry(rs,builder.toString());
     }
+
     //TODO 如果未来实现了类，必须要把类剥离出来
     //TODO groovy独特
+
     private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass,boolean isGroovy){
         try {
-            if(mainClass == null){
-                mainClass = "";
-            }
-            String annotation = prepareCompiler.toAnnotation(wenyanString);
-            String className = getClassName(thisFile,sc);
             StringBuilder builder = new StringBuilder();
+            mainClass = mainClass==null?"":mainClass;
+            String className = getClassName(thisFile,sc);
             int index = className.lastIndexOf(".");
-            String pack = "";
-            if(index !=-1){
-                pack = className.substring(0,index);
-                builder.append("package ");
-                builder.append(pack);
-            }
+            String pack = getPackage(className,index);
             File parent = new File(file+File.separator+pack.replace(".",File.separator));
             if(!parent.exists())parent.mkdirs();
             String name = File.separator+thisFile.getName().split("\\.")[0];
             File out = new File(parent,name+".groovy");
-
             File classFile = new File(parent,name+".class");
             if(!compiled.contains(classFile.toString())){
                 compiled.add(classFile.toString());
             }else {
                 return out;
             }
-            List<String> codes = compileToList(wenyanString,false);
-            boolean get = true;
-            if(className.equals(mainClass)){
-                get = false;
-            }
-            String filter = "import";
-            ResultEntry codeEntry = getStaticCode(makeStaticTocode(codes,filter,get),mainClass.equals(className));
-            String code = codesTocode(codeEntry.getCode(),filter);
-            String imports = getImports(codes);
 
-            builder.append("\n");
-            builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
-            builder.append("\n");
-            builder.append(imports);
-            if(!mainClass.equals(className)){
+            appendClassName(index,mainClass,className,compileToList(wenyanString,false),builder,prepareCompiler.toAnnotation(wenyanString),pack);
 
-                builder.append("\n");
-                builder.append(annotation);
-                builder.append("class ");
-                builder.append(className.replace(pack,"").replace(".",""));
-                builder.append("{");
-                builder.append("\n");
-            }
-            builder.append(code);
-            if(!mainClass.equals(className)) {
-                builder.append("\nstatic{\n");
-                builder.append(codeEntry.getOutCode());
-                builder.append("}");
-                builder.append("\n}");
-            }
-
-            code = builder.toString();
-
-            if(!classFile.exists())classFile.createNewFile();
-
-            FileUtils.write(out,code,System.getProperty("file.coding"));
-            if(!parent.exists())parent.mkdirs();
-
-            compileToClass(out,classFile);
-
-            if(isGroovy)out.delete();
+            createOutFile(classFile,out,builder.toString(),parent,isGroovy);
 
             serverLogger.info("得文件为: "+out);
             return out;
@@ -545,6 +509,54 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             serverLogger.error("Syntax Error",e);
             return null;
         }
+    }
+
+    private void appendClassName(int index,String mainClass,String className,List<String> codes,StringBuilder builder,String annotation,String pack){
+        if(index !=-1){
+            builder.append("package ");
+            builder.append(pack);
+        }
+        boolean isMain = mainClass.equals(className);
+        String filter = "import";
+        ResultEntry codeEntry = getStaticCode(makeStaticTocode(codes,filter,!isMain),isMain);
+        String code = codesTocode(codeEntry.getCode(),filter);
+        String imports = getImports(codes);
+
+        builder.append("\n");
+        builder.append(languageType.getSyntax(Syntax.IMPORT_WITH));
+        builder.append("\n");
+        builder.append(imports);
+        if(!isMain){
+
+            builder.append("\n");
+            builder.append(annotation);
+            builder.append("class ");
+            builder.append(className.replace(pack,"").replace(".",""));
+            builder.append("{");
+            builder.append("\n");
+        }
+        builder.append(code);
+        if(!isMain) {
+            builder.append("\nstatic{\n");
+            builder.append(codeEntry.getOutCode());
+            builder.append("}");
+            builder.append("\n}");
+        }
+    }
+
+    private String getPackage(String className,int index){
+        return index!=-1?className.substring(0,index):"";
+    }
+
+    private void createOutFile(File classFile,File out,String code,File parent,boolean isGroovy) throws IOException{
+        if(!classFile.exists())classFile.createNewFile();
+
+        FileUtils.write(out,code,System.getProperty("file.coding"));
+        if(!parent.exists())parent.mkdirs();
+
+        compileToClass(out,classFile);
+
+        if(isGroovy)out.delete();
     }
 
     private void compileWyg(File f,File cp) throws IOException{

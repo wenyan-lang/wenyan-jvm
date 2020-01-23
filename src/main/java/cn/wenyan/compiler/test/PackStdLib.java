@@ -19,7 +19,7 @@ public class PackStdLib {
 
                             project + "/target/classes",
 
-                            "-sc", source,"-g"
+                            "-sc", source
                     );
         });
     }

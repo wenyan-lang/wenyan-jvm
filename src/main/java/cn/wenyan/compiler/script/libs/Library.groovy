@@ -19,7 +19,8 @@ class Library {
                     "混沌經":"cn.wenyan.lang.混沌經",
                     "曆法":"cn.wenyan.lang.曆法",
                     "曆表":"cn.wenyan.lang.曆表",
-                    "西曆法":"cn.wenyan.lang.西曆法"
+                    "西曆法":"cn.wenyan.lang.西曆法",
+                    "籌經":"cn.wenyan.lang.籌經"
             ]
     ]
 

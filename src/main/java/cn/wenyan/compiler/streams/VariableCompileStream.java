@@ -66,7 +66,7 @@ public class VariableCompileStream extends CompileStream{
             clearStack();
             return new CompileResult("");
         }
-        //TODO
+
         if(Utils.matches(wenyans, WenYanLib.DEFINE_VAR())){
             compiler.removeWenyan();
             if(Utils.matches(wenyans,WenYanLib.DEFINE_ARG())){
@@ -90,7 +90,7 @@ public class VariableCompileStream extends CompileStream{
             String value = compiler.removeWenyan();
             return new CompileResult(LanguageUtils.defineVar(language,getAnsName(),language.getSyntax(Syntax.NOT)+Utils.getValue(Utils.getString(WenYanLib.VAR_NAME_FOR(),value),this)));
         }
-        //TODO
+
         if(Utils.matches(wenyans,WenYanLib.SIMPLE_VAR())){
             String value = compiler.removeWenyan();
             List<String> values = new ArrayList<>();
@@ -152,7 +152,6 @@ public class VariableCompileStream extends CompileStream{
     }
 
     //变量者乎
-    //TODO
     //endIndex就是结尾，为value定义后
     public String appendVar(int number,List<String> name, List<String> values, char type){
         if(name.size() == 0&&number > 1){

@@ -116,7 +116,6 @@ public class ControlCompileStream extends CompileStream {
         }
     }
 
-    //TODO 未完成
     public String getBool(String type,String wenYan){
         String[] numbers = wenYan.split(type);
         if(numbers.length != 2)throw new SyntaxException("此表达式之过也: "+wenYan);

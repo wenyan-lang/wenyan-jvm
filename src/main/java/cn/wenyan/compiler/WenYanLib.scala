@@ -293,7 +293,7 @@ object WenYanLib {
     MATH_START -> s"[加減乘除]($value)",////
     MOD -> "所餘幾何",//
     IT_CHANGE -> IT_CHANGE,//
-    AND_OR -> s"夫「$ALL_CHARACTERS」「$ALL_CHARACTERS」中(有陽|無陰)乎",//TODO
+    AND_OR -> s"夫「$ALL_CHARACTERS」「$ALL_CHARACTERS」中(有陽|無陰)乎",
     FOR_EACH -> s"凡「$ALL_CHARACTERS」中之「$ALL_CHARACTERS」",//
     FUNCTION -> (numbersGet+"術"),//
     NO_ARGS -> "是術曰",//

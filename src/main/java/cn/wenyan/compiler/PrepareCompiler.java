@@ -136,21 +136,26 @@ public class PrepareCompiler {
     }
 
     String toAnnotation(String wenyanCode){
-        StringBuilder builder = new StringBuilder("@"+Defines.class.getSimpleName()+"([");
-        getMacroMapping(wenyanCode).forEach((x,y)->builder
-                .append("\t@")
-                .append(Define.class.getSimpleName())
-                .append("(before = ")
-                .append("'")
-                .append(x)
-                .append("'")
-                .append(",after = ")
-                .append("'")
-                .append(y)
-                .append("'")
-                .append("),\n")
-        );
-        return builder.toString()+"])\n";
+        Map<String,String> macros = getMacroMapping(wenyanCode);
+        if(macros.size()!=0){
+            StringBuilder builder = new StringBuilder("@"+Defines.class.getSimpleName()+"([");
+            macros.forEach((x,y)->builder
+                    .append("\t@")
+                    .append(Define.class.getSimpleName())
+                    .append("(before = ")
+                    .append("'")
+                    .append(x)
+                    .append("'")
+                    .append(",after = ")
+                    .append("'")
+                    .append(y)
+                    .append("'")
+                    .append("),\n")
+            );
+            return builder.toString()+"])\n";
+        }
+
+        return "";
     }
 
     private Map<String,List<String>> getMacroNames(Map<String,String> macros){

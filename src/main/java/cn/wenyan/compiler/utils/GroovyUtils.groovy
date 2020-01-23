@@ -4,6 +4,37 @@ import cn.wenyan.compiler.WenYanLib
 
 class GroovyUtils {
 
+    static List<String> splitGroovyCode(String code){
+        int index = 0
+        def arr = []
+        StringBuilder builder = new StringBuilder()
+        boolean start = false
+        for(int i = 0;i<code.length();i++){
+            if(code[i].equals("\"")) {
+                if (!start) {
+                    index++
+                    start = true
+                } else {
+                    index--
+                    start = false
+                }
+            }
+
+            if(index == 0){
+                if(code[i].equals("\n")){
+                    arr.add(builder.toString())
+                    builder = new StringBuilder()
+                }else{
+                    builder.append(code[i])
+                }
+            }else{
+                builder.append(code[i])
+            }
+        }
+        if(!builder.toString().isEmpty())arr.add(builder.toString())
+        arr
+    }
+
     static BigDecimal getNumber(String wenyanNumber){
         int isNot = 1
         BigDecimal maxNumber = 0

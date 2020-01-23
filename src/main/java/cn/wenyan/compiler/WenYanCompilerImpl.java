@@ -14,6 +14,7 @@ import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Library;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
+import cn.wenyan.compiler.utils.GroovyUtils;
 import cn.wenyan.compiler.utils.LexerUtils;
 import cn.wenyan.compiler.utils.ResultEntry;
 import cn.wenyan.compiler.utils.Utils;
@@ -428,7 +429,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                     String result = results.get(i);
                     if (result.startsWith("def")||result.startsWith("class")){
                         StringBuilder builder = new StringBuilder();
-                        String[] str = result.split("\n");
+                        String[] str = GroovyUtils.splitGroovyCode(result).toArray(new String[0]);
                         for(int z = 0;z<str.length;z++){
                             if(str[z].startsWith("def"))
                                 builder.append("static ").append(str[z]).append("\n");
@@ -479,7 +480,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                         builder.append(results.get(i)).append("\n");
                         rs.set(i, null);
                     } else if(results.get(i).startsWith("static")){
-                        String[] defs = results.get(i).split("\n");
+                        String[] defs = GroovyUtils.splitGroovyCode(results.get(i)).toArray(new String[0]);
                         StringBuilder builder1 = new StringBuilder();
                         for(String def : defs){
                             String[] name_value = def.split("=");

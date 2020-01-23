@@ -478,6 +478,15 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                     if(!results.get(i).startsWith("static")&&!results.get(i).startsWith("import")) {
                         builder.append(results.get(i)).append("\n");
                         rs.set(i, null);
+                    } else if(results.get(i).startsWith("static")){
+                        String[] defs = results.get(i).split("\n");
+                        StringBuilder builder1 = new StringBuilder();
+                        for(String def : defs){
+                            String[] name_value = def.split("=");
+                            builder1.append(name_value[0]).append("\n");
+                            builder.append(name_value[0].split(" ")[2]).append("=").append(name_value[1]).append("\n");
+                        }
+                        rs.set(i,builder1.toString());
                     }
                 }
             }

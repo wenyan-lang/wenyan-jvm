@@ -43,6 +43,8 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
     private Map<File,File> wygFiles = new HashMap<>();
 
+    private boolean lexerViewer;
+
     protected Library library;
 
     private CompilerConfig compilerConfig;
@@ -177,6 +179,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             this.mainClass = compilerConfig.getMainClass();
             this.compilerConfig = compilerConfig;
             this.supportPinyin = compilerConfig.isSupportPinYin();
+            this.lexerViewer = compilerConfig.isLexerViewer();
             String[] files = compilerConfig.getCompileFiles();
             String[] args = compilerConfig.getRunArgs();
             String[] libs = compilerConfig.getCompileLib();
@@ -245,7 +248,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         List<String> results = new ArrayList<>();
         try {
             wenyans = prepareCompiler.macroPrepare(wenyan);
-            serverLogger.info(LexerUtils.getLine(wenyans));
+            if(lexerViewer) serverLogger.info(LexerUtils.getLine(wenyans));
             while (wenyans.size() != 0) {
                 results.add(factory.compile(0, wenyans).get(0));
             }

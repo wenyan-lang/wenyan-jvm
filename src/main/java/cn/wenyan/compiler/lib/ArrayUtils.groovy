@@ -10,4 +10,12 @@ class ArrayUtils {
     static def getArray(array){
         return array.getClass() == HashMap.Node.class?array.getValue():array
     }
+
+    static JSArray toJSArray(array){
+        JSArray js = new JSArray()
+        for(v in array){
+            js.add(v)
+        }
+        return js
+    }
 }

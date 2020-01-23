@@ -2,6 +2,8 @@ package cn.wenyan.compiler.command;
 
 public class CompilerConfig {
 
+    private boolean lexerViewer;
+
     private String wygDownload;
 
     private String wenyuangeFile;
@@ -120,5 +122,13 @@ public class CompilerConfig {
 
     public String getWygDownload() {
         return wygDownload;
+    }
+
+    public boolean isLexerViewer() {
+        return lexerViewer;
+    }
+
+    public void setLexerViewer(boolean lexerViewer) {
+        this.lexerViewer = lexerViewer;
     }
 }

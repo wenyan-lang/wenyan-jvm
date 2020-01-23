@@ -231,6 +231,8 @@ final Map<Language,Map<String,String>> libs = [
 
 -l: 参数: jarFiles,加入依赖的jar包，如hello.jar;eat.jar
 
+-lv: 分詞可視化
+
 > 直接加载文言文脚本
 
 ```groovy

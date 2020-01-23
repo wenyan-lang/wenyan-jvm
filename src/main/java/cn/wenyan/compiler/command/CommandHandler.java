@@ -30,6 +30,7 @@ public class CommandHandler {
         compileCommand.put("-n",new ClassFileCommand());
         compileCommand.put("-wyg",new WenYuanGeCommand());
         compileCommand.put("-wd",new WenYuanGeDownloadCommand());
+        compileCommand.put("-lv",new LexerViewerCommand());
     }
 
     public CommandHandler(WenYanCompilerImpl compiler){

@@ -157,7 +157,7 @@ object LexerUtils {
 
                 if(!isAppend)builder.append(s)
 
-                if(getString(builder.toString(),strings,index)){
+                if(canMatch(builder.toString(),strings,index)){
                     list.add(builder.toString())
                     builder = new StringBuilder
                 }
@@ -173,7 +173,7 @@ object LexerUtils {
 
     private def isNumber(s:Char):Boolean = s.toString.matches(WenYanLib.numbersGet)
 
-    private def getString(target: String,strings : String,index : Int): Boolean ={
+    private def canMatch(target: String,strings : String,index : Int): Boolean ={
         val patterns = WenYanLib.syntaxs
         for(p <- patterns){
             if(target.matches(p._2)){

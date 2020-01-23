@@ -43,6 +43,7 @@ public class CompileFactory {
                 if(!wenyan.equals(copy)){
                     wenyan.clear();
                     wenyan.addAll(copy);
+                    compiler.clearIndexCode();
                 }
             }
         }

@@ -19,7 +19,6 @@ public class VariableCompileStream extends CompileStream{
 
     private Map<String,Integer> arrIndex = new HashMap<>();
 
-
     private String nowName;
 
     private List<String> nowNames = new ArrayList<>();
@@ -135,7 +134,6 @@ public class VariableCompileStream extends CompileStream{
         if(wenyans.get(0).equals("是也")||wenyans.get(0).equals("也")){
             compiler.removeWenyan();
             if(!wenyans.get(0).equals("若非")||!wenyans.get(0).equals("或")){
-                compiler.removeWenyan();
                 end = language.getSyntax(Syntax.IF_END);
             }
         }else if(wenyans.get(0).equals("是矣")||wenyans.get(0).equals("矣")){

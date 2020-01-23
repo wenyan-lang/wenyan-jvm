@@ -315,6 +315,10 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         return indexCode;
     }
 
+    public void clearIndexCode(){
+        indexCode = 0;
+    }
+
     public void setIndexCode() {
         indexCode++;
     }

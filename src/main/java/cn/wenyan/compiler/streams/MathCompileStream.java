@@ -28,7 +28,6 @@ public class MathCompileStream extends CompileStream {
             String num = value01.substring(value01.indexOf(value01.charAt(0))+1);
             String number1 = Utils.getValue(num,stream);
             if(Utils.matches(wenyan,WenYanLib.VAL())) {
-
                 String value02 = compiler.removeWenyan();//1
                 String number2 = Utils.getValue(value02.substring(value02.indexOf(value02.charAt(0))+1), stream);
                 if (symbol.equals(language.getSyntax(Syntax.MATH_EXCEPT))) {
@@ -49,7 +48,6 @@ public class MathCompileStream extends CompileStream {
                 } else {
                     result = LanguageUtils.defineVar(language,name,symbol.replace(Language.getNAME(),number2).replace(Language.getVALUE(),number1));
                 }
-
 
                 return new CompileResult(result);
             }

@@ -43,7 +43,7 @@ public class FunctionCompileStream extends CompileStream {
                     String name = stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),value),false);
                     funcIndex++;
                     if(funcIndex == 1)nowFunc = name;
-                    if(Utils.matches(wenyan,WenYanLib.NO_ARGS())){
+                    if(Utils.matches(wenyan,WenYanLib.NO_ARGS())||Utils.matches(wenyan,WenYanLib.DEFINE_END())){
                         compiler.removeWenyan();
                         return new CompileResult(defineFunc(name));
                     }else if(Utils.matches(wenyan,WenYanLib.ARGS())){
@@ -66,10 +66,10 @@ public class FunctionCompileStream extends CompileStream {
                                         }
                                     }
                                 }
-                                if(Utils.matches(wenyan,WenYanLib.DEFINE_END()))break;
+                                if(Utils.matches(wenyan,WenYanLib.DEFINE_END())||Utils.matches(wenyan,WenYanLib.NO_ARGS()))break;
                             }
                         }
-                        if(Utils.matches(wenyan,WenYanLib.DEFINE_END())){
+                        if(Utils.matches(wenyan,WenYanLib.DEFINE_END())|Utils.matches(wenyan,WenYanLib.NO_ARGS())){
                             compiler.removeWenyan();
                             String args_str = args.toString().substring(0,args.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT)));
                             return new CompileResult(defineFunc(name,args_str));
@@ -118,7 +118,7 @@ public class FunctionCompileStream extends CompileStream {
                 }
             }
             String result;
-            String funcName = stream.getAnsName();
+
             if(i == 0){
                 List<String> nowArgs = getNowNames(stackNumber,stream);
                 stackNumber = 0;
@@ -138,6 +138,7 @@ public class FunctionCompileStream extends CompileStream {
                     result = builder.toString();
                 }
             }
+            String funcName = stream.getAnsName();
             return new CompileResult(LanguageUtils.runFunction(language,funcName,stream.getName(name,true,true,false),result));
         }
 

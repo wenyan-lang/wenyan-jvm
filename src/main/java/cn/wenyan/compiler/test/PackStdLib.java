@@ -12,14 +12,16 @@ public class PackStdLib {
         String project = "/Users/luchangcun/Projects/new/jvm/";
         WenYanCompilerImpl wenYanCompiler = (WenYanCompilerImpl) WenYanTools.makeCompiler(Language.GROOVY);
         String source = project+"src/main/java/";
-        wenYanCompiler.getLibrary().getLibs().forEach((x,y)->wenYanCompiler
-                .compile(
-                        "-c",source+y.replace(".", File.separator)+".wy",
+        wenYanCompiler.getLibrary().getLibs().forEach((x,y)-> {
+            if(x.equals("算經"))
+            wenYanCompiler
+                    .compile(
+                            "-c", source + y.replace(".", File.separator) + ".wy",
 
-                        project+"/target/classes",
+                            project + "/target/classes",
 
-                        "-sc",source,"-g"
-                )
-        );
+                            "-sc", source, "-g"
+                    );
+        });
     }
 }

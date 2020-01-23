@@ -293,9 +293,9 @@ object WenYanLib {
     MATH_START -> s"[加減乘除]($value)",////
     MOD -> "所餘幾何",//
     IT_CHANGE -> IT_CHANGE,//
-    AND_OR -> s"夫「$ALL_CHARACTERS」「$ALL_CHARACTERS」中(有陽|無陰)乎",//
+    AND_OR -> s"夫「$ALL_CHARACTERS」「$ALL_CHARACTERS」中(有陽|無陰)乎",//TODO
     FOR_EACH -> s"凡「$ALL_CHARACTERS」中之「$ALL_CHARACTERS」",//
-    FUNCTION -> "一術",//
+    FUNCTION -> (numbersGet+"術"),//
     NO_ARGS -> "是術曰",//
     RETURN -> s"乃得($value)",//
     FUNCTION_END -> s"是謂「$ALL_CHARACTERS」之術[也矣]",//
@@ -310,7 +310,7 @@ object WenYanLib {
     CLEAR_STACK -> "噫",
     ADD -> s"充($value)",////
     VAL -> s"[以於]($value)",////
-    GET -> s"夫「$ALL_CHARACTERS」之($value)",
+    GET -> s"夫(「$ALL_CHARACTERS」|其)之($value)",
     REPLACE_ARRAY -> (s"昔之"+VAL_DEF+"之("+value+")者"),
     NEW_COMMENT -> (comment+"曰"),
     OTHER -> s"變(「$ALL_CHARACTERS」|$TRUE|$FALSE)",
@@ -321,7 +321,7 @@ object WenYanLib {
     CONCAT -> s"銜「$ALL_CHARACTERS」",
     MACRO_BEFORE -> s"云「「$ALL_CHARACTERS」」",
     MACRO_AFTER -> s"蓋謂「「$ALL_CHARACTERS」」",
-    STATEMENT -> s"夫$VAL_DEF",
+    STATEMENT -> s"夫($VAL_DEF|$numbersGet|陽|陰|空無|「「([\\s\\S]+|)」」|其)",
     FUNC_ARG -> (s"取$numbersGet"+"以"),
     TRY -> "姑妄行此",
     EXCEPTION_DEFINE -> "嗚呼",

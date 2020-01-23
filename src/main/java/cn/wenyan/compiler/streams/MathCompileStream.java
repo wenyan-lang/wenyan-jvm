@@ -40,13 +40,14 @@ public class MathCompileStream extends CompileStream {
                 String name = stream.getAnsName();
 
                 String result;
+
                 if (value02.charAt(0) == '以') {
                     if(symbol.equals(language.getSyntax(Syntax.MATH_REMAIN))){
                         number1 = LanguageUtils.numberSugar(language,number1);
                     }
                     result = LanguageUtils.defineVar(language,name,symbol.replace(Language.getNAME(),number1).replace(Language.getVALUE(),number2));
                 } else {
-                    result = LanguageUtils.defineVar(language,name,symbol.replace(Language.getNAME(),number1).replace(Language.getVALUE(),number2));
+                    result = LanguageUtils.defineVar(language,name,symbol.replace(Language.getNAME(),number2).replace(Language.getVALUE(),number1));
                 }
 
 

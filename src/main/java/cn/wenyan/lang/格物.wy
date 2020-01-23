@@ -1,3 +1,11 @@
+疏曰『
+
+    此經乃改編者以順java之道
+
+    參見 https://github.com/wenyan-lang/wenyan/tree/master/lib
+
+
+』
 今有一術。名之曰「取物」。欲行是術。必先得一物曰「物」。一言曰「端」。乃行是術曰。
 	施「{ obj,x -> obj[x]}」於「物」於「端」。乃得矣。
 是謂「取物」之術也。

@@ -247,7 +247,6 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             wenyans = prepareCompiler.macroPrepare(wenyan);
             serverLogger.info(LexerUtils.getLine(wenyans));
             while (wenyans.size() != 0) {
-
                 results.add(factory.compile(0, wenyans).get(0));
             }
             return results;
@@ -418,16 +417,22 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         return builder.toString();
     }
 
-    private List<String> makeStaticTocode(List<String> results,String filter,boolean get){
+    private List<String> makeStaticTocode(List<String> results,boolean get){
         if(get) {
             int index = 0;
             for (int i = 0; i < results.size(); i++) {
+                index += Utils.getClose(results.get(i));
                 if (index == 0) {
                     String result = results.get(i);
-                    if (result.startsWith("def")||result.startsWith("class"))
-                        results.set(i, "static " + results.get(i));
+                    if (result.startsWith("def")||result.startsWith("class")){
+                        StringBuilder builder = new StringBuilder();
+                        String[] str = result.split("\n");
+                        for(int z = 0;z<str.length;z++){
+                            builder.append("static "+str[z]).append("\n");
+                        }
+                        results.set(i,builder.toString());
+                    }
                 }
-                index += Utils.getClose(results.get(i));
             }
         }
         return results;
@@ -518,7 +523,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
         boolean isMain = mainClass.equals(className);
         String filter = "import";
-        ResultEntry codeEntry = getStaticCode(makeStaticTocode(codes,filter,!isMain),isMain);
+        ResultEntry codeEntry = getStaticCode(makeStaticTocode(codes,!isMain),isMain);
         String code = codesTocode(codeEntry.getCode(),filter);
         String imports = getImports(codes);
 

@@ -148,8 +148,9 @@ object LexerUtils {
                 }
 
                 if(s.toString.matches(WenYanLib.SPLIT)){
-                    if(builder.nonEmpty)
+                    if(builder.nonEmpty){
                         list.add(builder.toString())
+                    }
                     builder = new StringBuilder
                     loop.break
                 }
@@ -170,7 +171,7 @@ object LexerUtils {
         list
     }
 
-    private def isNumber(s:Char):Boolean = WenYanLib.numbers.contains(s)||WenYanLib.prefixs.contains(s)||s=='又'
+    private def isNumber(s:Char):Boolean = s.toString.matches(WenYanLib.numbersGet)
 
     private def getString(target: String,strings : String,index : Int): Boolean ={
         val patterns = WenYanLib.syntaxs
@@ -182,6 +183,9 @@ object LexerUtils {
                 }
                 if(p._2.equals(patterns(WenYanLib.GET))){
                     if(index+1<=strings.length-1&&strings(index+1) == '餘')return false
+                }
+                if(p._2.equals(patterns(WenYanLib.AND_OR))){
+                    if(index+1<=strings.length-1&&strings(index+1) == '「')return false
                 }
                 return true
             }

@@ -15,7 +15,6 @@ public class SyntaxColor {
             "於","嘗觀","書","方悟","義","是","乃","之","欲"
     };
     public static String getSyntaxColor(String wenyan, WenYanCompilerImpl compiler){
-
         return wenyan;
     }
 }

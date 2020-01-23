@@ -16,7 +16,10 @@ class Library {
                     "物經" : "cn.wenyan.lang.物經",
                     "易經" : "cn.wenyan.lang.易經",
                     "格物" : "cn.wenyan.lang.格物",
-                    "混沌經":"cn.wenyan.lang.混沌經"
+                    "混沌經":"cn.wenyan.lang.混沌經",
+                    "曆法":"cn.wenyan.lang.曆法",
+                    "曆表":"cn.wenyan.lang.曆表",
+                    "西曆法":"cn.wenyan.lang.西曆法"
             ]
     ]
 

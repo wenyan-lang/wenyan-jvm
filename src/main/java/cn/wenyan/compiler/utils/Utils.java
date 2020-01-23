@@ -149,7 +149,7 @@ public class Utils {
         try {
             Class.forName(clz);
             return true;
-        } catch (ClassNotFoundException e) {
+        } catch (Throwable e) {
             return false;
         }
     }

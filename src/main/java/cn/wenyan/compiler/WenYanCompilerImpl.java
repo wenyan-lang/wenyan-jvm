@@ -424,18 +424,21 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         if(get) {
             int index = 0;
             for (int i = 0; i < results.size(); i++) {
-                index += Utils.getClose(results.get(i));
                 if (index == 0) {
                     String result = results.get(i);
                     if (result.startsWith("def")||result.startsWith("class")){
                         StringBuilder builder = new StringBuilder();
                         String[] str = result.split("\n");
                         for(int z = 0;z<str.length;z++){
-                            builder.append("static "+str[z]).append("\n");
+                            if(str[z].startsWith("def"))
+                                builder.append("static ").append(str[z]).append("\n");
+                            else
+                                builder.append(str[z]).append("\n");
                         }
                         results.set(i,builder.toString());
                     }
                 }
+                index += Utils.getClose(results.get(i));
             }
         }
         return results;
@@ -472,9 +475,9 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             index += close;
             if(index == 0){
                 if(close == 0){
-                    if(!results.get(i).startsWith("static")&&!results.get(i).startsWith("import")){
+                    if(!results.get(i).startsWith("static")&&!results.get(i).startsWith("import")) {
                         builder.append(results.get(i)).append("\n");
-                        rs.set(i,null);
+                        rs.set(i, null);
                     }
                 }
             }

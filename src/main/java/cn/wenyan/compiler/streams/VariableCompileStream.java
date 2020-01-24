@@ -233,22 +233,12 @@ public class VariableCompileStream extends CompileStream{
     public String getName(String name,boolean define,boolean runFunc,boolean defineArg){
         String chinese = name.substring(name.indexOf(WenYanLib.NAME_START()) + 1, name.lastIndexOf(WenYanLib.NAME_END()));
         FunctionCompileStream stream = compiler.getStream(FunctionCompileStream.class);
-        if(varMap.containsValue(chinese)){
-            return stream.getName(varMap.get(chinese),defineArg);
-        }
-        name = chinese;
-        if(varMap.containsKey(name)){
-            varIndex++;
-            name = name+varIndex;
-            varMap.put(name,chinese);
-        }else{
-            varMap.put(name,chinese);
-        }
+        name = stream.getName(chinese,defineArg);
         if(!runFunc) {
             nowName = name;
             nowNames.add(name);
         }
-        return stream.getName(name,defineArg);
+        return name;
     }
 
     private List<String> getValues(List<String> wenyans){

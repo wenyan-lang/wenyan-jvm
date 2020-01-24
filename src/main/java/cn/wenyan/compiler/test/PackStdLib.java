@@ -7,7 +7,8 @@ import cn.wenyan.compiler.script.libs.Language;
 import java.io.File;
 
 public class PackStdLib {
-
+    //施「JSON.stringify」於「太白餛飩」。書之。
+    //施「包渾沌」於「太白餛飩」。書之。
     public static void main(String[] args) {
         String project = "/Users/luchangcun/Projects/new/jvm/";
         WenYanCompilerImpl wenYanCompiler = (WenYanCompilerImpl) WenYanTools.makeCompiler(Language.GROOVY);
@@ -19,7 +20,7 @@ public class PackStdLib {
 
                             project + "/target/classes",
 
-                            "-sc", source
+                            "-sc", source,"-g"
                     );
         });
     }

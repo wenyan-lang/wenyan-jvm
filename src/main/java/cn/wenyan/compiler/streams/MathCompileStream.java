@@ -57,9 +57,9 @@ public class MathCompileStream extends CompileStream {
             String method = Utils.getString(WenYanLib.AND_OR(),value);
             List<String> strings = Utils.getStrings(WenYanLib.VAR_NAME_FOR(),value);
             if("有陽".equals(method)){
-                return new CompileResult(LanguageUtils.defineVar(language,stream.getAnsName(),stream.getName(strings.get(0),false)+language.getSyntax(Syntax.OR)+stream.getName(strings.get(1),false)));
+                return new CompileResult(LanguageUtils.defineVar(language,stream.getAnsName(),Utils.getValue(strings.get(0),stream)+language.getSyntax(Syntax.OR)+Utils.getValue(strings.get(1),stream)));
             }else if("無陰".equals(method)){
-                return new CompileResult(LanguageUtils.defineVar(language,stream.getAnsName(),stream.getName(strings.get(0),false)+language.getSyntax(Syntax.AND)+stream.getName(strings.get(1),false)));
+                return new CompileResult(LanguageUtils.defineVar(language,stream.getAnsName(),Utils.getValue(strings.get(0),stream)+language.getSyntax(Syntax.AND)+Utils.getValue(strings.get(1),stream)));
             }
         }
         return new CompileResult(false,wenyan);

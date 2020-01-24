@@ -4,7 +4,17 @@ import cn.wenyan.compiler.WenYanLib
 
 class GroovyUtils {
 
-    static List<String> splitGroovyCode(String code){
+    static String formatString(String value){
+        StringBuilder builder = new StringBuilder()
+        for(int i = 0;i<value.length();i++){
+            if(!(value[i] == "\\"&&i+1<=value.length()-1&&value[i+1]!= "\\")){
+                builder.append(value[i])
+            }
+        }
+        return builder.toString()
+    }
+
+    static List<String> splitGroovyCode(String code,char chars){
         int index = 0
         def arr = []
         StringBuilder builder = new StringBuilder()
@@ -19,9 +29,8 @@ class GroovyUtils {
                     start = false
                 }
             }
-
             if(index == 0){
-                if(code[i].equals("\n")){
+                if(code[i] == chars.toString()){
                     arr.add(builder.toString())
                     builder = new StringBuilder()
                 }else{

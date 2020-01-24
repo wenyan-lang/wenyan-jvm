@@ -197,9 +197,7 @@ object LexerUtils {
 
 
     def trimWenYanX(s: String):String = {
-
         val counter = new Counter
-
         s.trim.filter(x=>{
             var bool = true
             if (x == '「' || x == '『') {
@@ -209,7 +207,7 @@ object LexerUtils {
                 counter.cut()
             }
 
-            if(counter.count == 0||counter.count != 1){
+            if(counter.count == 0){
                 if(x == '\t'||x == '\n'||x == ' '){
                     bool = false
                 }

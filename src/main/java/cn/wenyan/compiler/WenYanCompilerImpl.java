@@ -274,6 +274,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                 return ERROR;
             }
         }
+        getStream(FunctionCompileStream.class).toGlobal();
 
         return codesTocode(results,null);
     }
@@ -378,8 +379,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         List<String> list = FileUtils.readLines(wenyan,System.getProperty("file.coding"));
         StringBuilder builder = new StringBuilder();
         for(String str:list){
-            String strNoT = trimWenYan(str);
-            builder.append(strNoT);
+            builder.append(str).append("\n");
         }
         return builder.toString();
     }
@@ -433,7 +433,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                     String result = results.get(i);
                     if (result.startsWith("def")||result.startsWith("class")){
                         StringBuilder builder = new StringBuilder();
-                        String[] str = GroovyUtils.splitGroovyCode(result).toArray(new String[0]);
+                        String[] str = GroovyUtils.splitGroovyCode(result,'\n').toArray(new String[0]);
                         for(int z = 0;z<str.length;z++){
                             if(str[z].startsWith("def"))
                                 builder.append("static ").append(str[z]).append("\n");
@@ -483,11 +483,11 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                     if(!results.get(i).startsWith("static")&&!results.get(i).startsWith("import")) {
                         builder.append(results.get(i)).append("\n");
                         rs.set(i, null);
-                    } else if(results.get(i).startsWith("static")){
-                        String[] defs = GroovyUtils.splitGroovyCode(results.get(i)).toArray(new String[0]);
+                    } else if(results.get(i).startsWith("static")&&results.get(i).contains("=")){
+                        String[] defs = GroovyUtils.splitGroovyCode(results.get(i),'\n').toArray(new String[0]);
                         StringBuilder builder1 = new StringBuilder();
                         for(String def : defs){
-                            String[] name_value = def.split("=");
+                            String[] name_value = GroovyUtils.splitGroovyCode(def,'=').toArray(new String[0]);
                             builder1.append(name_value[0]).append("\n");
                             builder.append(name_value[0].split(" ")[2]).append("=").append(name_value[1]).append("\n");
                         }

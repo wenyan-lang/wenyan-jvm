@@ -25,7 +25,9 @@ public class FunctionCompileStream extends CompileStream {
 
     private int stackNumber = 0;
 
-    private Map<String,String> names = new HashMap<>();
+
+
+    private List<String> defined = new ArrayList<>();
 
     public FunctionCompileStream(WenYanCompilerImpl compiler) {
         super(compiler);
@@ -41,12 +43,14 @@ public class FunctionCompileStream extends CompileStream {
                 if(Utils.matches(wenyan,WenYanLib.VAR_VALUE())){ //2
                     String value = compiler.removeWenyan();
                     String name = stream.getName(Utils.getString(WenYanLib.VAR_NAME_FOR(),value),false);
-                    funcIndex++;
-                    if(funcIndex == 1)nowFunc = name;
                     if(Utils.matches(wenyan,WenYanLib.NO_ARGS())||Utils.matches(wenyan,WenYanLib.DEFINE_END())){
+                        funcIndex++;
+                        if(funcIndex == 1)nowFunc = name;
                         compiler.removeWenyan();
                         return new CompileResult(defineFunc(name));
                     }else if(Utils.matches(wenyan,WenYanLib.ARGS())){
+                        funcIndex++;
+                        if(funcIndex == 1)nowFunc = name;
                         StringBuilder args = new StringBuilder();
                         compiler.removeWenyan();
                         if (Utils.matches(wenyan,WenYanLib.MUST())){
@@ -55,11 +59,13 @@ public class FunctionCompileStream extends CompileStream {
                                 if(Utils.matches(wenyan,WenYanLib.DEFINE_ARG())||Utils.matches(wenyan,WenYanLib.FUNCTION())){
                                     String value01 = compiler.removeWenyan();
                                     String wuYiYan = Utils.getString(WenYanLib.NUMBER(),value01);
+                                    //TODO 未來出現類要做修改，包括類型判斷
+                                    char type =  value01.charAt(value01.length()-1);
                                     int len = Integer.parseInt(stream.getNumber(wuYiYan).toString());
                                     for(int i = 0;i<len;i++){
                                         if(Utils.matches(wenyan,WenYanLib.VAR_GET_NAME())){
                                             String get = compiler.removeWenyan();
-                                            String defined = LanguageUtils.defineArg(language,stream.defineArgName(Utils.getString(WenYanLib.VAR_NAME_FOR(),get),true));
+                                            String defined = LanguageUtils.defineArg(language,stream.defineArgName(Utils.getString(WenYanLib.VAR_NAME_FOR(),get),true),type);
                                             args.append(defined).append(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT));
                                         }else{
                                             break;
@@ -68,13 +74,15 @@ public class FunctionCompileStream extends CompileStream {
                                 }
                                 if(Utils.matches(wenyan,WenYanLib.DEFINE_END())||Utils.matches(wenyan,WenYanLib.NO_ARGS()))break;
                             }
+                            if(Utils.matches(wenyan,WenYanLib.DEFINE_END())|Utils.matches(wenyan,WenYanLib.NO_ARGS())){
+                                compiler.removeWenyan();
+                                String args_str = args.toString().substring(0,args.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT)));
+                                return new CompileResult(defineFunc(name,args_str));
+                            }
                         }
-                        if(Utils.matches(wenyan,WenYanLib.DEFINE_END())|Utils.matches(wenyan,WenYanLib.NO_ARGS())){
-                            compiler.removeWenyan();
-                            String args_str = args.toString().substring(0,args.lastIndexOf(language.getSyntax(Syntax.FUNCTION_ARGS_SPLIT)));
-                            return new CompileResult(defineFunc(name,args_str));
-                        }
-
+                    }else{
+                        defined.add(nowFunc+"."+name);
+                        return new CompileResult(LanguageUtils.define(language,name));
                     }
                 }
             }
@@ -197,13 +205,14 @@ public class FunctionCompileStream extends CompileStream {
     //def a(a,b){
     //def a = {a,b ->
     private String defineFunc(String name,String args_str){
-
-        //if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,args_str);
+        if(defined.contains(nowFunc+"."+name))return LanguageUtils.giveFunction(language,name,args_str);
+        if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,args_str);
         return LanguageUtils.defineInnerFunction(language,name,args_str);
     }
 
     private String defineFunc(String name){
-        //if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,"");
+        if(defined.contains(name))return LanguageUtils.giveFunction(language,name,"");
+        if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,"");
         return LanguageUtils.defineInnerFunction(language,name);
     }
 
@@ -227,7 +236,6 @@ public class FunctionCompileStream extends CompileStream {
     }
 
     public String getName(String name,boolean defineArg){
-        if (funcIndex == 0)nowFunc = "global";
         if(!labelMap.containsKey(name)){
             VarLabel label = new VarLabel();
             label.setName(name);
@@ -235,6 +243,10 @@ public class FunctionCompileStream extends CompileStream {
             labelMap.put(name,label);
         }
         return labelMap.get(name).getAlis(nowFunc,funcIndex,defineArg);
+    }
+
+    public void toGlobal(){
+        nowFunc = "global";
     }
 
 

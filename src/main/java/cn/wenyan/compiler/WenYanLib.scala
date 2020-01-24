@@ -293,7 +293,7 @@ object WenYanLib {
     MATH_START -> s"[加減乘除]($value)",////
     MOD -> "所餘幾何",//
     IT_CHANGE -> IT_CHANGE,//
-    AND_OR -> s"夫「$ALL_CHARACTERS」「$ALL_CHARACTERS」中(有陽|無陰)乎",
+    AND_OR -> s"夫(「$ALL_CHARACTERS」|$FALSE|$TRUE)(「$ALL_CHARACTERS」|$FALSE|$TRUE)中(有陽|無陰)乎",
     FOR_EACH -> s"凡「$ALL_CHARACTERS」中之「$ALL_CHARACTERS」",//
     FUNCTION -> (numbersGet+"術"),//
     NO_ARGS -> "是術曰",//
@@ -310,7 +310,7 @@ object WenYanLib {
     CLEAR_STACK -> "噫",
     ADD -> s"充($value)",////
     VAL -> s"[以於]($value)",////
-    GET -> s"夫(「$ALL_CHARACTERS」|其)之($value)",
+    GET -> s"夫($VAL_DEF|其)之($value)",
     REPLACE_ARRAY -> (s"昔之"+VAL_DEF+"之("+value+")者"),
     NEW_COMMENT -> (comment+"曰"),
     OTHER -> s"變(「$ALL_CHARACTERS」|$TRUE|$FALSE)",
@@ -413,8 +413,9 @@ object WenYanLib {
     "言" -> Syntax.STRING_TYPE,
     "爻" -> Syntax.BOOL_TYPE,
     "列" -> Syntax.ARRAY_TYPE,
-    "元" -> Syntax.NULL,
-    "物" -> Syntax.NULL
+    "元" -> Syntax.VAR_TYPE,
+    "物" -> Syntax.OBJECT_TYPE,
+    "術" -> Syntax.VAR_TYPE
   )
 
 }

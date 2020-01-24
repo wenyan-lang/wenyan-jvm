@@ -43,9 +43,10 @@ public class ArrayCompileStream extends CompileStream {
         if(Utils.matches(wenyan,WenYanLib.GET())){
             String value = compiler.removeWenyan();
             String get = value.substring(value.indexOf("夫")+1);
+            String val = stream.getArray(get,stream);
 
             return new CompileResult(
-                    LanguageUtils.defineVar(language,stream.getAnsName(),stream.getArray(get,stream))
+                    LanguageUtils.defineVar(language,stream.getAnsName(),val)
             );
         }
         if(Utils.matches(wenyan,WenYanLib.CONCAT())){

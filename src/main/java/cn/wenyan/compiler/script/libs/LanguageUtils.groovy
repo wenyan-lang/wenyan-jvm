@@ -1,5 +1,7 @@
 package cn.wenyan.compiler.script.libs
 
+import cn.wenyan.compiler.WenYanLib
+
 
 class LanguageUtils {
 
@@ -15,7 +17,7 @@ class LanguageUtils {
                 .replace(Language.VALUE, value)
     }
 
-    static String defineVar(Language language,String name,String value,Syntax type){
+    static String defineVar(Language language,String name,String value,char type){
         Syntax syntax = Syntax.VAR_DEFINE
         if(isShell){
             syntax = Syntax.SHELL_VAR
@@ -23,14 +25,16 @@ class LanguageUtils {
         return language.getSyntax(syntax)
                 .replace(Language.NAME,name)
                 .replace(Language.VALUE, value)
-                .replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(type))
+                //.replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(WenYanLib.types().get(type.toString()).get()))
     }
 
-    static String defineArg(Language language,String name){
+    static String defineArg(Language language,String name,char type){
         return language.getSyntax(Syntax.FUNCTION_ARG_DEFINE)
                 .replace(Language.NAME,name)
-
+                .replace(Language.TYPE,"")
+                //.replace(Language.TYPE,language.getSyntax(WenYanLib.types().get(type.toString()).get()))
     }
+
 
 
     static String addArray(Language language,String name,String value){
@@ -74,6 +78,11 @@ class LanguageUtils {
                 .replace(Language.NAME,name)
                 .replace(Language.ARGS,args)
 
+    }
+    static String giveFunction(Language language,String name,String args){
+        return language.getSyntax(Syntax.GIVE_FUNCTION)
+                .replace(Language.NAME,name)
+                .replace(Language.ARGS,args)
     }
 
     static String putAll(Language language,String name,String value){
@@ -146,6 +155,11 @@ class LanguageUtils {
         return language.getSyntax(Syntax.THROW)
                 .replace(Language.NAME,name)
                 .replace(Language.EXCEPTION,exception)
+    }
+
+    static String define(Language language,String name){
+        return language.getSyntax(Syntax.DEFINE)
+                .replace(Language.NAME,name)
     }
 
     static String catchEx(Language language,String name){

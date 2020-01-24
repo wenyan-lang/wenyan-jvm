@@ -102,7 +102,7 @@ public class VariableCompileStream extends CompileStream{
         }
         if(Utils.matches(wenyans,WenYanLib.CHANGE())){
             String value = compiler.removeWenyan();
-            String beforeName = Utils.getStringFrom(WenYanLib.BEFORE_NAME(),value,WenYanLib.NAME_START(),WenYanLib.NAME_END());
+            String beforeName = Utils.getValue(Utils.getStringFrom(WenYanLib.BEFORE_NAME(),value,"之","者"),this);
             return change(beforeName,compiler.removeWenyan(),wenyans);
         }
         if(Utils.matches(wenyans,WenYanLib.REPLACE_ARRAY())){
@@ -286,13 +286,13 @@ public class VariableCompileStream extends CompileStream{
             }
             String getName =  i>name.size()?getAnsName():name.get(i);
             if (i >= values.size()){
-                def = LanguageUtils.defineVar(language,getName,language.getSyntax(WenYanLib.define().get(type).get()));
+                def = LanguageUtils.defineVar(language,getName,language.getSyntax(WenYanLib.define().get(type).get()),type);
             }else if(
                     values.get(i).startsWith("「")&&values.get(i).endsWith("」")
             ){
-                def = LanguageUtils.defineVar(language,getName,Utils.getValue(values.get(i),this));
+                def = LanguageUtils.defineVar(language,getName,Utils.getValue(values.get(i),this),type);
             }else{
-                def = LanguageUtils.defineVar(language,getName,setValue.apply(values.get(i)).toString());
+                def = LanguageUtils.defineVar(language,getName,setValue.apply(values.get(i)).toString(),type);
             }
 
 
@@ -303,7 +303,8 @@ public class VariableCompileStream extends CompileStream{
 
     public String getArray(String get,VariableCompileStream stream){
         int ind = Utils.indexOf(get,'之');
-        return LanguageUtils.getArray(language,getLeft(get,ind,stream),getRight(get,ind,stream));
+        String val = getRight(get,ind,stream);
+        return LanguageUtils.getArray(language,getLeft(get,ind,stream),val);
     }
 
     public String getNumberString(String wenyanNumber){

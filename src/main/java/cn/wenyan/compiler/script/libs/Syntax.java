@@ -58,6 +58,7 @@ public enum Syntax {
     BOOL_TYPE("bool_type"),
     DOUBLE_TYPE("double_type"),
     VAR_TYPE("var_type"),
+    OBJECT_TYPE("object_type"),
 
     FUNCTION_ARG_DEFINE("function_arg_define"),
 
@@ -87,7 +88,9 @@ public enum Syntax {
     CATCH_END("catch_end"),
     SHELL_VAR("shell_var"),
     DEFINE_OBJECT("define_object"),
-    DELETE("delete");
+    DELETE("delete"),
+    DEFINE("define"),
+    GIVE_FUNCTION("give_function");
 
 
 

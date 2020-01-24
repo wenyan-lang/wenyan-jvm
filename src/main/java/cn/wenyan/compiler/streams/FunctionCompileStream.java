@@ -249,6 +249,7 @@ public class FunctionCompileStream extends CompileStream {
 
     public void toGlobal(){
         nowFunc = "global";
+        funcIndex = 0;
     }
 
 

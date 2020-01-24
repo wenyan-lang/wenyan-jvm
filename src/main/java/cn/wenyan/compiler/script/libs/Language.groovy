@@ -83,7 +83,7 @@ enum Language {
                     (Syntax.THROW)                 : ("Exception $NAME = new Exception($EXCEPTION)\nthrow $NAME"),
                     (Syntax.CATCH)                 : "}catch($NAME){",
                     (Syntax.EXCEPTION_IF)          : (NAME+".message.equals($EXCEPTION)"),
-                    (Syntax.CATCH_END)             : "}\n}",
+                    (Syntax.CATCH_END)             : "}",
                     (Syntax.SHELL_VAR)             : "$NAME = $VALUE",
                     (Syntax.DEFINE_OBJECT)         : "[:]",
                     (Syntax.DELETE)                : (NAME+".remove($INDEX)"),

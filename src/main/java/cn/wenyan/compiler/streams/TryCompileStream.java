@@ -16,6 +16,8 @@ public class TryCompileStream extends CompileStream{
 
     private int index = 0;
 
+    boolean isStartElse = false;
+
     public TryCompileStream(WenYanCompilerImpl compiler) {
         super(compiler);
     }
@@ -39,7 +41,16 @@ public class TryCompileStream extends CompileStream{
             compiler.removeWenyan();
             String name = stream.getAnsName();
             nowException = name;
-            return new CompileResult(LanguageUtils.catchEx(language,name));
+            String end = "";
+            if(Utils.matches(wenyan,WenYanLib.CATCH_END())){
+                compiler.removeWenyan();
+                end = "}";
+            }
+            if(Utils.matches(wenyan,WenYanLib.EXCEPTION_ELSE())){
+                compiler.removeWenyan();
+                isStartElse = true;
+            }
+            return new CompileResult(LanguageUtils.catchEx(language,name)+end);
         }
         if(Utils.matches(wenyan,WenYanLib.EXCEPTION_IF())){
             String name = compiler.removeWenyan();
@@ -60,7 +71,12 @@ public class TryCompileStream extends CompileStream{
         if(Utils.matches(wenyan,WenYanLib.CATCH_END())){
             compiler.removeWenyan();
             index = 0;
-            return new CompileResult(language.getSyntax(Syntax.CATCH_END));
+            if(isStartElse) {
+                isStartElse = false;
+                return new CompileResult(language.getSyntax(Syntax.CATCH_END));
+            }else{
+                return new CompileResult(language.getSyntax(Syntax.CATCH_END)+"\n"+language.getSyntax(Syntax.CATCH_END));
+            }
         }
 
         return new CompileResult(false,wenyan);

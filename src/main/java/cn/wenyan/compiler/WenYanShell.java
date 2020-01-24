@@ -40,8 +40,8 @@ public class WenYanShell implements RunCode {
 
     public Object run(boolean out,String... wenyanString){
         compiler.getServerLogger().info("---------------运行之--------------------");
-
-        return run.evaluate(compiler.getGroovyCode(true,out, wenyanString));
+        String code = compiler.getGroovyCode(true,out, wenyanString);
+        return run.evaluate(code);
 
     }
 

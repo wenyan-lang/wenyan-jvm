@@ -33,7 +33,7 @@ final Map<Language,Map<String,String>> libs = [
 7. 关于项目开启的原因可以参见 [#411](https://github.com/LingDong-/wenyan-lang/issues/411)
 8. 本项目的目标语言是groovy,以实现动态语言，主要是为了实现`wenyan`可以调用java相关类库(并尽量确保js版本的wy文件)，以实现在虚拟机运行。
 9. 对于文渊阁的支持，只需要在项目的src执行wyg i 名称即可。编译器提供了相关参数实现文渊阁的编译
-
+10. 对于函数调用，如果是闭包函数，请先`吾有一術。名之曰「xx」。`定义，这样才能确保前面的函数调用后面实现的函数
 > 相关链接
 
 1. [wenyan_lang](https://github.com/LingDong-/wenyan-lang)

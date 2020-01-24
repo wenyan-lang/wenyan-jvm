@@ -12,6 +12,9 @@ class ArrayUtils {
     }
 
     static JSArray toJSArray(array){
+        if(array instanceof JSArray){
+            return array
+        }
         JSArray js = new JSArray()
         for(v in array){
             js.add(v)
@@ -26,7 +29,7 @@ class ArrayUtils {
         }
         if(str instanceof List){
             def list = new ArrayList(str)
-            return list.subList(1,list.size())
+            return new ArrayList<>(list.subList(1,list.size()))
         }
         if(str instanceof JSArray){
             return str.slice(1)

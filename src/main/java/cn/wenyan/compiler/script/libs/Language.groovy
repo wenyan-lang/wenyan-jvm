@@ -26,7 +26,7 @@ enum Language {
                     (Syntax.BREAK)                 : "break",
                     (Syntax.RETURN)                : "return $VALUE",
                     (Syntax.FUNCTION_END)          : "}",
-                    (Syntax.DEFINE_FUNCTION)       : "def $NAME = {\n $ARGS->",//
+                    (Syntax.DEFINE_FUNCTION)       : "def $NAME($ARGS){",//
                     (Syntax.FUNCTION_ARGS_SPLIT)   : ",",
                     (Syntax.IMPORT)                : "import $LIB",
                     (Syntax.IMPORT_STATIC)         : "import static $LIB.$METHOD",

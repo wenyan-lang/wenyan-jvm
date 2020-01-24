@@ -23,9 +23,9 @@ public class FunctionCompileStream extends CompileStream {
 
     private String nowFunc = "global";
 
+    private String nowInnerFunc = "global";
+
     private int stackNumber = 0;
-
-
 
     private List<String> defined = new ArrayList<>();
 
@@ -46,11 +46,13 @@ public class FunctionCompileStream extends CompileStream {
                     if(Utils.matches(wenyan,WenYanLib.NO_ARGS())||Utils.matches(wenyan,WenYanLib.DEFINE_END())){
                         funcIndex++;
                         if(funcIndex == 1)nowFunc = name;
+                        nowInnerFunc = name;
                         compiler.removeWenyan();
                         return new CompileResult(defineFunc(name));
                     }else if(Utils.matches(wenyan,WenYanLib.ARGS())){
                         funcIndex++;
                         if(funcIndex == 1)nowFunc = name;
+                        nowInnerFunc = name;
                         StringBuilder args = new StringBuilder();
                         compiler.removeWenyan();
                         if (Utils.matches(wenyan,WenYanLib.MUST())){
@@ -81,7 +83,7 @@ public class FunctionCompileStream extends CompileStream {
                             }
                         }
                     }else{
-                        defined.add(nowFunc+"."+name);
+                        defined.add(nowFunc+"."+name+"."+funcIndex);
                         return new CompileResult(LanguageUtils.define(language,name));
                     }
                 }
@@ -205,13 +207,13 @@ public class FunctionCompileStream extends CompileStream {
     //def a(a,b){
     //def a = {a,b ->
     private String defineFunc(String name,String args_str){
-        if(defined.contains(nowFunc+"."+name))return LanguageUtils.giveFunction(language,name,args_str);
+        if(defined.contains(nowFunc+"."+name+"."+(funcIndex-1)))return LanguageUtils.giveFunction(language,name,args_str);
         if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,args_str);
         return LanguageUtils.defineInnerFunction(language,name,args_str);
     }
 
     private String defineFunc(String name){
-        if(defined.contains(name))return LanguageUtils.giveFunction(language,name,"");
+        if(defined.contains(nowFunc+"."+name+"."+(funcIndex-1)))return LanguageUtils.giveFunction(language,name,"");
         if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,"");
         return LanguageUtils.defineInnerFunction(language,name);
     }

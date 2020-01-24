@@ -1,6 +1,5 @@
-import cn.wenyan.compiler.lib.ArrayUtils
-import cn.wenyan.compiler.lib.JSArray
-
+package cn.wenyan.lang
+import cn.wenyan.compiler.lib.*
 import static cn.wenyan.compiler.lib.ArrayUtils.getArray
 import static cn.wenyan.compiler.lib.ArrayUtils.getIndex
 import static cn.wenyan.compiler.lib.MathUtil.mod
@@ -19,8 +18,7 @@ class 渾沌經{
 
     static def 位名
 
-    static def 斬渾沌 = {
-        渾沌語->
+    static def 斬渾沌(渾沌語){
 
             def 諸咒 = new JSArray()
 
@@ -41,7 +39,7 @@ class 渾沌經{
             def 辭 = ''
 
             while(true){
-                if(讀> ArrayUtils.length(getArray(渾沌語))){
+                if(讀>ArrayUtils.length(getArray(渾沌語))){
                     break
                 }
                 if(getArray(渾沌語)[getIndex(讀)]==引起){
@@ -98,6 +96,8 @@ class 渾沌經{
             def 渾沌碎 = ans_755
 
             def 食數
+            def 食列
+            def 食物
             食數 = {
                 數名->
                     def 正負 = 1
@@ -170,7 +170,6 @@ class 渾沌經{
                     def ans_768 = ans_767*正負
                     return ans_768
             }
-            def 食列
             食列 = {
                 渾沌碎__2__食渾沌->
                     def 渾沌列 = new JSArray()
@@ -270,7 +269,6 @@ class 渾沌經{
                     }
                     return 渾沌列
             }
-            def 食物
             食物 = {
                 渾沌碎__2__食渾沌->
                     def 渾沌物 = [:]
@@ -381,6 +379,9 @@ class 渾沌經{
             def 抬符 = """\n"""
 
             def 包數
+            def 暗包渾沌
+            def 包列
+            def 包物
             包數 = {
                 甲__2__包渾沌->
                     def 正負 = ''
@@ -448,7 +449,6 @@ class 渾沌經{
                     }
                     return 整
             }
-            def 暗包渾沌
             暗包渾沌 = {
                 類__2__包渾沌, 實__2__包渾沌, 挪抬->
                     def 渾沌語 = ''
@@ -531,7 +531,6 @@ class 渾沌經{
                     }
                     return 渾沌語
             }
-            def 包列
             包列 = {
                 渾沌列__2__包渾沌, 挪抬->
                     def 渾沌語 = ''
@@ -555,7 +554,6 @@ class 渾沌經{
                     }
                     return 渾沌語
             }
-            def 包物
             包物 = {
                 渾沌物__2__包渾沌, 挪抬->
                     def 渾沌語 = ''

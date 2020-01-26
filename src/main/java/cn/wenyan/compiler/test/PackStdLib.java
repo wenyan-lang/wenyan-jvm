@@ -14,6 +14,7 @@ public class PackStdLib {
         WenYanCompilerImpl wenYanCompiler = (WenYanCompilerImpl) WenYanTools.makeCompiler(Language.GROOVY);
         String source = project+"src/main/java/";
         wenYanCompiler.getLibrary().getLibs().forEach((x,y)-> {
+            if(x.equals("渾沌經"))
             wenYanCompiler
                     .compile(
                             "-c", source + y.replace(".", File.separator) + ".wy",

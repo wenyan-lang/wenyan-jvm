@@ -107,10 +107,6 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         this.handler = new CommandHandler(this);
         this.supportPinyin = supportPinyin;
         if(File.separator.equals("\\")) AnsiConsole.systemInstall();
-        this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+ fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
-        this.serverLogger.info("@CopyRight wy-lang.org || github: https://github.com/LingDong-/wenyan-lang");
-        this.serverLogger.info("WenYan 3rd Party Compiler : github: https://github.com/MagicLu550/wenyan-lang_jvm/blob/master/README.md");
-        this.serverLogger.info("文言文语言的语法规则最终由LingDong的wenyan-lang为基本要素");
         this.listeners = new ArrayList<>();
         this.factory = new StreamBuilder(this)
                 .put(new VariableCompileStream(this))
@@ -209,6 +205,12 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             }
             if(sourcePath == null&&!isRun){
                 serverLogger.info("请指定sourcePath");
+            }
+            if(!isRun){
+                this.serverLogger.info(LogFormat.textFormat(LogFormat.Control.BOLD.getAnsi()+"WenYan Lang JVM Compiler"+ fg(Ansi.Color.DEFAULT),Ansi.Color.YELLOW));
+                this.serverLogger.info("@CopyRight wy-lang.org || github: https://github.com/LingDong-/wenyan-lang");
+                this.serverLogger.info("WenYan 3rd Party Compiler : github: https://github.com/MagicLu550/wenyan-lang_jvm/blob/master/README.md");
+                this.serverLogger.info("文言文语言的语法规则最终由LingDong的wenyan-lang为基本要素");
             }
 
             if(libs!=null){

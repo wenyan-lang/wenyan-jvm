@@ -235,8 +235,10 @@ public class VariableCompileStream extends CompileStream{
         FunctionCompileStream stream = compiler.getStream(FunctionCompileStream.class);
         name = stream.getName(chinese,defineArg);
         if(!runFunc) {
-            nowName = name;
-            nowNames.add(name);
+            if(define) {
+                nowName = name;
+                nowNames.add(name);
+            }
         }
         return name;
     }
@@ -298,14 +300,7 @@ public class VariableCompileStream extends CompileStream{
     }
 
     public String getNumberString(String wenyanNumber){
-        String number = getNumber(wenyanNumber)+"";
-        String intNumber = number.substring(number.lastIndexOf(".")+1);
-        for(int i = 0;i<intNumber.length();i++){
-            if(intNumber.charAt(i) != '0'){
-                return number;
-            }
-        }
-        return number.split("\\.")[0];
+        return getNumber(wenyanNumber).toString();
     }
 
     public BigDecimal getNumber(String wenyanNumber){
@@ -314,10 +309,6 @@ public class VariableCompileStream extends CompileStream{
         }
         NumberTree tree = new NumberTree();
         return tree.inputNumber(wenyanNumber).convertToNumber();
-    }
-
-    public Map<String, Integer> getArrIndex() {
-        return arrIndex;
     }
 
     public String getNowName() {

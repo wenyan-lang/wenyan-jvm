@@ -18,6 +18,7 @@ public class Main {
             CommandHandler.compileCommand.entrySet().stream().forEach(x->System.out.println(x.getValue().getOption()+": "+x.getValue().help()));
         }
         WenYanCompilerImpl compiler = new WenYanCompilerImpl(false, Language.GROOVY);
+        compiler.getRuntime().getShell().run(true,"");
         long time = ScalaUtils.countTime(()->{
             compiler.compile(args);
             return null;

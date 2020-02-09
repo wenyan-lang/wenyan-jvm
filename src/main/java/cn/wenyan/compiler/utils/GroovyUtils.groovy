@@ -4,6 +4,8 @@ import cn.wenyan.compiler.WenYanLib
 
 class GroovyUtils {
 
+    private static def number = [10,100,1000]
+
     static String formatString(String value){
         StringBuilder builder = new StringBuilder()
         for(int i = 0;i<value.length();i++){
@@ -139,7 +141,7 @@ class GroovyUtils {
                 }
             }
         }
-        if(max == 1000||max == 100||max == 10)return -1
+        if(number.contains(max))return -1
         return maxIndex
     }
 

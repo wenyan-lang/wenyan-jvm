@@ -91,7 +91,7 @@ public class PrepareCompiler {
         return builder.toString();
     }
 
-    
+
     private void expansion(List<String> strs){
         for(int i = 0;i<strs.size();i++){
             int index = i;

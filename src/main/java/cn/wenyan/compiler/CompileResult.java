@@ -34,10 +34,6 @@ public class CompileResult {
         this.result = result;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
     @Override
     public String toString() {
         return Utils.getWenyanFromArray(result.toArray(new String[0]));

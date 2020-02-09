@@ -4,6 +4,7 @@ package cn.wenyan.compiler;
 import cn.wenyan.compiler.lib.Define;
 import cn.wenyan.compiler.lib.Defines;
 import cn.wenyan.compiler.streams.FunctionCompileStream;
+import cn.wenyan.compiler.utils.GroovyUtils;
 import cn.wenyan.compiler.utils.LexerUtils;
 import cn.wenyan.compiler.utils.Utils;
 
@@ -90,6 +91,7 @@ public class PrepareCompiler {
         return builder.toString();
     }
 
+    //TODO 替换字符串的问题
     private void expansion(List<String> strs){
         for(int i = 0;i<strs.size();i++){
             int index = i;
@@ -101,7 +103,7 @@ public class PrepareCompiler {
                    
                     String result = macroMapping.get(v);
                     for(int j = 0;j<values.size();j++){
-                        result = result.replace(ns.get(j), values.get(j));
+                        result = GroovyUtils.replaceWithOutString(result,ns.get(j), values.get(j));
                     }
                     strs.set(index,result);
                     return;
@@ -109,6 +111,8 @@ public class PrepareCompiler {
             });
         }
     }
+
+
 
     private List<String> getImportsWenYan(List<String> lists){
         List<String> list = new ArrayList<>();

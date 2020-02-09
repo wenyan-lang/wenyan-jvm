@@ -16,14 +16,9 @@ import java.util.function.Function;
 
 public class VariableCompileStream extends CompileStream{
 
-
-    private Map<String,Integer> arrIndex = new HashMap<>();
-
     private String nowName;
 
     private List<String> nowNames = new ArrayList<>();
-
-    private Map<String,String> varMap = new HashMap<>();
 
     private long varIndex = 0;
 

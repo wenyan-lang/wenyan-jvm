@@ -143,4 +143,41 @@ class GroovyUtils {
         return maxIndex
     }
 
+    static String replace(String before,String replaced,String after,List range){
+        int close = 0
+        StringBuilder afterBuilder = new StringBuilder()
+        StringBuilder now = new StringBuilder()
+        int afterStart = 0
+        for(s in before){
+            if(s == range[0]){
+                close ++
+            }
+            if(s == range[1]){
+                close --
+            }
+            now.append(s)
+            if(s == replaced[afterStart]){
+                afterStart++
+            }else{
+                afterStart = 0
+                afterBuilder.append(now)
+                now = new StringBuilder()
+            }
+            if(afterStart == replaced.size()){
+                if(close == 0){
+                    afterBuilder.append(after)
+                }else{
+                    afterBuilder.append(now)
+                }
+                afterStart = 0
+                now = new StringBuilder()
+            }
+        }
+        return afterBuilder
+    }
+
+    static String replaceWithOutString(String before,String replaced,String after){
+        replace(before,replaced,after,["「","」"])
+    }
+
 }

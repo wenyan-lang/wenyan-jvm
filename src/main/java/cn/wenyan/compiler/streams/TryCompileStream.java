@@ -16,7 +16,7 @@ public class TryCompileStream extends CompileStream{
 
     private int index = 0;
 
-    boolean isStartElse = false;
+    private boolean isStartElse = false;
 
     public TryCompileStream(WenYanCompilerImpl compiler) {
         super(compiler);

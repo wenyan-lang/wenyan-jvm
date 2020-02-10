@@ -89,7 +89,8 @@ enum Language {
                     (Syntax.DELETE)                : (NAME+".remove($INDEX)"),
                     (Syntax.OBJECT_TYPE)           : ("Map "),
                     (Syntax.DEFINE)                : "def $NAME",
-                    (Syntax.GIVE_FUNCTION)         : "$NAME = {\n $ARGS->"
+                    (Syntax.GIVE_FUNCTION)         : "$NAME = {\n $ARGS->",
+                    (Syntax.DEFINE_GIVE_FUNCTION)  : "def $NAME = {\n $ARGS->"
             ],new GroovyCompiler()
     );
 

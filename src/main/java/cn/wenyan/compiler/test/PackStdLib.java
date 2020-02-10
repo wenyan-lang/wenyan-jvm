@@ -10,11 +10,10 @@ public class PackStdLib {
     //施「JSON.stringify」於「太白餛飩」。書之。
     //施「包渾沌」於「太白餛飩」。書之。
     public static void main(String[] args) {
-        String project = "/Users/luchangcun/Projects/new/jvm/";
+        String project = "/Users/luchangcun/Projects/new/wenyan-jvm/";
         WenYanCompilerImpl wenYanCompiler = (WenYanCompilerImpl) WenYanTools.makeCompiler(Language.GROOVY);
         String source = project+"src/main/java/";
         wenYanCompiler.getLibrary().getLibs().forEach((x,y)-> {
-            if(x.equals("渾沌經"))
             wenYanCompiler
                     .compile(
                             "-c", source + y.replace(".", File.separator) + ".wy",

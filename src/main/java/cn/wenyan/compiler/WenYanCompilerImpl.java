@@ -50,6 +50,8 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
     protected Library library;
 
+    private String compilingFile = "";
+
     private CompilerConfig compilerConfig;
 
     private List<Listener> listeners;
@@ -363,7 +365,11 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
     }
 
-    public String getGroovyCode(boolean addNow,boolean outInConsole,String... wenyanString){
+    public String getCompilingFile() {
+        return compilingFile;
+    }
+
+    public String getGroovyCode(boolean addNow, boolean outInConsole, String... wenyanString){
         StringBuilder groovyCode = new StringBuilder();
         if(addNow)
             groovyCode.append(languageType.getSyntax(Syntax.IMPORT_WITH));
@@ -392,6 +398,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
 
     public void compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
+        this.compilingFile = file.getName().split("\\.")[0];
         compileToGroovy(file,classPath,outDir, getWenYanCodeByFile(file),mainClass,groovy);
     }
     public String getSourcePath() {

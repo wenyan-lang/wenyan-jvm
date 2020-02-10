@@ -207,15 +207,19 @@ public class FunctionCompileStream extends CompileStream {
     //def a(a,b){
     //def a = {a,b ->
     private String defineFunc(String name,String args_str){
+        boolean defineOut = false;
         if(defined.contains(nowFunc+"."+name+"."+(funcIndex-1)))return LanguageUtils.giveFunction(language,name,args_str);
-        if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,args_str);
-        return LanguageUtils.defineInnerFunction(language,name,args_str);
+        if(funcIndex == 1&& !name.equals(compiler.getCompilingFile()))return LanguageUtils.defineFunction(language,name,args_str);
+        if(funcIndex == 1 && name.equals(compiler.getCompilingFile()))defineOut = true;
+        return LanguageUtils.defineInnerFunction(language,name,args_str,defineOut);
     }
 
     private String defineFunc(String name){
+        boolean defineOut = false;
         if(defined.contains(nowFunc+"."+name+"."+(funcIndex-1)))return LanguageUtils.giveFunction(language,name,"");
-        if(funcIndex == 1)return LanguageUtils.defineFunction(language,name,"");
-        return LanguageUtils.defineInnerFunction(language,name);
+        if(funcIndex == 1 && !name.equals(compiler.getCompilingFile()))return LanguageUtils.defineFunction(language,name,"");
+        if(funcIndex == 1 && name.equals(compiler.getCompilingFile()))defineOut = true;
+        return LanguageUtils.defineInnerFunction(language,name,defineOut);
     }
 
     public String getClassName(String value01){

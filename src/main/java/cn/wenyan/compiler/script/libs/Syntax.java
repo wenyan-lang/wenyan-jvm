@@ -90,7 +90,8 @@ public enum Syntax {
     DEFINE_OBJECT("define_object"),
     DELETE("delete"),
     DEFINE("define"),
-    GIVE_FUNCTION("give_function");
+    GIVE_FUNCTION("give_function"),
+    DEFINE_GIVE_FUNCTION("def_give");
 
 
 

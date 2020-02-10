@@ -31,6 +31,7 @@ public class CommandHandler {
         compileCommand.put("-wyg",new WenYuanGeCommand());
         compileCommand.put("-wd",new WenYuanGeDownloadCommand());
         compileCommand.put("-lv",new LexerViewerCommand());
+        compileCommand.put("-st",new StrongTypeCommand());
     }
 
     public CommandHandler(WenYanCompilerImpl compiler){

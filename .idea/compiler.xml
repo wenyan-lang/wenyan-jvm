@@ -10,6 +10,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="wenyan_lang" />
+        <module name="wenyan-jvm" />
         <module name="wenyan_lang_jvm" />
       </profile>
     </annotationProcessing>

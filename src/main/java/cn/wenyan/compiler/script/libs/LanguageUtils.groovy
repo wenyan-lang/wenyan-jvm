@@ -17,15 +17,20 @@ class LanguageUtils {
                 .replace(Language.VALUE, value)
     }
 
-    static String defineVar(Language language,String name,String value,char type){
+    static String defineVar(Language language,String name,String value,char type,boolean isStrong){
         Syntax syntax = Syntax.VAR_DEFINE
         if(isShell){
             syntax = Syntax.SHELL_VAR
         }
-        return language.getSyntax(syntax)
+        String result = language.getSyntax(syntax)
                 .replace(Language.NAME,name)
                 .replace(Language.VALUE, value)
-                //.replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(WenYanLib.types().get(type.toString()).get()))
+        if(isStrong){
+            return result.replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(WenYanLib.types().get(type.toString()).get()))
+        }else{
+            return result
+        }
+
     }
 
     static String defineArg(Language language,String name,char type){

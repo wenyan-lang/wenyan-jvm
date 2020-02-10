@@ -2,6 +2,8 @@ package cn.wenyan.compiler.command;
 
 public class CompilerConfig {
 
+    private boolean strongType;
+
     private boolean lexerViewer;
 
     private String wygDownload;
@@ -27,6 +29,14 @@ public class CompilerConfig {
     private String sourcePath;
 
     private String[] runArgs = new String[0];
+
+    public boolean isStrongType() {
+        return strongType;
+    }
+
+    public void setStrongType(boolean strongType) {
+        this.strongType = strongType;
+    }
 
     public boolean isSupportPinYin() {
         return supportPinYin;

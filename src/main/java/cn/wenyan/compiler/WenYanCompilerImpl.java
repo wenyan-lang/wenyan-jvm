@@ -14,10 +14,7 @@ import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Library;
 import cn.wenyan.compiler.script.libs.Syntax;
 import cn.wenyan.compiler.streams.*;
-import cn.wenyan.compiler.utils.GroovyUtils;
-import cn.wenyan.compiler.utils.LexerUtils;
-import cn.wenyan.compiler.utils.ResultEntry;
-import cn.wenyan.compiler.utils.Utils;
+import cn.wenyan.compiler.utils.*;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.tools.Compiler;
@@ -43,6 +40,8 @@ import static cn.wenyan.compiler.log.LogFormat.fg;
 public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
     private Map<File,File> wygFiles = new HashMap<>();
+
+    private PrettyCode pretty;
 
     private boolean strongType = false;
 
@@ -130,6 +129,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         this.classPath = sourcePath;
         this.loadPlugins();
         this.prepareCompiler = new PrepareCompiler(this);
+        this.pretty = language.getPretty();
     }
 
 
@@ -449,7 +449,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                     String result = results.get(i);
                     if (result.startsWith("def")||result.startsWith("class")){
                         StringBuilder builder = new StringBuilder();
-                        String[] str = GroovyUtils.splitGroovyCode(result,'\n').toArray(new String[0]);
+                        String[] str = GroovyUtils.splitGroovyCode(result,"\n").toArray(new String[0]);
                         for(int z = 0;z<str.length;z++){
                             if(str[z].startsWith("def"))
                                 builder.append("static ").append(str[z]).append("\n");
@@ -500,10 +500,10 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                         builder.append(results.get(i)).append("\n");
                         rs.set(i, null);
                     } else if(results.get(i).startsWith("static")&&results.get(i).contains("=")){
-                        String[] defs = GroovyUtils.splitGroovyCode(results.get(i),'\n').toArray(new String[0]);
+                        String[] defs = GroovyUtils.splitGroovyCode(results.get(i),"\n").toArray(new String[0]);
                         StringBuilder builder1 = new StringBuilder();
                         for(String def : defs){
-                            String[] name_value = GroovyUtils.splitGroovyCode(def,'=').toArray(new String[0]);
+                            String[] name_value = GroovyUtils.splitGroovyCode(def,"=").toArray(new String[0]);
                             builder1.append(name_value[0]).append("\n");
                             builder.append(name_value[0].split(" ")[2]).append("=").append(name_value[1]).append("\n");
                         }
@@ -592,7 +592,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
     private void createOutFile(File classFile,File out,String code,File parent,boolean isGroovy) throws IOException{
         if(!classFile.exists())classFile.createNewFile();
 
-        FileUtils.write(out,code,System.getProperty("file.coding"));
+        FileUtils.write(out,pretty.pretty(code),System.getProperty("file.coding"));
         if(!parent.exists())parent.mkdirs();
 
         compileToClass(out,classFile);

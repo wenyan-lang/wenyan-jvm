@@ -16,13 +16,13 @@ class GroovyUtils {
         return builder.toString()
     }
 
-    static List<String> splitGroovyCode(String code,char chars){
+    static List<String> splitGroovyCode(String code,String chars){
         int index = 0
         def arr = []
         StringBuilder builder = new StringBuilder()
         boolean start = false
         for(int i = 0;i<code.length();i++){
-            if(code[i].equals("\"")) {
+            if(code[i].equals("\"")||code[i].equals("'")) {
                 if (!start) {
                     index++
                     start = true
@@ -32,7 +32,7 @@ class GroovyUtils {
                 }
             }
             if(index == 0){
-                if(code[i] == chars.toString()){
+                if(code[i] == chars){
                     arr.add(builder.toString())
                     builder = new StringBuilder()
                 }else{

@@ -3,11 +3,9 @@ package cn.wenyan.compiler.script.libs
 import cn.wenyan.compiler.GroovyCompiler
 import cn.wenyan.compiler.LanguageCompiler
 import cn.wenyan.compiler.lib.ArrayUtils
-import cn.wenyan.compiler.lib.Define
-import cn.wenyan.compiler.lib.Defines
-import cn.wenyan.compiler.lib.JSArray
 import cn.wenyan.compiler.lib.MathUtil
-import cn.wenyan.compiler.lib.WenYanException
+import cn.wenyan.compiler.utils.GroovyPrettyCode
+import cn.wenyan.compiler.utils.PrettyCode
 
 enum Language {
 
@@ -91,7 +89,7 @@ enum Language {
                     (Syntax.DEFINE)                : "def $NAME",
                     (Syntax.GIVE_FUNCTION)         : "$NAME = {\n $ARGS->",
                     (Syntax.DEFINE_GIVE_FUNCTION)  : "def $NAME = {\n $ARGS->"
-            ],new GroovyCompiler()
+            ],new GroovyCompiler(),new GroovyPrettyCode()
     );
 
     static final String EXCEPTION ="%{exception}%"
@@ -125,9 +123,12 @@ enum Language {
 
     protected LanguageCompiler compiler
 
-    Language(syntaxLib,compiler){
+    protected PrettyCode pretty;
+
+    Language(syntaxLib,compiler,pretty){
         this.syntaxLib = syntaxLib
         this.compiler = compiler
+        this.pretty = pretty
     }
 
     String getSyntax(Syntax property){
@@ -136,5 +137,9 @@ enum Language {
 
     LanguageCompiler languageCompiler(){
         return compiler
+    }
+
+    PrettyCode getPretty() {
+        return pretty
     }
 }

@@ -10,4 +10,5 @@ public abstract class Listener {
 
     public abstract void onCompileFinish(CompileStream stream, List<String> list);
 
+    public abstract void onCompileFailed(CompileStream stream,List<String> list);
 }

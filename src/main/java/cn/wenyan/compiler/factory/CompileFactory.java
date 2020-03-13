@@ -34,10 +34,10 @@ public class CompileFactory {
         copy = new ArrayList<>();
         copy.addAll(wenyan);
         for(CompileStream stream : streamList){
-            compiler.callListener(stream,wenyan,true);
+            compiler.callListenerStart(stream,wenyan);
             CompileResult result = stream.compile(wenyan);
             if(result.isSuccess()){
-                compiler.callListener(stream,result.getResult(),false);
+                compiler.callListenerEnd(stream,result.getResult());
                 return result.getResult();
             }else{
                 if(!wenyan.equals(copy)){
@@ -45,6 +45,7 @@ public class CompileFactory {
                     wenyan.addAll(copy);
                     compiler.clearIndexCode();
                 }
+                compiler.callListenerFailed(stream,wenyan);
             }
         }
         return Assert.syntaxError(index+"语句组 Line: "+(compiler.getIndexCode())+": "+wenyan.get(0));

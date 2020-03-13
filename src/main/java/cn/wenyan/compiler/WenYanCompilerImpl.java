@@ -353,15 +353,21 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         return listeners;
     }
 
-    public void callListener(CompileStream stream,List<String> wenyans,boolean start){
-        if(start){
-            for(Listener listener : listeners){
-                listener.onCompileStart(stream,wenyans);
-            }
-        }else{
-            for(Listener listener : listeners){
-                listener.onCompileFinish(stream,wenyans);
-            }
+    public void callListenerStart(CompileStream stream,List<String> wenyans){
+        for(Listener listener : listeners){
+            listener.onCompileStart(stream,wenyans);
+        }
+    }
+
+    public void callListenerEnd(CompileStream stream,List<String> wenyans){
+        for(Listener listener : listeners){
+            listener.onCompileFinish(stream,wenyans);
+        }
+    }
+
+    public void callListenerFailed(CompileStream stream,List<String> wenyans){
+        for(Listener listener : listeners){
+            listener.onCompileFailed(stream,wenyans);
         }
     }
 

@@ -111,6 +111,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         this.supportPinyin = supportPinyin;
         if(File.separator.equals("\\")) AnsiConsole.systemInstall();
         this.listeners = new ArrayList<>();
+        this.loadPlugins();
         this.factory = new StreamBuilder(this)
                 .put(new VariableCompileStream(this))
                 .put(new CommentCompileStream(this))
@@ -127,7 +128,6 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         this.mainClass = "";
         this.sourcePath = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParent();
         this.classPath = sourcePath;
-        this.loadPlugins();
         this.prepareCompiler = new PrepareCompiler(this);
         this.pretty = language.getPretty();
     }

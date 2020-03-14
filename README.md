@@ -189,11 +189,6 @@ final Map<Language,Map<String,String>> libs = [
 
 本編譯器允許直接使用`書之`，可以輸出最後定義的變量
 
-| wenyan | groovy |
-|---|---|
-|`有言「「好。好。」」。書之。`|`def ans_1 = '好。好。' println(ans_1)`|
-|`有列空。名之曰「空也」`|`def kongYe = []`|
-
 调用静态方法
 
 ```

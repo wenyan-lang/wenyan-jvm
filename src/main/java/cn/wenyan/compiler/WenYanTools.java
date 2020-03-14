@@ -8,4 +8,8 @@ public class WenYanTools {
     public static WenYanCompiler makeCompiler(Language language){
         return new WenYanCompilerImpl(false,language);
     }
+
+    public static WenYanCompiler getDefault(){
+        return makeCompiler(Language.GROOVY);
+    }
 }

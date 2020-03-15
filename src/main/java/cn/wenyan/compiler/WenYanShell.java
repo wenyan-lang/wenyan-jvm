@@ -41,6 +41,7 @@ public class WenYanShell implements RunCode {
     public synchronized Object run(boolean out,String... wenyanString){
         compiler.getServerLogger().info("---------------运行之--------------------");
         String code = compiler.getGroovyCode(true,out, wenyanString);
+        //System.out.println(code);
         return run.evaluate(code);
 
     }

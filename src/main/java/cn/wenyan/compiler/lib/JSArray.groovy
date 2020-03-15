@@ -1,7 +1,11 @@
 package cn.wenyan.compiler.lib
 
+import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
+
 import java.util.Map.Entry
 
+@CompileStatic
 class JSArray<V> extends HashMap<Object,V> {
 
     private Integer index = 0
@@ -28,7 +32,7 @@ class JSArray<V> extends HashMap<Object,V> {
     }
 
     JSArray<V> slice(int index){
-        if(index > this.size())return new JSArray<>()
+        if(index > this.size())return new JSArray<V>()
         JSArray jsArray = (JSArray) this.clone()
         for(int i = 0;i<index;i++){
             jsArray.remove(i)

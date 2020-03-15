@@ -6,7 +6,9 @@ import cn.wenyan.compiler.lib.ArrayUtils
 import cn.wenyan.compiler.lib.MathUtil
 import cn.wenyan.compiler.utils.GroovyPrettyCode
 import cn.wenyan.compiler.utils.PrettyCode
+import groovy.transform.CompileStatic
 
+@CompileStatic
 enum Language {
 
     GROOVY(
@@ -123,9 +125,9 @@ enum Language {
 
     protected LanguageCompiler compiler
 
-    protected PrettyCode pretty;
+    protected PrettyCode pretty
 
-    Language(syntaxLib,compiler,pretty){
+    Language(Map syntaxLib,LanguageCompiler compiler,PrettyCode pretty){
         this.syntaxLib = syntaxLib
         this.compiler = compiler
         this.pretty = pretty

@@ -1,20 +1,12 @@
 package cn.wenyan.compiler.utils
 
 import cn.wenyan.compiler.WenYanLib
+import groovy.transform.CompileStatic
 
+@CompileStatic
 class GroovyUtils {
 
-    private static def number = [10,100,1000]
-
-    static String formatString(String value){
-        StringBuilder builder = new StringBuilder()
-        for(int i = 0;i<value.length();i++){
-            if(!(value[i] == "\\"&&i+1<=value.length()-1&&value[i+1]!= "\\")){
-                builder.append(value[i])
-            }
-        }
-        return builder.toString()
-    }
+    private static List number = [10,100,1000]
 
     static List<String> splitGroovyCode(String code,String chars){
         int index = 0

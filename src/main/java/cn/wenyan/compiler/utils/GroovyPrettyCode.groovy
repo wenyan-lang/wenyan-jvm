@@ -1,5 +1,8 @@
-package cn.wenyan.compiler.utils;
+package cn.wenyan.compiler.utils
 
+import groovy.transform.CompileStatic;
+
+@CompileStatic
 class GroovyPrettyCode implements PrettyCode {
 
     @Override

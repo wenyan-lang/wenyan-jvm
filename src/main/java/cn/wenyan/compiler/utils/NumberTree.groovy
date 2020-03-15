@@ -1,6 +1,8 @@
-package cn.wenyan.compiler.utils;
+package cn.wenyan.compiler.utils
 
+import groovy.transform.CompileStatic;
 
+@CompileStatic
 class NumberTree {
 
     private int prefix = 1
@@ -60,6 +62,7 @@ class NumberTree {
 
 
 }
+@CompileStatic
 class Node{
 
     static int id = 0

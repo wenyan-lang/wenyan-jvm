@@ -10,13 +10,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="wenyan_lang" />
-        <module name="wenyan-jvm" />
         <module name="wenyan_lang_jvm" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="jvm" target="1.8" />
       <module name="project_example" target="1.5" />
+      <module name="wenyan-jvm" target="1.8" />
       <module name="wenyan-lang_jvm" target="1.8" />
       <module name="Wenyan4jProjectManager" target="1.8" />
       <module name="wyg4j" target="1.8" />

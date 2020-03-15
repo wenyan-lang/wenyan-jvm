@@ -1,14 +1,17 @@
 package cn.wenyan.compiler.script.libs
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class Library {
 
     private Language language
 
-    Library(language) {
+    Library(Language language) {
         this.language = language
     }
 
-    private final Map<Language,Map<String,String>> libs = [
+    private final Map<Language,LinkedHashMap<String,String>> libs = [
             (Language.GROOVY) : [
                     "算經" : "cn.wenyan.lang.算經",
                     "位經" : "cn.wenyan.lang.位經",

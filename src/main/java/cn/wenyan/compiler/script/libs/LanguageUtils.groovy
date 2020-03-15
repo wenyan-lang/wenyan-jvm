@@ -1,8 +1,9 @@
 package cn.wenyan.compiler.script.libs
 
 import cn.wenyan.compiler.WenYanLib
+import groovy.transform.CompileStatic
 
-
+@CompileStatic
 class LanguageUtils {
 
     private static boolean isShell = false

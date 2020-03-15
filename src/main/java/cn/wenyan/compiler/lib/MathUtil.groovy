@@ -1,5 +1,8 @@
 package cn.wenyan.compiler.lib
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class MathUtil {
 
     static Number mod(BigDecimal decimal1,BigDecimal decimal2){

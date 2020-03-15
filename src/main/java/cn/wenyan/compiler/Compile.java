@@ -8,5 +8,10 @@ package cn.wenyan.compiler;
 
 public interface Compile {
 
+    /**
+     * 若以此，需行标准之指令选项哉。
+     * @param args 选项之令
+     * @return 变数之阴阳
+     */
     int compile(String... args);
 }

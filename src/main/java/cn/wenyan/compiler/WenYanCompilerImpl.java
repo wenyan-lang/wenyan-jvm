@@ -241,12 +241,14 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
                         clz.getDeclaredMethod("main",String[].class).invoke(null,(Object)args);
                     }catch (Exception e){
                         serverLogger.error("",e);
+                        return 1;
                     }
                 }
             }
             wygFiles.forEach((x,y)->x.renameTo(y));
-        }catch (IOException e){
+        }catch (Exception e){
             serverLogger.error("",e);
+            return 1;
         }
         return 0;
     }
@@ -403,7 +405,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
 
 
-    public void compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws IOException{
+    public void compileOut(String classPath,File file, File outDir,String mainClass,boolean groovy) throws Exception{
         this.compilingFile = file.getName().split("\\.")[0];
         compileToGroovy(file,classPath,outDir, getWenYanCodeByFile(file),mainClass,groovy);
     }
@@ -528,7 +530,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
     //TODO 如果未来实现了类，必须要把类剥离出来
     //TODO groovy独特
 
-    private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass,boolean isGroovy){
+    private File compileToGroovy(File thisFile,String sc,File file,String wenyanString,String mainClass,boolean isGroovy) throws Exception{
         try {
             StringBuilder builder = new StringBuilder();
             mainClass = mainClass==null?"":mainClass;
@@ -554,11 +556,14 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             return out;
         }catch (Exception e){
             serverLogger.error("Syntax Error",e);
-            return null;
+            throw e;
         }
     }
 
     private void appendClassName(int index,String mainClass,String className,List<String> codes,StringBuilder builder,String annotation,String pack){
+        if(codes.size()>=1&&codes.get(0).equals(ERROR)){
+            throw new RuntimeException("compile error");
+        }
         if(index !=-1){
             builder.append("package ");
             builder.append(pack);
@@ -606,7 +611,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         if(isGroovy)out.delete();
     }
 
-    private void compileWyg(File f,File cp) throws IOException{
+    private void compileWyg(File f,File cp) throws Exception{
         File xu = new File(f,WYG_LIB);
         File xuAfter = new File(f,f.getName()+".wy");
         xu.renameTo(xuAfter);
@@ -615,7 +620,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         wygFiles.put(xuAfter,xu);
     }
 
-    private void compileWygs(File[] fileLibs,File cp) throws IOException{
+    private void compileWygs(File[] fileLibs,File cp) throws Exception{
         if(fileLibs!=null){
             for(File f : fileLibs){
                 File[] fs = f.listFiles();

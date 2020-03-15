@@ -257,7 +257,7 @@ public class PrepareCompiler {
                 String filePath = path + File.separator + imp.replace(".", File.separator) + ".wy";
                 try {
                     compiler.compileOut(compiler.getSourcePath(), new File(filePath), new File(compiler.getClassPath()), compiler.getMainClass(), true);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     compiler.getServerLogger().error("", e);
                 }
             }

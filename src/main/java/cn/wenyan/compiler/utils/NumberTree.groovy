@@ -60,7 +60,6 @@ class NumberTree {
         for(int i = 0;i<nodes.size();i+=2){
             result += GroovyUtils.getNumber(nodes[i].value) * GroovyUtils.getNumber(i+1<nodes.size()?nodes[i+1].value:"一")
         }
-        println(result)
         (result + floatValue)*prefix
     }
 
@@ -84,9 +83,5 @@ class Node{
     @Override
     String toString() {
         return value
-    }
-
-    boolean isEmpty(){
-        return value.empty
     }
 }

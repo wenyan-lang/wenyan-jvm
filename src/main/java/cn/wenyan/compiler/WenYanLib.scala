@@ -3,6 +3,7 @@ package cn.wenyan.compiler
 import java.util.regex.Pattern
 
 import cn.wenyan.compiler.script.libs.Syntax
+import cn.wenyan.compiler.utils.LexerUtils
 
 
 object WenYanLib {
@@ -229,6 +230,7 @@ object WenYanLib {
   ).addAll(prefixAfter)
 
 
+
   //二分三釐八毫八絲三忽八微
 
   val numbers = Map[Char,BigDecimal0](
@@ -417,5 +419,7 @@ object WenYanLib {
     "物" -> Syntax.OBJECT_TYPE,
     "術" -> Syntax.VAR_TYPE
   )
+
+  val mapSyntaxs = LexerUtils.getUtilsMap(syntaxs)
 
 }

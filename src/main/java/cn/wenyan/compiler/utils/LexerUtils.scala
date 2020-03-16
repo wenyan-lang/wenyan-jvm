@@ -178,23 +178,27 @@ object LexerUtils {
         val patterns = WenYanLib.syntaxs
         for(p <- patterns){
             if(target.matches(p._2)){
+                if(!SpecialSyntaxLexer.matches(p,index,strings,patterns)){
+                    return false
+                }
                 //对于夫的特殊处理
-                if(p._2.equals(patterns(WenYanLib.STATEMENT))){
-                    if(index+1<=strings.length-1&&strings(index+1) == '之')return false
-                }
-                if(p._2.equals(patterns(WenYanLib.GET))){
-                    if(index+1<=strings.length-1&&strings(index+1) == '餘')return false
-                }
-                if(p._2.equals(patterns(WenYanLib.AND_OR))){
-                    if(index+1<=strings.length-1&&strings(index+1) == '「')return false
-                }
-                if(!wenYanCompilerImpl.callPluginOnMatch(p._2)){
+                if(!wenYanCompilerImpl.callPluginOnMatch(p,index,strings,WenYanLib.mapSyntaxs)){
                     return false
                 }
                 return true
             }
         }
         false
+    }
+
+    def getUtilsMap(map : scala.collection.mutable.Map[String,String]): util.Map[String,String] ={
+        val hashMap = new util.HashMap[String,String]()
+        map.foreach{
+            x =>{
+                hashMap.put(x._1,x._2)
+            }
+        }
+        hashMap
     }
 
 

@@ -21,6 +21,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.tools.Compiler;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import scala.Tuple2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -375,11 +376,11 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
     }
 
-    public boolean callPluginOnMatch(String pattern){
+    public boolean callPluginOnMatch(Tuple2 pattern,int index,String strings,Map<String,String> patterns){
         Collection<Plugin> plugins = pluginManager.getPlugins().values();
         boolean notSkip = true;
         for(Plugin plugin : plugins){
-            notSkip = plugin.onCanMatch(pattern);
+            notSkip = plugin.onCanMatch(pattern,index,strings,patterns);
         }
         return notSkip;
     }

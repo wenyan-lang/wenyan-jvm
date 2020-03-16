@@ -22,6 +22,6 @@ abstract class Plugin {
     //LexerUtils的canMatch中的三个if判断
     //如语法有夫「x」之长和夫「x」，为了防止分割夫「x」之长，可以在匹配夫「x」时
     //后面有没有之，来组合上面的语法
-    def onCanMatch(pattern: String) : Boolean
+    def onCanMatch(p : (String,String),index : Int,strings: String,patterns : util.Map[String,String]) : Boolean
 
 }

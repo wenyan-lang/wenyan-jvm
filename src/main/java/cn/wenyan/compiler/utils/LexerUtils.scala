@@ -4,7 +4,7 @@ import java.util
 
 import cn.wenyan.compiler.{WenYanCompilerImpl, WenYanLib}
 import cn.wenyan.compiler.exceptions.SyntaxException
-import cn.wenyan.compiler.plugins.Plugin
+
 
 import scala.util.control.Breaks
 

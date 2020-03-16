@@ -376,7 +376,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
     }
 
-    public boolean callPluginOnMatch(Tuple2 pattern,int index,String strings,Map<String,String> patterns){
+    public boolean callPluginOnMatch(Tuple2<String,String> pattern,int index,String strings,Map<String,String> patterns){
         Collection<Plugin> plugins = pluginManager.getPlugins().values();
         boolean notSkip = true;
         for(Plugin plugin : plugins){

@@ -4,6 +4,9 @@ package cn.wenyan.compiler;
 import cn.wenyan.compiler.command.CommandHandler;
 import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.utils.ScalaUtils;
+import groovy.lang.GroovyClassLoader;
+
+import java.io.File;
 
 /**
  * 万事开头必有难，指令重器蔑则空。
@@ -21,6 +24,14 @@ public class Main {
         if(args.length == 1 && args[0].equals("shell")){
             WenYanShell.run();
             return;
+        }
+        if(args.length == 2 && args[0].equals("run")) {
+            try {
+                Class<?> runner = new GroovyClassLoader(Main.class.getClassLoader()).parseClass(new File(args[1]));
+                runner.getDeclaredMethod("main",String[].class).invoke(null,(Object)args);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         if (args.length == 0||args[0].equals("help")){

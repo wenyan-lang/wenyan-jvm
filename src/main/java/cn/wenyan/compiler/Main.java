@@ -31,11 +31,12 @@ public class Main {
                 runner.getDeclaredMethod("main",String[].class).invoke(null,(Object)args);
             }catch (Exception e){
                 e.printStackTrace();
-            }
+            return;
         }
 
         if (args.length == 0||args[0].equals("help")){
             CommandHandler.compileCommand.entrySet().stream().forEach(x->System.out.println(x.getValue().getOption()+": "+x.getValue().help()));
+            return;
         }
         WenYanCompilerImpl compiler = new WenYanCompilerImpl(false, Language.GROOVY);
         long time = ScalaUtils.countTime(()->{

@@ -570,7 +570,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             serverLogger.info("得文件为: "+out);
             return out;
         }catch (Exception e){
-            serverLogger.error("Syntax Error",e);
+            serverLogger.error("Syntax Error: "+e.getMessage());
             throw e;
         }
     }

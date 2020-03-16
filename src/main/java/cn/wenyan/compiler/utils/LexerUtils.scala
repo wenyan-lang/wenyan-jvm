@@ -2,8 +2,9 @@ package cn.wenyan.compiler.utils
 
 import java.util
 
-import cn.wenyan.compiler.WenYanLib
+import cn.wenyan.compiler.{WenYanCompilerImpl, WenYanLib}
 import cn.wenyan.compiler.exceptions.SyntaxException
+import cn.wenyan.compiler.plugins.Plugin
 
 import scala.util.control.Breaks
 
@@ -21,9 +22,9 @@ object LexerUtils {
 
     val loop = Breaks
 
-    def getWenYan(string: String) : String ={
+    def getWenYan(string: String,compiler : WenYanCompilerImpl) : String ={
         val builder = new StringBuilder
-        wenYanLexer(string).stream().forEach(
+        wenYanLexer(string,compiler).stream().forEach(
             x=>if(!x.equals(""))builder.append(x).append("。")
         )
         builder.toString()
@@ -74,7 +75,7 @@ object LexerUtils {
         builder.toString()
     }
 
-    def wenYanLexer(strings: String) : java.util.List[String] ={
+    def wenYanLexer(strings: String,compiler : WenYanCompilerImpl) : java.util.List[String] ={
         val string = trimWenYanX(newStringToCommon(strings.trim))
         val list = new util.ArrayList[String]()
         var builder = new StringBuilder
@@ -157,7 +158,7 @@ object LexerUtils {
 
                 if(!isAppend)builder.append(s)
 
-                if(canMatch(builder.toString(),strings,index)){
+                if(canMatch(builder.toString(),strings,index,compiler)){
                     list.add(builder.toString())
                     builder = new StringBuilder
                 }
@@ -173,7 +174,7 @@ object LexerUtils {
 
     private def isNumber(s:Char):Boolean = s.toString.matches(WenYanLib.numbersGet)
 
-    private def canMatch(target: String,strings : String,index : Int): Boolean ={
+    private def canMatch(target: String,strings : String,index : Int,wenYanCompilerImpl: WenYanCompilerImpl): Boolean ={
         val patterns = WenYanLib.syntaxs
         for(p <- patterns){
             if(target.matches(p._2)){
@@ -186,6 +187,9 @@ object LexerUtils {
                 }
                 if(p._2.equals(patterns(WenYanLib.AND_OR))){
                     if(index+1<=strings.length-1&&strings(index+1) == '「')return false
+                }
+                if(!wenYanCompilerImpl.callPluginOnMatch(p._2)){
+                    return false
                 }
                 return true
             }

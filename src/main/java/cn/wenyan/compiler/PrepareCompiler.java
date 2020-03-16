@@ -54,7 +54,7 @@ public class PrepareCompiler {
         initMacro(get);
 
         //导入其他文件macro，前提是import不是宏的
-        List<String> strs = LexerUtils.wenYanLexer(wenyanCode);
+        List<String> strs = LexerUtils.wenYanLexer(wenyanCode,compiler);
 
 
         List<String> imports = getImportsWenYan(strs);
@@ -66,7 +66,7 @@ public class PrepareCompiler {
 
 
         //重新解析
-        List<String> format = LexerUtils.wenYanLexer(getString(strs));
+        List<String> format = LexerUtils.wenYanLexer(getString(strs),compiler);
 
         imports = getImportsWenYan(format);
 
@@ -75,7 +75,7 @@ public class PrepareCompiler {
 
         expansion(format);
 
-        format = LexerUtils.wenYanLexer(getString(format));
+        format = LexerUtils.wenYanLexer(getString(format),compiler);
 
         //编译import的文件
         compileImports(imports);

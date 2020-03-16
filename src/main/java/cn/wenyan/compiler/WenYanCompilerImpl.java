@@ -9,6 +9,7 @@ import cn.wenyan.compiler.factory.StreamBuilder;
 import cn.wenyan.compiler.log.LogFormat;
 import cn.wenyan.compiler.log.ServerLogger;
 import cn.wenyan.compiler.plugins.Listener;
+import cn.wenyan.compiler.plugins.Plugin;
 import cn.wenyan.compiler.plugins.PluginManager;
 import cn.wenyan.compiler.script.libs.Language;
 import cn.wenyan.compiler.script.libs.Library;
@@ -26,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static cn.wenyan.compiler.log.LogFormat.fg;
 
@@ -373,6 +375,15 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         }
     }
 
+    public boolean callPluginOnMatch(String pattern){
+        Collection<Plugin> plugins = pluginManager.getPlugins().values();
+        boolean notSkip = true;
+        for(Plugin plugin : plugins){
+            notSkip = plugin.onCanMatch(pattern);
+        }
+        return notSkip;
+    }
+
     public String getCompilingFile() {
         return compilingFile;
     }
@@ -427,6 +438,10 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
 
     public boolean isStrongType() {
         return strongType;
+    }
+
+    public PluginManager getPluginManager() {
+        return pluginManager;
     }
 
     @Override

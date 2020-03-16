@@ -18,4 +18,10 @@ abstract class Plugin {
 
     def addListener(map : util.List[Listener])
 
+    //如果你需要拦截高优先级的语法，则可以在这里拦截，可以参见
+    //LexerUtils的canMatch中的三个if判断
+    //如语法有夫「x」之长和夫「x」，为了防止分割夫「x」之长，可以在匹配夫「x」时
+    //后面有没有之，来组合上面的语法
+    def onCanMatch(pattern: String) : Boolean
+
 }

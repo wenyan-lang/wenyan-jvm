@@ -295,6 +295,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         return serverLogger;
     }
 
+    //TODO 语言特有
     public void compileToClass(File out,File classFile) throws FileNotFoundException {
         CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
         PrintWriter writer = new PrintWriter(classFile);
@@ -648,11 +649,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
             }
         }
     }
-
-    private String trimWenYan(String s){
-        return LexerUtils.trimWenYanX(s);
-    }
-
+    
     private void loadPlugins(){
         File pluginFile = new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile()+"/plugins");
         if(!pluginFile.exists()) pluginFile.mkdirs();

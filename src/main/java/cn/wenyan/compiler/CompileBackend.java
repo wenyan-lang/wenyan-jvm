@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-public interface CompileBackend {
+public interface CompileBackend extends Init{
 
     void appendClassName(int index, String mainClass, String className, List<String> codes, StringBuilder builder, String annotation, String pack);
 
@@ -18,7 +18,7 @@ public interface CompileBackend {
         return builder.toString();
     }
 
-    void init(WenYanCompilerImpl impl);
+
 
     void compileToClass(File out, File classFile) throws FileNotFoundException;
 }

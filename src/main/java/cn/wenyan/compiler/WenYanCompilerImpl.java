@@ -533,8 +533,10 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         File[] plugins = pluginFile.listFiles();
         if(plugins != null){
             for(File f : plugins){
-                if (f.toString().endsWith(".jar"))
-                    pluginManager.loadPlugin(f);
+                if (f.toString().endsWith(".jar")){
+                    Plugin plugin = pluginManager.loadPlugin(f);
+                    plugin.init(this);
+                }
             }
         }
     }

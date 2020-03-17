@@ -7,11 +7,9 @@ import cn.wenyan.compiler.streams.CompileStream
 import scala.collection.mutable
 import java.util
 
-import cn.wenyan.compiler.WenYanCompiler
+import cn.wenyan.compiler.{Init, WenYanCompiler}
 
-abstract class Plugin {
-
-    def init(wenYanCompiler: WenYanCompiler)
+abstract class Plugin extends Init{
 
     def addSyntaxRegex(map : mutable.Map[String,String])
 

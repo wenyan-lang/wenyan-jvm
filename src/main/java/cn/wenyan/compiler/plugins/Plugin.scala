@@ -7,7 +7,7 @@ import cn.wenyan.compiler.streams.CompileStream
 import scala.collection.mutable
 import java.util
 
-import cn.wenyan.compiler.{Init, WenYanCompiler}
+import cn.wenyan.compiler.Init
 
 abstract class Plugin extends Init{
 

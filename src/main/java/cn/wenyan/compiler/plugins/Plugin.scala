@@ -5,10 +5,13 @@ import java.util.regex.Pattern
 import cn.wenyan.compiler.streams.CompileStream
 
 import scala.collection.mutable
-
 import java.util
 
+import cn.wenyan.compiler.WenYanCompiler
+
 abstract class Plugin {
+
+    def init(wenYanCompiler: WenYanCompiler)
 
     def addSyntaxRegex(map : mutable.Map[String,String])
 

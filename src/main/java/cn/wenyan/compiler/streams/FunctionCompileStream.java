@@ -92,7 +92,9 @@ public class FunctionCompileStream extends CompileStream {
 
         if(Utils.matches(wenyan,WenYanLib.RETURN())){
             String value = compiler.removeWenyan();
-            return new CompileResult(LanguageUtils.returnSomething(language,Utils.getValue(value.substring(value.indexOf("得")+1),stream)));
+            String ans = stream.getAnsName();
+            String var = LanguageUtils.defineVar(language,ans,Utils.getValue(value.substring(value.indexOf("得")+1),stream));
+            return new CompileResult(var+"\n"+LanguageUtils.returnSomething(language,ans));
         }
         if(Utils.matches(wenyan,WenYanLib.FUNCTION_END())){
             funcIndex--;
@@ -185,9 +187,6 @@ public class FunctionCompileStream extends CompileStream {
                     String methods = method.substring(0,method.lastIndexOf(language.getSyntax(Syntax.IMPORT_STATIC_SEPARATE)));
                     builder.append(LanguageUtils.importStatic(language,clz,methods)).append("\n");
                 }
-
-
-
                 return new CompileResult(builder.toString());
             }else{
                 return new CompileResult(builder.toString());

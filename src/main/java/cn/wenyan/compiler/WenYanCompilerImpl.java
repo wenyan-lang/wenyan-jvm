@@ -99,6 +99,14 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
         this(supportPinyin,language,null);
     }
 
+    WenYanCompilerImpl(boolean supportPinyin,String language){
+        this(supportPinyin,Language.getLanguage(language),null);
+    }
+
+    WenYanCompilerImpl(boolean supportPinyin,String language,WenYanShell shell){
+        this(supportPinyin,Language.getLanguage(language),shell);
+    }
+
     WenYanCompilerImpl(boolean supportPinyin, Language language, WenYanShell shell){
         this.languageType = language;
         this.languageType.getCompileBackend().init(this);
@@ -325,7 +333,7 @@ public class WenYanCompilerImpl implements WenYanCompiler,Cloneable{
     private void createOutFile(File classFile,File out,String code,File parent,boolean isGroovy) throws IOException {
         if(!classFile.exists())classFile.createNewFile();
 
-        FileUtils.write(out,this.getLanguageType().getPretty().pretty(code),System.getProperty("file.coding"));
+        FileUtils.write(out,pretty.pretty(code),System.getProperty("file.coding"));
         if(!parent.exists())parent.mkdirs();
 
         languageType.getCompileBackend().compileToClass(out,classFile);

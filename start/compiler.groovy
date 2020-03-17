@@ -1,4 +1,5 @@
 import cn.wenyan.compiler.WenYanTools
+import cn.wenyan.compiler.script.libs.Language
 
 WenYanTools.default.runtime.shell.run(false,
         """
@@ -62,4 +63,3 @@ WenYanTools.default.runtime.shell.run(false,
 
 
                 """)
-

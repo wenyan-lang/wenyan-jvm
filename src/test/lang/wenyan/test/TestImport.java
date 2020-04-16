@@ -10,8 +10,5 @@ public class TestImport {
     @Test
     public void test(){
         WenYanCompiler wenYanCompiler = WenYanTools.makeCompiler(Language.GROOVY);
-        wenYanCompiler.runDirectly(true,"" +
-                "吾有一言，曰「「好」」，名之曰「價」" +
-                "");
     }
 }

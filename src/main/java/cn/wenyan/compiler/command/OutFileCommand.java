@@ -11,4 +11,9 @@ public class OutFileCommand extends Command {
         compilerConfig.setOutFile(args[0]);
         return null;
     }
+
+    @Override
+    public String help() {
+        return "参数: OutFile,单独设置编译文件输出的文件夹";
+    }
 }

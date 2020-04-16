@@ -58,6 +58,7 @@ public enum Syntax {
     BOOL_TYPE("bool_type"),
     DOUBLE_TYPE("double_type"),
     VAR_TYPE("var_type"),
+    OBJECT_TYPE("object_type"),
 
     FUNCTION_ARG_DEFINE("function_arg_define"),
 
@@ -71,7 +72,26 @@ public enum Syntax {
 
     IMPORT_WITH("import_with"),
 
-    NOT("not");
+    NOT("not"),
+
+    REQUIRE_SCRIPT("require script"),
+
+    CONTINUE("continue"),
+
+    ELSE_IF("else_if"),
+
+    CONCAT("concat"),
+    TRY("try"),
+    THROW("throw"),
+    CATCH("catch"),
+    EXCEPTION_IF("exception_if"),
+    CATCH_END("catch_end"),
+    SHELL_VAR("shell_var"),
+    DEFINE_OBJECT("define_object"),
+    DELETE("delete"),
+    DEFINE("define"),
+    GIVE_FUNCTION("give_function"),
+    DEFINE_GIVE_FUNCTION("def_give");
 
 
 

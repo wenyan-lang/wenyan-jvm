@@ -1,0 +1,16 @@
+疏曰『
+
+    此經乃改編者以順java之道
+
+    參見 https://github.com/wenyan-lang/wenyan/tree/master/lib
+
+
+』
+
+今有一術。名之曰「紀元時」。是術曰。
+	施「{-> new Date().getTime()/1000}」。乃得矣。
+是謂「紀元時」之術也。
+
+今有一術。名之曰「時差」。欲行是術。必先得一數。曰「時」。乃行是術曰。
+	施「{x -> 0 - new Date(x * 1000).getTimezoneOffset() * 60}」於「時」。乃得矣。
+是謂「時差」之術也。

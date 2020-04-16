@@ -3,6 +3,8 @@ package cn.wenyan.compiler.utils;
 import cn.wenyan.compiler.WenYanCompilerImpl;
 import cn.wenyan.compiler.exceptions.SyntaxException;
 
+import java.util.List;
+
 public class Assert {
 
     public static void typeCheck(WenYanCompilerImpl stream, String name, String code, String... types){
@@ -14,7 +16,7 @@ public class Assert {
         }
     }
 
-    public static String[] syntaxError(String wenyan) throws SyntaxException{
+    public static List<String> syntaxError(String wenyan) throws SyntaxException{
         String prefix = "\n于此言有误: ";
         throw new SyntaxException(prefix+ wenyan+"\n");
     }

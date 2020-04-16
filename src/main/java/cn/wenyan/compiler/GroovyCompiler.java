@@ -3,7 +3,15 @@ package cn.wenyan.compiler;
 import groovy.lang.GroovyClassLoader;
 
 /**
- * groovy 编译器
+ *
+ * 欲语此类用者何，成名一诗少不了。
+ *
+ * 若以成者行此中，必先编译以横行。
+ * 此类不出实体者，即编即用以交互。
+ *
+ * 先得加载对象者，终以源码得英雄，
+ * 此类内涵不言耳，故以工具以敝之。
+ *
  */
 public class GroovyCompiler implements LanguageCompiler{
 
@@ -35,5 +43,6 @@ public class GroovyCompiler implements LanguageCompiler{
         ClassLoader cl = GroovyCompiler.class.getClassLoader();
         return new GroovyClassLoader(cl);
     }
+
 
 }

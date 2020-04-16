@@ -3,6 +3,7 @@ package cn.wenyan.compiler
 import java.util.regex.Pattern
 
 import cn.wenyan.compiler.script.libs.Syntax
+import cn.wenyan.compiler.utils.LexerUtils
 
 
 object WenYanLib {
@@ -129,7 +130,7 @@ object WenYanLib {
 
   final val HASH_NAME : String = "hash_name"
 
-  final val YI : String = "yi"
+  final val CLEAR_STACK : String = "clear_stack"
 
   final val ADD : String = "add"
 
@@ -149,29 +150,66 @@ object WenYanLib {
 
   final val LENGTH : String = "「[\\s\\S]+」之(長|其餘)"
 
+  final val RETURN_ : String = "return_"
+
+  final val CONTINUE : String = "continue"
+
+  final val ELSE_IF : String = "else_if"
+
+  final val CONCAT : String = "concat"
+
+  final val MACRO_BEFORE : String = "macro_before"
+
+  final val MACRO_AFTER : String = "macro_after"
+
+  final val STATEMENT : String = "statement"
+
+  final val FUNC_ARG : String = "func_arg"
+
+  final val TRY : String = "try"
+
+  final val EXCEPTION_DEFINE : String = "exception_define"
+
+  final val EXCEPTION_THROW : String = "exception_throw"
+
+  final val CATCH : String = "catch"
+
+  final val EXCEPTION_IF : String= "exception_if"
+
+  final val EXCEPTION_ELSE : String = "exception_else"
+
+  final val OBJECT_IT : String = "object_it"
+
+  final val CATCH_END : String = "catch_end"
+
+  final val GIVE_OBJECT : String = "give_object"
+
+  final val GIVE_OBJECT_VALUE : String = "give_object_value"
+
+  final val OBJECT_END : String = "object_end"
+
+  final val DELETE : String ="delete"
+
+
   val MMap = scala.collection.mutable.Map
 
   private type BigDecimal0 = java.math.BigDecimal
 
-  val prefixs = Map[Char,BigDecimal0](
-    '十' -> new BigDecimal0(10),
+  val prefixAfter = MMap[Char,BigDecimal0](
+    '負' -> new BigDecimal0(-1),
     '百' -> new BigDecimal0(100),
     '千' -> new BigDecimal0(1000),
     '萬' -> new BigDecimal0(10000),
     '億' -> new BigDecimal0(1E8),
-    '廿' -> new BigDecimal0(20),
-    '卅' -> new BigDecimal0(30),
-    '卌' -> new BigDecimal0(40),
-    '皕' -> new BigDecimal0(200),
     '兆' -> new BigDecimal0("1E12"),
     '京' -> new BigDecimal0("1E16"),
-    '垓' -> new BigDecimal0("10E20"),
-    '秭' -> new BigDecimal0("10E24"),
-    '穣' -> new BigDecimal0("10E28"),
-    '溝' -> new BigDecimal0("10E32"),
-    '澗' -> new BigDecimal0("10E36"),
-    '正' -> new BigDecimal0("10E40"),
-    '載' -> new BigDecimal0("10E44"),
+    '垓' -> new BigDecimal0("1E20"),
+    '秭' -> new BigDecimal0("1E24"),
+    '穣' -> new BigDecimal0("1E28"),
+    '溝' -> new BigDecimal0("1E32"),
+    '澗' -> new BigDecimal0("1E36"),
+    '正' -> new BigDecimal0("1E40"),
+    '載' -> new BigDecimal0("1E44"),
     '分' -> new BigDecimal0("1E-1"),
     '釐' -> new BigDecimal0("1E-2"),
     '毫' -> new BigDecimal0("1E-3"),
@@ -182,8 +220,17 @@ object WenYanLib {
     '埃' -> new BigDecimal0("1E-8"),
     '渺' -> new BigDecimal0("1E-9"),
     '漠' -> new BigDecimal0("1E-10")
-
   )
+  val prefixs = MMap[Char,BigDecimal0](
+    '廿' -> new BigDecimal0(20),
+    '卅' -> new BigDecimal0(30),
+    '卌' -> new BigDecimal0(40),
+    '皕' -> new BigDecimal0(200),
+    '十' -> new BigDecimal0(10),
+  ).addAll(prefixAfter)
+
+
+
   //二分三釐八毫八絲三忽八微
 
   val numbers = Map[Char,BigDecimal0](
@@ -211,6 +258,7 @@ object WenYanLib {
       stringBuilder.append(k)
     }
     stringBuilder.append("又")
+    stringBuilder.append("·")
     stringBuilder.append("]+")
     stringBuilder.toString()
   }
@@ -218,71 +266,105 @@ object WenYanLib {
   val numbersGet = getNumber()
 
 
+  private val value = s"$VAL_DEF|$numbersGet|「「([\\s\\S]+|)」」|空無|其|陽|陰|其然|其不然|矣"
+  private val myType = "[數言爻列物元]"
+  private val comment = "[批注疏]"
+  private val ONE_CHAR = "[\\s\\S]"
+  private val ALL_CHARACTERS = s"$ONE_CHAR+"
+
+
+  final val VALUE : String = "value"
   val syntaxs = MMap[String,String](
-    DEFINE_VAR -> "(吾有|今有)",
-    VAR_NAME -> "曰[\\s\\S]+",
-    VAR_VALUE -> s"([以]|)名之(曰$VAL_DEF)+",
-    VAR_GET_NAME -> s"曰$VAL_DEF",
-    WRITE -> "書之",
-    SIMPLE_VAR -> "有[數言爻列物][\\s\\S]+",
-    CHANGE -> (s"昔之$VAL_DEF"+"者"),
-    AFTER_NAME -> s"今($VAL_DEF|$numbersGet|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})(是|)",
-    COMMENT -> "[也矣]",
-    FOR -> s"為是($numbersGet|「[\\s\\S]+」)遍",
-    FOR_END -> "云云",
-    IF_START -> "若[\\s\\S]+者",
-    IF_END -> "[也]",
-    BREAK -> "乃止",
-    IF_BREAK -> "若[\\s\\S]+者乃止也",
-    WHILE -> "恆為是",
-    ELSE -> "若非",
-    MATH_START -> s"[加減乘除]($numbersGet|「[\\s\\S]+」|其|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
-    MOD -> "所餘幾何",
-    IT_CHANGE -> IT_CHANGE,
-    AND_OR -> "夫「[\\s\\S]+」「[\\s\\S]+」中(有陽|無陰)乎",
-    FOR_EACH -> "凡「[\\s\\S]+」中之「[\\s\\S]+」",
-    FUNCTION -> "一術",
-    NO_ARGS -> "是術曰",
-    RETURN -> s"乃得(「「[\\s\\S]+」」|『[\\s\\S]+』|「[\\s\\S]+」|$numbersGet|空無|其)",
-    FUNCTION_END -> "是謂「[\\s\\S]+」之術也",
-    ARGS -> "欲行是術",
-    MUST -> "必先得",
-    DEFINE_ARG -> s"$numbersGet[數言爻列物]",
-    DEFINE_END -> "乃行是術曰",
-    RUN_FUNCTION -> "施「[\\s\\S]+」",
-    ARGS_RUN -> "於(「[\\s\\S]+」|[\\s\\S]+)",
-    IMPORT -> "吾嘗觀「「[\\s\\S]+」」之書",
-    IMPORT_STATIC -> "方悟(「[\\s\\S]+」)+之義",
-    YI -> "噫",
-    ADD -> "充「[\\s\\S]+」",
-    VAL -> s"[以於](「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」|\\{\\{[0-9]+HASH~\\}\\})",
-    GET -> s"夫「[\\s\\S]+」之(「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」)",
-    REPLACE_ARRAY -> ("昔之"+VAL_DEF+"之("+VAL_DEF+"|「「[\\s\\S]+」」)者"),
-    NEW_COMMENT -> "[批注疏]曰",
-    OTHER -> "變「[\\s\\S]+」",
-    LENGTH -> s"夫$LENGTH"
+    DEFINE_VAR -> "(吾有|今有)",//
+    VAR_NAME -> s"曰$ALL_CHARACTERS",//
+    VAR_VALUE -> s"([以]|)名之(曰$VAL_DEF)+",//
+    VAR_GET_NAME -> s"曰$VAL_DEF",//
+    WRITE -> "書之",//
+    SIMPLE_VAR -> s"有$myType$ALL_CHARACTERS",//
+    CHANGE -> (s"昔之$VAL_DEF"+"者"),//
+    AFTER_NAME -> s"今($value)(是|)",////
+    COMMENT -> "(是也|是矣)",//
+    FOR -> s"為是($numbersGet|「$ALL_CHARACTERS」)遍",//
+    FOR_END -> "云云",//
+    IF_START -> (s"若$ALL_CHARACTERS"+"者"),//
+    IF_END -> "(也|终也)",//
+    BREAK -> "乃止",//
+    IF_BREAK -> (s"若$ALL_CHARACTERS"+"者乃止也"),//
+    WHILE -> "恆為是",//
+    ELSE -> "若非",//
+    MATH_START -> s"[加減乘除]($value)",////
+    MOD -> "所餘幾何",//
+    IT_CHANGE -> IT_CHANGE,//
+    AND_OR -> s"夫(「$ALL_CHARACTERS」|$FALSE|$TRUE)(「$ALL_CHARACTERS」|$FALSE|$TRUE)中(有陽|無陰)乎",
+    FOR_EACH -> s"凡「$ALL_CHARACTERS」中之「$ALL_CHARACTERS」",//
+    FUNCTION -> (numbersGet+"術"),//
+    NO_ARGS -> "是術曰",//
+    RETURN -> s"乃得($value)",//
+    FUNCTION_END -> s"是謂「$ALL_CHARACTERS」之術[也矣]",//
+    ARGS -> "欲行是術",//
+    MUST -> "必先得",//
+    DEFINE_ARG -> s"$numbersGet$myType",//
+    DEFINE_END -> "乃行是術曰",//
+    RUN_FUNCTION -> s"施「$ALL_CHARACTERS」",//
+    ARGS_RUN -> s"於(「$ALL_CHARACTERS」|$ALL_CHARACTERS)",//
+    IMPORT -> s"吾嘗觀((「「$ALL_CHARACTERS」」中)+|)「「$ALL_CHARACTERS」」之書",//
+    IMPORT_STATIC -> s"方悟(「$ALL_CHARACTERS」)+之義",//
+    CLEAR_STACK -> "噫",
+    ADD -> s"充($value)",////
+    VAL -> s"[以於]($value)",////
+    GET -> s"夫($VAL_DEF|其)之($value)",
+    REPLACE_ARRAY -> (s"昔之"+VAL_DEF+"之("+value+")者"),
+    NEW_COMMENT -> (comment+"曰"),
+    OTHER -> s"變(「$ALL_CHARACTERS」|$TRUE|$FALSE)",
+    LENGTH -> s"夫$LENGTH",
+    RETURN_ -> "乃歸空無",
+    CONTINUE -> "乃止是遍",
+    ELSE_IF -> "或",
+    CONCAT -> s"銜「$ALL_CHARACTERS」",
+    MACRO_BEFORE -> s"云「「$ALL_CHARACTERS」」",
+    MACRO_AFTER -> s"蓋謂「「$ALL_CHARACTERS」」",
+    STATEMENT -> s"夫($VAL_DEF|$numbersGet|陽|陰|空無|「「([\\s\\S]+|)」」|其)",
+    FUNC_ARG -> (s"取$numbersGet"+"以"),
+    TRY -> "姑妄行此",
+    EXCEPTION_DEFINE -> "嗚呼",
+    EXCEPTION_THROW -> s"「「$ALL_CHARACTERS」」之禍",
+    CATCH -> "如事不諧",
+    EXCEPTION_IF -> s"豈「「$ALL_CHARACTERS」」之禍歟",
+    EXCEPTION_ELSE -> "不知何禍歟",
+    CATCH_END -> "乃作罷",
+    OBJECT_IT -> "其物如是",
+    GIVE_OBJECT -> s"物之「「$ALL_CHARACTERS」」者",
+    GIVE_OBJECT_VALUE -> (myType+"曰("+value+")"),
+    OBJECT_END -> s"是謂「$ALL_CHARACTERS」之物也",
+    DELETE -> "今不復存矣"
   )
 
 
-  val patterns = Map[String,Pattern](
+
+
+  //乃歸空無
+  val patterns = MMap[String,Pattern](
     NUMBER -> Pattern.compile(numbersGet),
     ALL -> Pattern.compile("[\\s\\S]+"),
-    TYPE -> Pattern.compile("[數言爻列物]"),
+    TYPE -> Pattern.compile(myType),
     VAR_GET_NAME -> Pattern.compile(syntaxs(VAR_GET_NAME)),
     BEFORE_NAME -> Pattern.compile(syntaxs(CHANGE)),
     AFTER_NAME -> Pattern.compile(syntaxs(AFTER_NAME)),
     COMMENT -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
     STRING -> Pattern.compile("(「「|『)[^(「「|」」|『|』)]+(」」|』)"),
-    HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}"),
+    HASH -> Pattern.compile("\\{\\{[0-9]+HASH~\\}\\}"),//淘汰
     FOR -> Pattern.compile(numbersGet),
     VAR_NAME_FOR -> Pattern.compile(VAL_DEF),
     SPLIT_MATH ->Pattern.compile("[以於]"),
     AND_OR -> Pattern.compile("(有陽|無陰)"),
-    HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),
+    HASH_NAME -> Pattern.compile("「\\{\\{[0-9]+HASH~\\}\\}」"),//淘汰
     ONLY_STRING -> Pattern.compile("(「「|『)[\\s\\S]+(」」|』)"),
-    VAL -> Pattern.compile(s"(「\\s\\S」|$numbersGet|「「[\\s\\S]+」」)"),
-    GET -> Pattern.compile(s"「[\\s\\S]+」之(「[\\s\\S]+」|$numbersGet|「「[\\s\\S]+」」)"),
-    NEW_COMMENT -> Pattern.compile("[批注疏]")
+    VAL -> Pattern.compile(s"($value)"),
+    GET -> Pattern.compile(s"「[\\s\\S]+」之($value)"),
+    NEW_COMMENT -> Pattern.compile(comment),
+    MACRO_BEFORE -> Pattern.compile(syntaxs(MACRO_BEFORE)),
+    MACRO_AFTER -> Pattern.compile(syntaxs(MACRO_AFTER)),
+    VALUE -> Pattern.compile(value)
   )
 
 
@@ -324,14 +406,20 @@ object WenYanLib {
     define('言') = Syntax.DEFINE_STRING
     define('爻') = Syntax.FALSE
     define('列') = Syntax.DEFINE_ARRAY
-    define('物') = Syntax.NULL
+    define('物') = Syntax.DEFINE_OBJECT
+    define('元') = Syntax.NULL
   }
 
   val types = Map[String,Syntax](
     "數" -> Syntax.INT_TYPE,
     "言" -> Syntax.STRING_TYPE,
     "爻" -> Syntax.BOOL_TYPE,
-    "列" -> Syntax.ARRAY_TYPE
+    "列" -> Syntax.ARRAY_TYPE,
+    "元" -> Syntax.VAR_TYPE,
+    "物" -> Syntax.OBJECT_TYPE,
+    "術" -> Syntax.VAR_TYPE
   )
+
+  val mapSyntaxs = LexerUtils.getUtilsMap(syntaxs)
 
 }

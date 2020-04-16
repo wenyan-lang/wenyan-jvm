@@ -1,1 +1,0 @@
-java -jar ./lib/wenyan.jar %1

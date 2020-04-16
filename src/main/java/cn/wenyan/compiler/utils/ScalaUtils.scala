@@ -2,6 +2,7 @@ package cn.wenyan.compiler.utils
 
 import cn.wenyan.compiler.WenYanLib
 
+
 object ScalaUtils {
 
   def containsCommonNumber(wenyan:String) : Boolean ={
@@ -10,6 +11,13 @@ object ScalaUtils {
       if(wenyan.contains(x))return true
     }
     false
+  }
+
+  def countTime(func : =>Unit): Long ={
+    val start = System.currentTimeMillis
+    func
+    val end = System.currentTimeMillis
+    return end -start
   }
 
 }

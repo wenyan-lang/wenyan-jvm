@@ -24,6 +24,14 @@ public class CommandHandler {
         compileCommand.put("-o",new OutFileCommand());
         compileCommand.put("-l",new CompileLibCommand());
         compileCommand.put("-r",new RunCommand());
+        compileCommand.put("-sc",new SourceCommand());
+        compileCommand.put("-m",new MainClassCommand());
+        compileCommand.put("-g",new GroovyCommand());
+        compileCommand.put("-n",new ClassFileCommand());
+        compileCommand.put("-wyg",new WenYuanGeCommand());
+        compileCommand.put("-wd",new WenYuanGeDownloadCommand());
+        compileCommand.put("-lv",new LexerViewerCommand());
+        compileCommand.put("-st",new StrongTypeCommand());
     }
 
     public CommandHandler(WenYanCompilerImpl compiler){

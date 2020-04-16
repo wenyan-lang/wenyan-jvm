@@ -2,5 +2,5 @@ package cn.wenyan.compiler;
 
 public interface RunCode {
 
-    Object runDirectly(boolean out,String... wenyanString);
+    Object run(boolean out,String... wenyanString);
 }

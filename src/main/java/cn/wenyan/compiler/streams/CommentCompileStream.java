@@ -6,6 +6,8 @@ import cn.wenyan.compiler.WenYanLib;
 import cn.wenyan.compiler.script.libs.LanguageUtils;
 import cn.wenyan.compiler.utils.Utils;
 
+import java.util.List;
+
 /**
  * 此为批注之编译流。亦可编译"注释"之术，曰: 经必有注也。
  * 批曰。「「文氣淋灕。字句切實」」。
@@ -29,12 +31,12 @@ public class CommentCompileStream extends CompileStream {
      * @return 编译之果
      */
     @Override
-    public CompileResult compile(String[] wenyan) {
-        if(Utils.matches(wenyan[0], WenYanLib.NEW_COMMENT())){
-            Utils.inputWenyan(compiler,0);
-            Utils.inputWenyan(compiler,1);
+    public CompileResult compile(List<String> wenyan) {
+        if(Utils.matches(wenyan, WenYanLib.NEW_COMMENT())){
+            compiler.removeWenyan();
+            String value02 = compiler.removeWenyan();
             return new CompileResult(LanguageUtils.addComment(language,
-                    Utils.getStringFrom(WenYanLib.COMMENT(),wenyan[1],WenYanLib.STRING_START(),WenYanLib.STRING_END())
+                    Utils.getStringFrom(WenYanLib.COMMENT(),value02,WenYanLib.STRING_START(),WenYanLib.STRING_END())
 
             ));
         }

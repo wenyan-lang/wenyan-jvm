@@ -1,0 +1,22 @@
+疏曰『
+
+    此經乃改編者以順java之道
+
+    參見 https://github.com/wenyan-lang/wenyan/tree/master/lib
+
+
+』
+或云「「觀物「甲」為非數」」。
+蓋謂「「施「{x -> x.class == Integer.class||x.class == BigInteger.class||x.class == java.math.BigDecimal}」於「甲」。」」
+
+或云「「觀物「甲」為非列」」。
+蓋謂「「施「{x -> x.class == JSArray.class}」於「甲」。」」
+
+或云「「觀物「甲」為非言」」。
+蓋謂「「施「{x -> x.class == String.class}」於「甲」。」」
+
+或云「「觀物「甲」為非物」」。
+蓋謂「「施「{x -> x.class == Map.class}」於「甲」。」」
+
+或云「「觀物「甲」為非爻」」。
+蓋謂「「施「{x -> x.class == Boolean.class}」於「甲」。」」

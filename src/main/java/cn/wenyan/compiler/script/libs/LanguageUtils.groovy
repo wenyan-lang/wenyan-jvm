@@ -1,26 +1,47 @@
 package cn.wenyan.compiler.script.libs
 
+import cn.wenyan.compiler.WenYanLib
+import groovy.transform.CompileStatic
 
+@CompileStatic
 class LanguageUtils {
 
+    private static boolean isShell = false
+
     static String defineVar(Language language,String name,String value){
-        return language.getSyntax(Syntax.VAR_DEFINE)
+        Syntax syntax = Syntax.VAR_DEFINE
+        if(isShell){
+            syntax = Syntax.SHELL_VAR
+        }
+        return language.getSyntax(syntax)
                 .replace(Language.NAME,name)
                 .replace(Language.VALUE, value)
     }
 
-    static String defineVar(Language language,String name,String value,Syntax type){
-        return language.getSyntax(Syntax.VAR_DEFINE)
+    static String defineVar(Language language,String name,String value,char type,boolean isStrong){
+        Syntax syntax = Syntax.VAR_DEFINE
+        if(isShell){
+            syntax = Syntax.SHELL_VAR
+        }
+        String result = language.getSyntax(syntax)
                 .replace(Language.NAME,name)
                 .replace(Language.VALUE, value)
-                .replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(type))
+        if(isStrong){
+            return result.replace(language.getSyntax(Syntax.VAR_TYPE),language.getSyntax(WenYanLib.types().get(type.toString()).get()))
+        }else{
+            return result
+        }
+
     }
 
-    static String defineArg(Language language,String name,String type){
+    static String defineArg(Language language,String name,char type){
         return language.getSyntax(Syntax.FUNCTION_ARG_DEFINE)
                 .replace(Language.NAME,name)
-                .replace(Language.TYPE,type)
+                .replace(Language.TYPE,"")
+                //.replace(Language.TYPE,language.getSyntax(WenYanLib.types().get(type.toString()).get()))
     }
+
+
 
     static String addArray(Language language,String name,String value){
         return language.getSyntax(Syntax.ARRAY_ADD)
@@ -64,17 +85,35 @@ class LanguageUtils {
                 .replace(Language.ARGS,args)
 
     }
-
-    static String defineInnerFunction(Language language,String name,String args){
-        return language.getSyntax(Syntax.INNER_FUNCTION)
+    static String giveFunction(Language language,String name,String args){
+        return language.getSyntax(Syntax.GIVE_FUNCTION)
                 .replace(Language.NAME,name)
                 .replace(Language.ARGS,args)
     }
 
-    static String defineInnerFunction(Language language,String name){
-        return language.getSyntax(Syntax.INNER_FUNCTION_NO_ARGS)
+    static String putAll(Language language,String name,String value){
+        return language.getSyntax(Syntax.CONCAT)
                 .replace(Language.NAME,name)
+                .replace(Language.VALUE,value)
+    }
 
+    static String defineInnerFunction(Language language,String name,String args,boolean outer){
+        String result = language.getSyntax(outer?Syntax.DEFINE_GIVE_FUNCTION:Syntax.INNER_FUNCTION)
+                .replace(Language.NAME,name)
+                .replace(Language.ARGS,args)
+        if(isShell){
+            result = result.substring(result.indexOf("def")+3)
+        }
+        return result
+    }
+
+    static String defineInnerFunction(Language language,String name,boolean outer){
+        String result = language.getSyntax(outer?Syntax.DEFINE_GIVE_FUNCTION:Syntax.INNER_FUNCTION_NO_ARGS)
+                .replace(Language.NAME,name)
+        if(isShell){
+            result = result.substring(result.indexOf("def")+3)
+        }
+        return result
     }
 
     static String returnSomething(Language language,String value){
@@ -116,5 +155,44 @@ class LanguageUtils {
         return language.getSyntax(Syntax.ARRAY_GET)
                 .replace(Language.NAME,name)
                 .replace(Language.INDEX,index)
+    }
+
+    static String throwEx(Language language,String name,String exception){
+        return language.getSyntax(Syntax.THROW)
+                .replace(Language.NAME,name)
+                .replace(Language.EXCEPTION,exception)
+    }
+
+    static String define(Language language,String name){
+        return language.getSyntax(Syntax.DEFINE)
+                .replace(Language.NAME,name)
+    }
+
+    static String catchEx(Language language,String name){
+        return  language.getSyntax(Syntax.CATCH)
+                .replace(Language.NAME,name)
+    }
+
+    static String ifEquals(Language language,String name,String exception){
+        return language.getSyntax(Syntax.EXCEPTION_IF)
+                .replace(Language.NAME,name)
+                .replace(Language.EXCEPTION,exception)
+    }
+
+    static String arraySet(Language language,String name,String index,String value){
+        return language.getSyntax(Syntax.REPLACE_ARRAY)
+                .replace(Language.NAME,name)
+                .replace(Language.INDEX,index)
+                .replace(Language.VALUE,value)
+    }
+
+    static String removeArray(Language language,String name,String index){
+        return language.getSyntax(Syntax.DELETE)
+                .replace(Language.NAME,name)
+                .replace(Language.INDEX,index)
+    }
+
+    static void setShell(boolean shell){
+        isShell = shell
     }
 }

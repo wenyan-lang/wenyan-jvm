@@ -1,13 +1,6 @@
 package cn.wenyan.compiler.utils;
 
 import cn.wenyan.compiler.WenYanCompilerImpl;
-import cn.wenyan.compiler.WenYanLib;
-import cn.wenyan.compiler.log.LogFormat;
-import org.fusesource.jansi.Ansi;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SyntaxColor {
 
@@ -22,7 +15,6 @@ public class SyntaxColor {
             "於","嘗觀","書","方悟","義","是","乃","之","欲"
     };
     public static String getSyntaxColor(String wenyan, WenYanCompilerImpl compiler){
-
         return wenyan;
     }
 }

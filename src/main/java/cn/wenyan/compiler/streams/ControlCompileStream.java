@@ -108,11 +108,9 @@ public class ControlCompileStream extends CompileStream {
         String[] numbers = wenYan.split(type);
         if(numbers.length != 2)throw new SyntaxException("此表达式之过也: "+wenYan);
         VariableCompileStream stream = compiler.getStream(VariableCompileStream.class);
-        StringBuilder builder = new StringBuilder();
-        builder.append(getValue(numbers[0],stream));
-        builder.append(language.getSyntax(WenYanLib.bool().get(type).get()));
-        builder.append(getValue(numbers[1],stream));
-        return builder.toString();
+        return new StringBuilder().append(getValue(numbers[0],stream))
+                .append(language.getSyntax(WenYanLib.bool().get(type).get()))
+                .append(getValue(numbers[1],stream)).toString();
     }
 
 

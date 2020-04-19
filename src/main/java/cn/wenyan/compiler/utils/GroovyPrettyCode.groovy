@@ -26,11 +26,12 @@ class GroovyPrettyCode implements PrettyCode {
 
     private static int getClose(String code){
         int close = 0
+        int string = 0
         for(s in code){
             if(s == "'"||s == "\"") {
-                close ++
+                string ++
             }
-            if(close %2 == 0){
+            if(string %2 == 0){
                 if(s == "{"){
                     close ++
                 }

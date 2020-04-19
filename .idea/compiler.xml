@@ -10,8 +10,5 @@
         <module name="wenyan_lang_jvm" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="wenyan-lang_jvm" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
